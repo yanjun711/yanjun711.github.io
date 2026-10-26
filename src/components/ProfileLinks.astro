@@ -1,0 +1,10 @@
+---
+import { profile } from '../data/site';
+const onBlog = Astro.url.pathname.startsWith('/blog');
+---
+<nav class="profile-links" aria-label="Profile links">
+  <a href={'mailto:' + profile.email}>Email</a><span aria-hidden="true">/</span>
+  <a href={profile.scholar}>Scholar</a><span aria-hidden="true">/</span>
+  <a href={profile.github}>GitHub</a><span aria-hidden="true">/</span>
+  <a href="/blog/" aria-current={onBlog ? 'page' : undefined}>Blogs</a>
+</nav>

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ExperienceList from '../components/ExperienceList.astro';
+import ProfileLinks from '../components/ProfileLinks.astro';
 import { profile, publications, researchExperience, internshipExperience, bibtex } from '../data/site';
 ---
 <Base>
@@ -8,7 +9,7 @@ import { profile, publications, researchExperience, internshipExperience, bibtex
     <h1>Yanjun Li</h1>
     <p>I'm an undergraduate at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a>, majoring in Robotics Engineering. I work on world models with Prof. Hao Tang at the EGI Lab, <a href="https://www.pku.edu.cn/">Peking University</a>. Previously, I worked on efficient VLA with Prof. Xinggang Wang at HUST.</p>
     <p>I'm currently a research intern at AI² Robotics. Previously, I interned at BAAI.</p>
-    <p class="profile-links"><a href={'mailto:' + profile.email}>Email</a><span>/</span><a href={profile.scholar}>Scholar</a><span>/</span><a href={profile.github}>GitHub</a><span>/</span><a href="/blog/">Blogs</a></p>
+    <ProfileLinks />
   </section>
 
   <section id="research" class="content-section">

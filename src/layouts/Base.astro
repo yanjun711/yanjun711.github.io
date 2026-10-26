@@ -4,9 +4,9 @@ import '@fontsource/lato/latin-400-italic.css';
 import '@fontsource/lato/latin-700.css';
 import '../styles/global.css';
 import { profile } from '../data/site';
+import ProfileLinks from '../components/ProfileLinks.astro';
 const { title = profile.name, description = profile.description, article = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const onBlog = Astro.url.pathname.startsWith('/blog');
 ---
 <!doctype html>
 <html lang="en">
@@ -28,13 +28,9 @@ const onBlog = Astro.url.pathname.startsWith('/blog');
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    {Astro.url.pathname !== '/' && <header class="site-header wrap">
-      <nav aria-label="Main navigation">
-        <a href="/">Home</a>
-        <a href="/#research">Publications</a>
-        <a href="/#experience">Experience</a>
-        <a href="/blog/" aria-current={onBlog ? 'page' : undefined}>Blogs</a>
-      </nav>
+    {Astro.url.pathname !== '/' && <header class="intro secondary-header wrap">
+      <p class="site-name"><a href="/">Yanjun Li</a></p>
+      <ProfileLinks />
     </header>}
     <main id="main" class="wrap"><slot /></main>
     <footer class="site-footer wrap">© {new Date().getFullYear()} Yanjun Li</footer>

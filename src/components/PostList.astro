@@ -1,8 +1,13 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { profile } from '../data/site';
 const { posts } = Astro.props as { posts: CollectionEntry<'blog'>[] };
 ---
-{posts.map(post => <a class="post-row" href={`/blog/${post.id}/`}>
-  <time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>
-  <div><h3>{post.data.title}</h3><p>{post.data.description}</p></div>
-</a>)}
+<ol class="post-list" reversed>
+  {posts.map(post => <li>
+    <a class="post-row" href={`/blog/${post.id}/`}>
+      <div class="post-info"><h2>{post.data.title}</h2><p>{profile.name}</p></div>
+      <time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>
+    </a>
+  </li>)}
+</ol>

@@ -42,7 +42,7 @@ Create `src/content/blog/your-post-slug.md`:
 ```markdown
 ---
 title: "A question worth exploring"
-description: "A short description for the archive, RSS, and social previews."
+description: "A short description for RSS and social previews."
 date: 2026-10-26
 tags: [Robot learning, Research notes]
 draft: false
@@ -84,6 +84,10 @@ publication entries with figures, and plain links to papers and projects. It
 uses the reference's Lato font, 14px body and paper text, regular 32px name,
 regular 22px section headings, and 800px maximum page width. The blog is a
 separate page reached through the Blogs link beside Email, Scholar, and GitHub.
+The archive follows [Thinking Machines Lab's blog](https://thinkingmachines.ai/blog/):
+dates beside article titles and authors, with a thin rule between entries.
+The homepage, archive, and articles share Lato and the same profile navigation.
+Institutional logos occupy an 80 × 80 pixel area, preserving their proportions.
 
 Publication figures are reproduced from the author's own papers. MotionVLA and
 HumanoidTTT identify their arXiv licenses as CC BY-NC-SA 4.0; Language-Forcing
