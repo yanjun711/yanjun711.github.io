@@ -4,5 +4,5 @@ const { posts } = Astro.props as { posts: CollectionEntry<'blog'>[] };
 ---
 {posts.map(post => <a class="post-row" href={`/blog/${post.id}/`}>
   <time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>
-  <div><h3>{post.data.title}</h3><p>{post.data.description}</p></div><span aria-hidden="true">↗</span>
+  <div><h3>{post.data.title}</h3><p>{post.data.description}</p></div>
 </a>)}

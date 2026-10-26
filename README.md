@@ -1,8 +1,8 @@
 # Yanjun Li — personal website
 
-A quiet, typography-led academic homepage for robot learning, world models, and
-embodied intelligence. Built with Astro and Markdown. The published site has no
-framework runtime, no external font requests, and no analytics.
+A simple academic homepage with biography, publications, experience, and
+education. The **Blogs** button opens a separate archive; posts and excerpts
+never appear on the homepage. Built with Astro and Markdown.
 
 ## Local development
 
@@ -56,7 +56,7 @@ Write in Markdown. Images go in `public/images/` and can be embedded with
 ```
 
 The filename becomes `/blog/your-post-slug/`. Draft and future-dated articles
-are excluded from the homepage, archive, generated pages, RSS, and sitemap.
+are excluded from the archive, generated pages, RSS, and sitemap.
 Future-dated posts appear after a build on or after their date. The included
 `first-note.md` is an unpublished template, not a real post.
 
@@ -70,20 +70,12 @@ Future-dated posts appear after a build on or after their date. The included
 
 After setup, publishing only requires committing your content changes to `main`.
 
-## Design references
+## Design reference
 
-- [Jon Barron](https://jonbarron.info/): concise biography, easy access to papers,
-  project pages, and code.
-- [Ben Mildenhall](https://bmild.github.io/): visual research summaries and short,
-  useful descriptions of each contribution.
-- [Andrej Karpathy](https://karpathy.ai/): a clear personal voice and visible
-  writing alongside research and experience.
-- [Chris Olah](https://colah.github.io/): an independent home for research notes
-  and longer explanations.
-
-The layout is original. It combines an editorial serif with a compact sans serif,
-an off-white background, muted green accents, generous margins, and paper figures
-instead of decorative stock imagery. The terrain sketch is an original SVG.
+The layout follows the straightforward academic structure of
+[Jon Barron's homepage](https://jonbarron.info/): a short biography, compact
+publication entries with figures, and plain links to papers and projects. The
+blog is a separate page reached through the navigation button.
 
 Publication figures are reproduced from the author's own papers. MotionVLA and
 HumanoidTTT identify their arXiv licenses as CC BY-NC-SA 4.0; Language-Forcing
@@ -102,8 +94,9 @@ The initial version was checked with a production build and real Chromium:
 - No horizontal overflow at 320, 360, 390, 768, 1024, and 1440 pixels.
 - All publication figures and internal links load.
 - BibTeX expansion, clipboard copying, and download endpoints work.
-- A temporary published Markdown article appeared in the homepage, archive,
-  article route, RSS, and sitemap; drafts and future articles stayed excluded.
+- A temporary published Markdown article appeared in the archive, article route,
+  RSS, and sitemap, while staying absent from the homepage. Drafts and future
+  articles stayed excluded.
 - No WCAG 2 A/AA or WCAG 2.1 AA violations reported by axe for the homepage
   at desktop and mobile sizes, or the blog archive at desktop size.
 - Valid RSS and sitemap XML, English-only page text, and no browser exceptions.

@@ -1,7 +1,5 @@
 ---
 import '@fontsource-variable/inter';
-import '@fontsource/instrument-serif/latin-400.css';
-import '@fontsource/instrument-serif/latin-400-italic.css';
 import '../styles/global.css';
 import { profile } from '../data/site';
 const { title = profile.name, description = profile.description, article = false } = Astro.props;
@@ -13,12 +11,12 @@ const onBlog = Astro.url.pathname.startsWith('/blog');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#fafbf8" />
+    <meta name="theme-color" content="#ffffff" />
     <title>{title === profile.name ? `${profile.name} · Robot Learning` : `${title} · ${profile.name}`}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title="Yanjun Li — Writing" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Yanjun Li — Blogs" href="/rss.xml" />
     <meta property="og:type" content={article ? 'article' : 'website'} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -29,20 +27,14 @@ const onBlog = Astro.url.pathname.startsWith('/blog');
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header wrap">
-      <a class="brand" href="/" aria-label="Yanjun Li — home"><span class="monogram">yl<span>·</span></span><span class="brand-name">Yanjun Li</span></a>
       <nav aria-label="Main navigation">
-        <a href="/#about">About</a>
-        <a href="/#research">Research</a>
-        <a href="/blog/" aria-current={onBlog ? 'page' : undefined}>Writing</a>
+        <a href="/">Home</a>
+        <a href="/#research">Publications</a>
         <a href="/#experience">Experience</a>
+        <a class="blog-button" href="/blog/" aria-current={onBlog ? 'page' : undefined}>Blogs</a>
       </nav>
-      <a class="header-contact" href={`mailto:${profile.email}`}>Say hello <span aria-hidden="true">↗</span></a>
     </header>
     <main id="main" class="wrap"><slot /></main>
-    <footer class="site-footer wrap">
-      <div><a class="footer-name" href="/">Yanjun Li</a><span class="footer-note">Learning from the world.</span></div>
-      <div class="footer-links"><a href={profile.github}>GitHub ↗</a><a href={profile.scholar}>Scholar ↗</a><a href="/rss.xml">RSS ↗</a><a href={`mailto:${profile.email}`}>Email ↗</a></div>
-      <span class="copyright">© {new Date().getFullYear()} Yanjun Li</span>
-    </footer>
+    <footer class="site-footer wrap">© {new Date().getFullYear()} Yanjun Li</footer>
   </body>
 </html>

@@ -3,7 +3,7 @@ export const profile = {
   email: 'liyanjun@hust.edu.cn',
   github: 'https://github.com/yanjun711',
   scholar: 'https://scholar.google.com/citations?user=xpyQJSAAAAAJ&hl=en',
-  description: 'Yanjun Li — robot learning, world models, and embodied intelligence. Undergraduate at Huazhong University of Science and Technology.',
+  description: 'Yanjun Li is an undergraduate student at Huazhong University of Science and Technology studying robot learning and world models.',
 };
 
 export const publications = [
