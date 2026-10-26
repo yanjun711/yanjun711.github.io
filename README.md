@@ -26,6 +26,7 @@ npm run preview
 - Biography, research interests, and education: `src/pages/index.astro`.
 - Colors, spacing, and typography: `src/styles/global.css`.
 - Publication images: `public/images/`.
+- Institutional logos and their original sources: `public/images/logos/`.
 - Site URL: `astro.config.mjs`, `src/pages/rss.xml.ts`,
   `src/pages/sitemap.xml.ts`, and `public/robots.txt`.
 
@@ -59,6 +60,11 @@ The filename becomes `/blog/your-post-slug/`. Draft and future-dated articles
 are excluded from the archive, generated pages, RSS, and sitemap.
 Future-dated posts appear after a build on or after their date. The included
 `first-note.md` is an unpublished template, not a real post.
+
+Two published samples, `test-post-text.md` and `test-post-media.md`, are included
+to check the blog archive and article formatting. They are explicitly labeled
+as test posts. Delete them, or set `draft: true`, when they are no longer needed.
+They never appear on the homepage.
 
 ## Deploy to GitHub Pages
 

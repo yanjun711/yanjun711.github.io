@@ -54,14 +54,25 @@ export const publications = [
   },
 ];
 
-export const researchExperience = [
-  { organization: 'EGI Lab, Peking University', role: 'Research Assistant', date: 'Jan 2026 — Present', description: 'Robot learning and world action models. Advised by Prof. Hao Tang.' },
-  { organization: 'Vision Lab, HUST', role: 'Research Intern', date: 'Jan — May 2025', description: 'Efficient vision-language-action policies. Advised by Prof. Xinggang Wang.' },
+export type Experience = {
+  organization: string;
+  role: string;
+  date: string;
+  url: string;
+  logo: string;
+  logoAlt: string;
+  advisor?: string;
+  topic?: string;
+};
+
+export const researchExperience: Experience[] = [
+  { organization: 'EGI Lab, Peking University', role: 'Research Assistant', date: 'Jan 2026 — Present', advisor: 'Prof. Hao Tang', topic: 'World models', url: 'https://www.pku.edu.cn/', logo: '/images/logos/pku.webp', logoAlt: 'Peking University emblem' },
+  { organization: 'Vision Lab, HUST', role: 'Research Intern', date: 'Jan — May 2025', advisor: 'Prof. Xinggang Wang', topic: 'Efficient VLA', url: 'https://www.hust.edu.cn/', logo: '/images/logos/hust.webp', logoAlt: 'Huazhong University of Science and Technology emblem' },
 ];
 
-export const internshipExperience = [
-  { organization: 'AI² Robotics', role: 'Research Intern', date: 'May 2026 — Present', description: 'World models for humanoid policies.' },
-  { organization: 'Beijing Academy of Artificial Intelligence', role: 'Research Intern', date: 'Jan — May 2026', description: 'Memory for embodied agents and dexterous skill learning.' },
+export const internshipExperience: Experience[] = [
+  { organization: 'AI² Robotics', role: 'Research Intern', date: 'May 2026 — Present', url: 'https://ai2robotics.com/', logo: '/images/logos/ai2.webp', logoAlt: 'AI² Robotics logo' },
+  { organization: 'Beijing Academy of Artificial Intelligence', role: 'Research Intern', date: 'Jan — May 2026', url: 'https://www.baai.ac.cn/', logo: '/images/logos/baai.webp', logoAlt: 'Beijing Academy of Artificial Intelligence logo' },
 ];
 
 export function bibtex(paper: typeof publications[number]) {

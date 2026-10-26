@@ -1,0 +1,11 @@
+---
+import type { Experience } from '../data/site';
+const { items } = Astro.props as { items: Experience[] };
+---
+<div class="experience-list">
+  {items.map(item => <div class="experience-item">
+    <a class="organization-logo" href={item.url} aria-label={item.organization + ' website'}><img src={item.logo} alt={item.logoAlt} width="40" height="40" loading="lazy" /></a>
+    <div class="experience-details"><h3>{item.organization}</h3><p>{item.role}</p>{item.advisor && <p>Advisor: {item.advisor}{item.topic && <> · {item.topic}</>}</p>}</div>
+    <span class="date">{item.date}</span>
+  </div>)}
+</div>
