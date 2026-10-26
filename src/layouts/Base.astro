@@ -33,7 +33,7 @@ const onBlog = Astro.url.pathname.startsWith('/blog');
         <a href="/">Home</a>
         <a href="/#research">Publications</a>
         <a href="/#experience">Experience</a>
-        <a class="blog-button" href="/blog/" aria-current={onBlog ? 'page' : undefined}>Blogs</a>
+        <a href="/blog/" aria-current={onBlog ? 'page' : undefined}>Blogs</a>
       </nav>
     </header>}
     <main id="main" class="wrap"><slot /></main>

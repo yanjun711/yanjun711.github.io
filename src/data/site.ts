@@ -54,11 +54,14 @@ export const publications = [
   },
 ];
 
-export const experience = [
-  { organization: 'AI² Robotics', role: 'Research Intern', date: 'May 2026 — Present', description: 'World models for humanoid policies.' },
+export const researchExperience = [
   { organization: 'EGI Lab, Peking University', role: 'Research Assistant', date: 'Jan 2026 — Present', description: 'Robot learning and world action models. Advised by Prof. Hao Tang.' },
-  { organization: 'Beijing Academy of Artificial Intelligence', role: 'Research Intern', date: 'Jan — May 2026', description: 'Memory for embodied agents and dexterous skill learning.' },
   { organization: 'Vision Lab, HUST', role: 'Research Intern', date: 'Jan — May 2025', description: 'Efficient vision-language-action policies. Advised by Prof. Xinggang Wang.' },
+];
+
+export const internshipExperience = [
+  { organization: 'AI² Robotics', role: 'Research Intern', date: 'May 2026 — Present', description: 'World models for humanoid policies.' },
+  { organization: 'Beijing Academy of Artificial Intelligence', role: 'Research Intern', date: 'Jan — May 2026', description: 'Memory for embodied agents and dexterous skill learning.' },
 ];
 
 export function bibtex(paper: typeof publications[number]) {

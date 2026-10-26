@@ -1,7 +1,7 @@
 # Yanjun Li — personal website
 
-A simple academic homepage with biography, publications, experience, and
-education. The **Blogs** button opens a separate archive; posts and excerpts
+A simple academic homepage with biography, publications, research experience,
+internship experience, and education. The **Blogs** text link opens a separate archive; posts and excerpts
 never appear on the homepage. Built with Astro and Markdown.
 
 ## Local development

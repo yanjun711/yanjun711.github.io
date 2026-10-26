@@ -1,12 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import { profile, publications, experience, bibtex } from '../data/site';
+import { profile, publications, researchExperience, internshipExperience, bibtex } from '../data/site';
 ---
 <Base>
   <section id="about" class="intro">
     <h1>Yanjun Li</h1>
-    <p>I'm an undergraduate at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a>, majoring in Robotics Engineering. I work with Prof. Hao Tang at the EGI Lab, <a href="https://www.pku.edu.cn/">Peking University</a>. I'm also a research intern at AI² Robotics. Previously, I interned at BAAI and worked with Prof. Xinggang Wang at HUST.</p>
-    <p class="profile-links"><a href={'mailto:' + profile.email}>Email</a><span>/</span><a href={profile.scholar}>Scholar</a><span>/</span><a href={profile.github}>GitHub</a><span>/</span><a class="blog-button" href="/blog/">Blogs</a></p>
+    <p>I'm an undergraduate at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a>, majoring in Robotics Engineering. I work with Prof. Hao Tang at the EGI Lab, <a href="https://www.pku.edu.cn/">Peking University</a>. Previously, I worked with Prof. Xinggang Wang at HUST.</p>
+    <p>I'm currently a research intern at AI² Robotics. Previously, I interned at BAAI.</p>
+    <p class="profile-links"><a href={'mailto:' + profile.email}>Email</a><span>/</span><a href={profile.scholar}>Scholar</a><span>/</span><a href={profile.github}>GitHub</a><span>/</span><a href="/blog/">Blogs</a></p>
   </section>
 
   <section id="research" class="content-section">
@@ -28,8 +29,13 @@ import { profile, publications, experience, bibtex } from '../data/site';
   </section>
 
   <section id="experience" class="content-section">
-    <h2>Experience</h2>
-    <div class="experience-list">{experience.map(item => <div class="experience-item"><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="date">{item.date}</span></div>)}</div>
+    <h2>Research Experience</h2>
+    <div class="experience-list">{researchExperience.map(item => <div class="experience-item"><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="date">{item.date}</span></div>)}</div>
+  </section>
+
+  <section id="internships" class="content-section">
+    <h2>Internship Experience</h2>
+    <div class="experience-list">{internshipExperience.map(item => <div class="experience-item"><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="date">{item.date}</span></div>)}</div>
   </section>
 
   <section class="content-section education">

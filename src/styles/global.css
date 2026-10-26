@@ -28,11 +28,8 @@ h1, h2, h3, p { margin: 0; }
 .content-section { margin-top: 25px; padding: 0 16px; }
 .content-section h2 { font-size: 22px; font-weight: 400; line-height: normal; }
 .research-intro { margin: 14px 0; }
-.section-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px 20px; }
-.section-heading > a { font-size: 12px; }
 .publications { margin-top: 10px; }
 .publication { display: grid; grid-template-columns: 160px minmax(0, 1fr); align-items: center; gap: 24px; padding: 16px 0; margin-bottom: 10px; }
-.publication:last-child { border-bottom: 0; }
 .paper-image { width: 160px; }
 .paper-image img { width: 160px; height: 160px; object-fit: contain; background: #fff; }
 .paper-content h3 { font-size: 14px; font-weight: 700; line-height: normal; }
@@ -45,7 +42,7 @@ h1, h2, h3, p { margin: 0; }
 .citation summary { list-style: none; cursor: pointer; color: #1772d0; }
 .citation summary::-webkit-details-marker { display: none; }
 .citation[open] { flex-basis: 100%; }
-.citation-body { padding: 12px; margin-top: 8px; border: 1px solid #ddd; background: #fafafa; color: #242424; }
+.citation-body { padding: 12px; margin-top: 8px; background: #fafafa; color: #242424; }
 .citation-body pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; line-height: 1.5; margin: 0 0 10px; }
 .copy-citation { border: 1px solid #aeb8c0; background: #fff; border-radius: 2px; padding: 4px 8px; font-size: 11px; margin-right: 12px; }
 .copy-status:not(:empty) { display: block; margin-top: 6px; }
@@ -63,19 +60,19 @@ h1, h2, h3, p { margin: 0; }
 .page-heading p { color: #555; font-size: 14px; margin-top: 8px; }
 .blog-list { min-height: 220px; padding-inline: 16px; }
 .empty-notebook { margin-top: 12px; font-size: 14px; }
-.post-row { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 20px; border-top: 1px solid #e9e9e9; padding: 20px 0; }
+.post-row { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 20px; padding: 20px 0; }
 .post-row time { color: #555; font-size: 12px; }
-.post-row h3 { font-size: 15px; font-weight: 600; }
-.post-row p { color: #555; font-size: 13px; margin-top: 3px; }
+.post-row h3 { font-size: 14px; font-weight: 700; }
+.post-row p { font-size: 14px; margin-top: 3px; }
 .blog-article { padding-top: 46px; }
 .back-link { display: inline-block; margin-bottom: 25px; font-size: 13px; }
-.article-heading { border-bottom: 1px solid #e9e9e9; padding-bottom: 20px; }
+.article-heading { padding-bottom: 20px; }
 .article-heading time { color: #555; font-size: 12px; }
 .article-heading h1 { font-size: 30px; font-weight: 400; line-height: 1.25; margin-top: 10px; }
 .article-heading > p { color: #555; margin-top: 10px; }
 .article-tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; color: #555; font-size: 12px; }
-.prose { font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; }
-.prose h2 { font-size: 21px; margin: 36px 0 10px; }
+.prose { font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.prose h2 { font-size: 22px; font-weight: 400; margin: 36px 0 10px; }
 .prose h3 { font-size: 17px; margin: 27px 0 9px; }
 .prose p, .prose ul, .prose ol { margin: 17px 0; }
 .prose pre { padding: 15px; border: 1px solid #e5e5e5; background: #fafafa; overflow-x: auto; font-size: 12px; }
