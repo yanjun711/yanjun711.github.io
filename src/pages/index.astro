@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import WorldSketch from '../components/WorldSketch.astro';
+import PostList from '../components/PostList.astro';
+import { profile, publications, experience, bibtex } from '../data/site';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog', ({data}) => !data.draft && data.date <= new Date())).sort((a,b) => b.data.date.valueOf()-a.data.date.valueOf()).slice(0,3);
+---
+<Base>
+  <section id="about" class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="live-dot"></span> ROBOT LEARNING & EMBODIED INTELLIGENCE</p>
+      <h1>Yanjun Li<span class="name-dot">.</span></h1>
+      <p class="hero-statement">Understanding the world.<br /><em>Learning to act in it.</em></p>
+      <p class="hero-bio">I'm an undergraduate in Robotics Engineering at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a>, and a research assistant at <a href="https://www.pku.edu.cn/">Peking University</a>, advised by Prof. Hao Tang.</p>
+      <p class="hero-bio">I study generative models of physical dynamics as a foundation for general-purpose robot policies. My goal is to build robots that can act in unfamiliar situations.</p>
+      <div class="social-links"><a href={`mailto:${profile.email}`}>Email <span>↗</span></a><a href={profile.scholar}>Google Scholar <span>↗</span></a><a href={profile.github}>GitHub <span>↗</span></a></div>
+    </div>
+    <aside class="hero-aside">
+      <WorldSketch />
+      <div class="currently"><span class="eyebrow">CURRENTLY</span><p>Research Intern <span>at AI² Robotics</span></p><p>Research Assistant <span>at EGI Lab, PKU</span></p></div>
+    </aside>
+  </section>
+
+  <div class="interest-strip"><span class="eyebrow">THINKING ABOUT</span><div><span>World models</span><i>·</i><span>Robot learning</span><i>·</i><span>3D representations</span><i>·</i><span>Test-time adaptation</span></div></div>
+
+  <section id="research" class="section-grid">
+    <div class="section-label"><span class="section-number">01 / RESEARCH</span><h2>Selected<br /> work<span>.</span></h2><p>From modeling the world<br />to acting in it.</p><a class="text-link" href={profile.scholar}>All publications <span>↗</span></a></div>
+    <div class="section-content">
+      <p class="section-intro">Generative policies, physical understanding, and learning through deployment.</p>
+      <div class="publications">
+        {publications.map(paper => <article class="publication">
+          <a class={`paper-image ${paper.id}`} href={paper.project || `https://arxiv.org/abs/${paper.arxiv}`} aria-label={`${paper.name} ${paper.project ? 'project page' : 'paper'}`}><img src={paper.image} alt={paper.imageAlt} width="600" height="360" loading="lazy" /></a>
+          <div class="paper-content">
+            <div class="paper-meta"><span>{paper.topic}</span><span>arXiv · {paper.year}</span></div>
+            <h3><a href={`https://arxiv.org/abs/${paper.arxiv}`}>{paper.title}</a></h3>
+            <p class="authors">{paper.authors.map((author,i) => <>{i>0 && ', '}{author === profile.name ? <strong>{author}{paper.equal && i<4 ? '*' : ''}</strong> : <>{author}{paper.equal && i<4 ? '*' : ''}</>}</>)}</p>
+            <p class="paper-description">{paper.description}</p>
+            <div class="paper-links"><a href={`https://arxiv.org/abs/${paper.arxiv}`}>Paper ↗</a>{paper.project && <a href={paper.project}>Project ↗</a>}{paper.code && <a href={paper.code}>Code ↗</a>}<details class="citation"><summary>BibTeX</summary><div class="citation-body"><pre><code>{bibtex(paper)}</code></pre><button type="button" class="copy-citation">Copy citation</button><a href={`/bib/${paper.id}.bib`} download>Download .bib ↧</a><span class="copy-status" role="status"></span></div></details></div>
+          </div>
+        </article>)}
+      </div>
+      <p class="publication-note">* Equal contribution. Listed works are preprints.</p>
+    </div>
+  </section>
+
+  <section id="writing" class="section-grid writing-section">
+    <div class="section-label"><span class="section-number">02 / WRITING</span><h2>Notes &<br /> ideas<span>.</span></h2><a class="text-link" href="/blog/">The notebook <span>↗</span></a></div>
+    <div class="section-content">
+      {posts.length ? <PostList posts={posts} /> : <a class="notebook-preview" href="/blog/"><span class="notebook-symbol" aria-hidden="true">↳</span><div><span class="eyebrow">A NOTEBOOK, IN PROGRESS</span><h3>A little more room<br />to think out loud.</h3><p>Research notes, experiments, and things learned along the way.</p></div><span class="notebook-arrow" aria-hidden="true">↗</span></a>}
+    </div>
+  </section>
+
+  <section id="experience" class="section-grid">
+    <div class="section-label"><span class="section-number">03 / THE JOURNEY</span><h2>Along<br /> the way<span>.</span></h2></div>
+    <div class="section-content">
+      <h3 class="small-heading">Research & experience</h3>
+      <div class="experience-list">{experience.map(item => <article class="experience-item"><span class="timeline-dot"></span><div><h4>{item.organization}</h4><p class="role">{item.role}</p><p class="experience-description">{item.description}</p></div><span class="experience-date">{item.date}</span></article>)}</div>
+      <div class="education"><span class="eyebrow">EDUCATION</span><h4>Huazhong University of Science and Technology</h4><div><p>B.E. in Robotics Engineering</p><span>2022 — 2026</span></div></div>
+    </div>
+  </section>
+
+  <section class="contact-section"><div><span class="eyebrow">GOOD IDEAS START WITH A CONVERSATION</span><h2>Let's compare notes<span>.</span></h2><p>Interested in robot learning, world models, or a research collaboration?</p></div><a class="contact-link" href={`mailto:${profile.email}`}>{profile.email} <span aria-hidden="true">↗</span></a></section>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-citation').forEach(button => {
+    button.addEventListener('click', async () => {
+      const body = button.closest('.citation-body');
+      const code = body?.querySelector('code')?.textContent;
+      const status = body?.querySelector('.copy-status');
+      if (!code || !status) return;
+      try { await navigator.clipboard.writeText(code); status.textContent = 'Copied!'; }
+      catch { status.textContent = 'Select the citation above to copy it.'; }
+      window.setTimeout(() => { status.textContent = ''; }, 3500);
+    });
+  });
+</script>

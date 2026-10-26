@@ -1,0 +1,31 @@
+---
+const lines = Array.from({ length: 17 }, (_, row) => {
+  const points = Array.from({ length: 65 }, (_, col) => {
+    const x = col / 64 * 320;
+    const z = row / 16;
+    const height = Math.exp(-((x - 165 - z * 40) ** 2) / 3800) * 53 * Math.sin(z * Math.PI);
+    return `${(x * (0.47 + z * 0.53) + (1-z)*85).toFixed(1)},${(56 + z * 135 - height).toFixed(1)}`;
+  });
+  return points.join(' ');
+});
+---
+<div class="world-sketch" aria-hidden="true">
+  <div class="sketch-label"><span class="live-dot"></span> A WORLD TO UNDERSTAND</div>
+  <svg viewBox="0 0 360 250" fill="none">
+    <defs>
+      <linearGradient id="terrain" x1="0" y1="0" x2="0" y2="240" gradientUnits="userSpaceOnUse"><stop stop-color="#81a493"/><stop offset="1" stop-color="#36735b" stop-opacity=".3"/></linearGradient>
+    </defs>
+    <g transform="translate(16 8)" stroke="url(#terrain)" stroke-width=".75">
+      {lines.map(points => <polyline points={points} />)}
+    </g>
+    <path d="M70 187 Q130 175 165 146 T274 142" stroke="#306b53" stroke-width="1.5" stroke-dasharray="3 5"/>
+    <circle cx="70" cy="187" r="4" fill="#306b53"/>
+    <circle cx="274" cy="142" r="7" fill="#edf3ec" stroke="#306b53"/>
+    <circle cx="274" cy="142" r="2.5" fill="#306b53"/>
+    <path d="M40 216H320" stroke="#d4dfd3"/>
+    <g fill="#6e8173" font-family="monospace" font-size="8" letter-spacing="1.5">
+      <text x="41" y="235">OBSERVE</text><text x="151" y="235">MODEL</text><text x="281" y="235">ACT</text>
+    </g>
+    <g stroke="#9bab9b"><path d="M110 232h22m-4-3 4 3-4 3"/><path d="M215 232h41m-4-3 4 3-4 3"/></g>
+  </svg>
+</div>
