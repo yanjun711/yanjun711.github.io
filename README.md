@@ -74,8 +74,10 @@ After setup, publishing only requires committing your content changes to `main`.
 
 The layout follows the straightforward academic structure of
 [Jon Barron's homepage](https://jonbarron.info/): a short biography, compact
-publication entries with figures, and plain links to papers and projects. The
-blog is a separate page reached through the navigation button.
+publication entries with figures, and plain links to papers and projects. It
+uses the reference's Lato font, 14px body and paper text, regular 32px name,
+regular 22px section headings, and 800px maximum page width. The blog is a
+separate page reached through the Blogs link beside Email, Scholar, and GitHub.
 
 Publication figures are reproduced from the author's own papers. MotionVLA and
 HumanoidTTT identify their arXiv licenses as CC BY-NC-SA 4.0; Language-Forcing

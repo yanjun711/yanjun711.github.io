@@ -1,5 +1,7 @@
 ---
-import '@fontsource-variable/inter';
+import '@fontsource/lato/latin-400.css';
+import '@fontsource/lato/latin-400-italic.css';
+import '@fontsource/lato/latin-700.css';
 import '../styles/global.css';
 import { profile } from '../data/site';
 const { title = profile.name, description = profile.description, article = false } = Astro.props;
@@ -26,14 +28,14 @@ const onBlog = Astro.url.pathname.startsWith('/blog');
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header wrap">
+    {Astro.url.pathname !== '/' && <header class="site-header wrap">
       <nav aria-label="Main navigation">
         <a href="/">Home</a>
         <a href="/#research">Publications</a>
         <a href="/#experience">Experience</a>
         <a class="blog-button" href="/blog/" aria-current={onBlog ? 'page' : undefined}>Blogs</a>
       </nav>
-    </header>
+    </header>}
     <main id="main" class="wrap"><slot /></main>
     <footer class="site-footer wrap">© {new Date().getFullYear()} Yanjun Li</footer>
   </body>

@@ -5,22 +5,22 @@ import { profile, publications, experience, bibtex } from '../data/site';
 <Base>
   <section id="about" class="intro">
     <h1>Yanjun Li</h1>
-    <p>I am an undergraduate student in Robotics Engineering at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a>. I am also a research assistant at the EGI Lab, <a href="https://www.pku.edu.cn/">Peking University</a>, advised by Prof. Hao Tang, and a research intern at AI² Robotics.</p>
-    <p>My research focuses on world action models, generative robot policies, and 3D representations. I am interested in how models of physical dynamics can help robots act in unfamiliar environments.</p>
-    <p class="profile-links"><a href={'mailto:' + profile.email}>Email</a><span>/</span><a href={profile.scholar}>Google Scholar</a><span>/</span><a href={profile.github}>GitHub</a></p>
+    <p>I'm an undergraduate at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a>, majoring in Robotics Engineering. I work with Prof. Hao Tang at the EGI Lab, <a href="https://www.pku.edu.cn/">Peking University</a>. I'm also a research intern at AI² Robotics. Previously, I interned at BAAI and worked with Prof. Xinggang Wang at HUST.</p>
+    <p class="profile-links"><a href={'mailto:' + profile.email}>Email</a><span>/</span><a href={profile.scholar}>Scholar</a><span>/</span><a href={profile.github}>GitHub</a><span>/</span><a class="blog-button" href="/blog/">Blogs</a></p>
   </section>
 
   <section id="research" class="content-section">
-    <div class="section-heading"><h2>Publications</h2><a href={profile.scholar}>Full list on Google Scholar</a></div>
+    <h2>Research</h2>
+    <p class="research-intro">I'm interested in robot learning and world models. My recent work is on humanoid control, including learning from video and language, and reusing motions at test time.</p>
     <div class="publications">
       {publications.map(paper => <article class="publication">
         <a class="paper-image" href={paper.project || 'https://arxiv.org/abs/' + paper.arxiv} aria-label={paper.name + (paper.project ? ' project page' : ' paper')}><img src={paper.image} alt={paper.imageAlt} width="600" height="360" loading="lazy" /></a>
         <div class="paper-content">
           <h3><a href={'https://arxiv.org/abs/' + paper.arxiv}>{paper.title}</a></h3>
           <p class="authors">{paper.authors.map((author,i) => <>{i>0 && ', '}{author === profile.name ? <strong>{author}{paper.equal && i<4 ? '*' : ''}</strong> : <>{author}{paper.equal && i<4 ? '*' : ''}</>}</>)}</p>
-          <p class="paper-venue">arXiv preprint, {paper.year}</p>
+          <p class="paper-venue"><em>arXiv</em>, {paper.year}</p>
+          <div class="paper-links">{paper.project && <><a href={paper.project}>project page</a><span>/</span></>}<a href={'https://arxiv.org/abs/' + paper.arxiv}>arXiv</a>{paper.code && <><span>/</span><a href={paper.code}>code</a></>}<span>/</span><details class="citation"><summary>bibtex</summary><div class="citation-body"><pre><code>{bibtex(paper)}</code></pre><button type="button" class="copy-citation">Copy citation</button><a href={'/bib/' + paper.id + '.bib'} download>Download .bib</a><span class="copy-status" role="status"></span></div></details></div>
           <p class="paper-description">{paper.description}</p>
-          <div class="paper-links"><a href={'https://arxiv.org/abs/' + paper.arxiv}>Paper</a>{paper.project && <a href={paper.project}>Project</a>}{paper.code && <a href={paper.code}>Code</a>}<details class="citation"><summary>BibTeX</summary><div class="citation-body"><pre><code>{bibtex(paper)}</code></pre><button type="button" class="copy-citation">Copy citation</button><a href={'/bib/' + paper.id + '.bib'} download>Download .bib</a><span class="copy-status" role="status"></span></div></details></div>
         </div>
       </article>)}
     </div>
