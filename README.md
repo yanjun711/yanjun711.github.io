@@ -137,6 +137,8 @@ The homepage, archive, and articles share Lato. The homepage links to Blogs;
 the archive and articles show an explicit Home link. Articles also link back
 to the archive through All blogs.
 Institutional logos occupy an 80 × 80 pixel area, preserving their proportions.
+HUST uses the classic full-color emblem from its official visual identity guide,
+with the original blue, red, white, and dark-gray artwork.
 
 Publication figures are reproduced from the author's own papers. MotionVLA and
 HumanoidTTT identify their arXiv licenses as CC BY-NC-SA 4.0; Language-Forcing
