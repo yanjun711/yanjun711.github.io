@@ -30,9 +30,6 @@ h1, h2, h3, p { margin: 0; }
 .publication { display: grid; grid-template-columns: 160px minmax(0, 1fr); align-items: center; gap: 24px; padding: 16px 0; margin-bottom: 10px; }
 .paper-image { width: 160px; }
 .paper-image img { width: 160px; height: 160px; object-fit: contain; background: #fff; }
-.paper-preview { width: 160px; }
-.paper-preview .paper-image { width: 100%; }
-.paper-preview video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #fff; }
 
 .paper-content h3 { font-size: 14px; font-weight: 700; line-height: normal; }
 .authors { margin-top: 0; font-size: 14px; line-height: normal; }

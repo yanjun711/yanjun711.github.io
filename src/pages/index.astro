@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import ExperienceList from '../components/ExperienceList.astro';
-import PublicationPreview from '../components/PublicationPreview.astro';
 import ProfileLinks from '../components/ProfileLinks.astro';
 import { profile, publications, researchExperience, internshipExperience, bibtex } from '../data/site';
 ---
@@ -18,7 +17,7 @@ import { profile, publications, researchExperience, internshipExperience, bibtex
     <p class="research-intro">I'm interested in robot learning and world models. My recent work is on humanoid control, including learning from video and language, and reusing motions at test time.</p>
     <div class="publications">
       {publications.map(paper => <article class="publication">
-        <PublicationPreview paper={paper} />
+        <a class="paper-image" href={paper.project || 'https://arxiv.org/abs/' + paper.arxiv} aria-label={paper.name + (paper.project ? ' project page' : ' paper')}><img src={paper.image} alt={paper.imageAlt} width="600" height="360" loading="lazy" /></a>
         <div class="paper-content">
           <h3><a href={'https://arxiv.org/abs/' + paper.arxiv}>{paper.title}</a></h3>
           <p class="authors">{paper.authors.map((author,i) => <>{i>0 && ', '}{author === profile.name ? <strong>{author}{paper.equal && i<4 ? '*' : ''}</strong> : <>{author}{paper.equal && i<4 ? '*' : ''}</>}</>)}</p>
