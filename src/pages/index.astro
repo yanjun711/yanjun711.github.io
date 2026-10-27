@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import ExperienceList from '../components/ExperienceList.astro';
+import ProfileLinks from '../components/ProfileLinks.astro';
+import { profile, publications, researchExperience, internshipExperience, bibtex } from '../data/site';
+---
+<Base>
+  <section id="about" class="intro">
+    <h1>Yanjun Li</h1>
+    <p>I'm an undergraduate at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a>, majoring in Robotics Engineering. I work on world models with <a href="https://github.com/Ha0Tang">Prof. Hao Tang</a> at the EGI Lab, <a href="https://www.pku.edu.cn/">Peking University</a>. Previously, I worked on efficient VLA with <a href="https://github.com/xinggangw">Prof. Xinggang Wang</a> at HUST.</p>
+    <p>I'm currently a research intern at AI² Robotics. Previously, I interned at BAAI.</p>
+    <ProfileLinks />
+  </section>
+
+  <section id="research" class="content-section">
+    <h2>Research</h2>
+    <p class="research-intro">I'm interested in robot learning and world models. My recent work is on humanoid control, including learning from video and language, and reusing motions at test time.</p>
+    <div class="publications">
+      {publications.map(paper => <article class="publication">
+        <a class="paper-image" href={paper.project || 'https://arxiv.org/abs/' + paper.arxiv} aria-label={paper.name + (paper.project ? ' project page' : ' paper')}><img src={paper.image} alt={paper.imageAlt} width="600" height="360" loading="lazy" /></a>
+        <div class="paper-content">
+          <h3><a href={'https://arxiv.org/abs/' + paper.arxiv}>{paper.title}</a></h3>
+          <p class="authors">{paper.authors.map((author,i) => <>{i>0 && ', '}{author === profile.name ? <strong>{author}{paper.equal && i<4 ? '*' : ''}</strong> : <>{author}{paper.equal && i<4 ? '*' : ''}</>}</>)}</p>
+          <p class="paper-venue"><em>arXiv</em>, {paper.year}</p>
+          <div class="paper-links">{paper.project && <><a href={paper.project}>project page</a><span>/</span></>}<a href={'https://arxiv.org/abs/' + paper.arxiv}>arXiv</a>{paper.code && <><span>/</span><a href={paper.code}>code</a></>}<span>/</span><details class="citation"><summary>bibtex</summary><div class="citation-body"><pre><code>{bibtex(paper)}</code></pre><button type="button" class="copy-citation">Copy citation</button><a href={'/bib/' + paper.id + '.bib'} download>Download .bib</a><span class="copy-status" role="status"></span></div></details></div>
+          <p class="paper-description">{paper.description}</p>
+        </div>
+      </article>)}
+    </div>
+    <p class="publication-note">* Equal contribution.</p>
+  </section>
+
+  <section id="experience" class="content-section">
+    <h2>Research Experience</h2>
+    <ExperienceList items={researchExperience} />
+  </section>
+
+  <section id="internships" class="content-section">
+    <h2>Internship Experience</h2>
+    <ExperienceList items={internshipExperience} />
+  </section>
+
+  <section class="content-section education">
+    <h2>Education</h2>
+    <ExperienceList items={[{ organization: 'Huazhong University of Science and Technology', role: 'B.E. in Robotics Engineering', date: '2022 – 2026', url: 'https://www.hust.edu.cn/', logo: '/images/logos/hust.webp', logoAlt: 'Huazhong University of Science and Technology emblem' }]} />
+  </section>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-citation').forEach(button => {
+    button.addEventListener('click', async () => {
+      const body = button.closest('.citation-body');
+      const code = body?.querySelector('code')?.textContent;
+      const status = body?.querySelector('.copy-status');
+      if (!code || !status) return;
+      try { await navigator.clipboard.writeText(code); status.textContent = 'Copied!'; }
+      catch { status.textContent = 'Select the citation above to copy it.'; }
+      window.setTimeout(() => { status.textContent = ''; }, 3500);
+    });
+  });
+</script>

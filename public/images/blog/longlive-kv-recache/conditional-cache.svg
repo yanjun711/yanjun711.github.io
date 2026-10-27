@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="270" viewBox="0 0 620 270" role="img" aria-labelledby="title desc">
+<title id="title">Re-encode the same visual prefix under the new prompt</title>
+<desc id="desc">The same generated video prefix enters two encodings. Old-prompt cross-attention produces stale downstream video keys and values. New-prompt cross-attention requires recomputing those downstream keys and values before continuing. The visual prefix itself remains unchanged.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<defs>
+<marker id="arrow-ink" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L5 3L1 5" fill="none" stroke="#282828" stroke-width="1"/></marker>
+<marker id="arrow-gray" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L5 3L1 5" fill="none" stroke="#777777" stroke-width="1"/></marker>
+<marker id="arrow-accent" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L5 3L1 5" fill="none" stroke="#526b78" stroke-width="1"/></marker>
+</defs>
+<g font-family="Lato, Arial, sans-serif" fill="#282828" stroke-linecap="round" stroke-linejoin="round">
+<text x="310" y="22" font-size="15" fill="#282828" text-anchor="middle">Same generated visual prefix z₁:ₘ</text>
+<rect x="252.0" y="34" width="32" height="25" stroke="#777777" fill="white" stroke-width="1"/>
+<text x="268.0" y="52" font-size="15" fill="#282828" text-anchor="middle">z¹</text>
+<text x="310.0" y="52" font-size="15" fill="#282828" text-anchor="middle">…</text>
+<rect x="336.0" y="34" width="32" height="25" stroke="#777777" fill="white" stroke-width="1"/>
+<text x="352.0" y="52" font-size="15" fill="#282828" text-anchor="middle">zᵐ</text>
+<path d="M310 64V76H166V93" fill="none" stroke="#282828" stroke-width="1.15" marker-end="url(#arrow-ink)"/>
+<path d="M310 76H466V93" fill="none" stroke="#282828" stroke-width="1.15" marker-end="url(#arrow-ink)"/>
+<text x="18" y="112" font-size="13" fill="#777777" text-anchor="start">old prompt</text>
+<path d="M85 107H96" fill="none" stroke="#777777" stroke-width="1.15" marker-end="url(#arrow-gray)"/>
+<text x="166" y="112" font-size="14" fill="#282828" text-anchor="middle">text cross-attention</text>
+<text x="317" y="112" font-size="13" fill="#526b78" text-anchor="start">new prompt</text>
+<path d="M390 107H400" fill="none" stroke="#526b78" stroke-width="1.15" marker-end="url(#arrow-accent)"/>
+<text x="466" y="112" font-size="14" fill="#282828" text-anchor="middle">text cross-attention</text>
+<path d="M166 123V143" fill="none" stroke="#777777" stroke-width="1.15" marker-end="url(#arrow-gray)"/>
+<text x="166" y="160" font-size="14" fill="#282828" text-anchor="middle">later video self-attn</text>
+<path d="M166 171V191" fill="none" stroke="#777777" stroke-width="1.15" marker-end="url(#arrow-gray)"/>
+<path d="M466 123V143" fill="none" stroke="#526b78" stroke-width="1.15" marker-end="url(#arrow-accent)"/>
+<text x="466" y="160" font-size="14" fill="#282828" text-anchor="middle">later video self-attn</text>
+<path d="M466 171V191" fill="none" stroke="#526b78" stroke-width="1.15" marker-end="url(#arrow-accent)"/>
+<text x="166" y="208" font-size="16" fill="#777777" text-anchor="middle">K, V (old)</text>
+<text x="466" y="208" font-size="16" fill="#526b78" text-anchor="middle">K, V (new)</text>
+<rect x="130" y="218" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="139" y="218" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="148" y="218" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="130" y="225" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="139" y="225" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="148" y="225" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="130" y="232" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="139" y="232" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="148" y="232" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="173" y="218" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="182" y="218" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="191" y="218" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="173" y="225" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="182" y="225" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="191" y="225" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="173" y="232" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="182" y="232" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="191" y="232" width="6" height="4" stroke="#777777" fill="white" stroke-width="1"/>
+<rect x="430" y="218" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="439" y="218" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="448" y="218" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="430" y="225" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="439" y="225" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="448" y="225" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="430" y="232" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="439" y="232" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="448" y="232" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="473" y="218" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="482" y="218" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="491" y="218" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="473" y="225" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="482" y="225" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="491" y="225" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="473" y="232" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="482" y="232" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<rect x="491" y="232" width="6" height="4" stroke="#526b78" fill="white" stroke-width="1"/>
+<text x="166" y="261" font-size="13" fill="#777777" text-anchor="middle">stale after prompt switch</text>
+<text x="466" y="261" font-size="13" fill="#526b78" text-anchor="middle">recompute and use</text>
+</g>
+</svg>

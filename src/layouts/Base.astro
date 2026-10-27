@@ -1,0 +1,38 @@
+---
+import '@fontsource/lato/latin-400.css';
+import '@fontsource/lato/latin-400-italic.css';
+import '@fontsource/lato/latin-700.css';
+import '../styles/global.css';
+import { profile } from '../data/site';
+import ProfileLinks from '../components/ProfileLinks.astro';
+const { title = profile.name, description = profile.description, article = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>{title === profile.name ? `${profile.name} · Robot Learning` : `${title} · ${profile.name}`}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="Yanjun Li — Blogs" href="/rss.xml" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/social-card.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {Astro.url.pathname !== '/' && <header class="intro secondary-header wrap">
+      <p class="site-name"><a href="/">Yanjun Li</a></p>
+      <ProfileLinks />
+    </header>}
+    <main id="main" class="wrap"><slot /></main>
+    <footer class="site-footer wrap">© {new Date().getFullYear()} Yanjun Li</footer>
+  </body>
+</html>

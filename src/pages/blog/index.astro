@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog', ({data}) => !data.draft && data.date <= new Date())).sort((a,b) => b.data.date.valueOf()-a.data.date.valueOf());
+---
+<Base title="Blogs" description="Research notes by Yanjun Li.">
+  <section class="blog-index" aria-labelledby="blog-title">
+    <h1 id="blog-title">Blogs</h1>
+    {posts.length ? <PostList posts={posts} /> : <p class="empty-notebook">No posts yet. <a href="/rss.xml">RSS feed</a></p>}
+  </section>
+</Base>

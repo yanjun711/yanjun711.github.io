@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="305" viewBox="0 0 360 305" role="img" aria-labelledby="title desc">
+<title id="title">Generated context with a detached KV cache</title>
+<desc id="desc">Previous generated frames are encoded without gradients into a KV prefix. The selected denoising call reads this prefix and produces the current frame. Gradients reach the selected call but stop before entering the cached prefix.</desc>
+<rect width="100%" height="100%" fill="white"/>
+<defs>
+<marker id="arrow-ink" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L5 3L1 5" fill="none" stroke="#282828" stroke-width="1"/></marker>
+<marker id="arrow-gray" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L5 3L1 5" fill="none" stroke="#777777" stroke-width="1"/></marker>
+<marker id="arrow-accent" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L5 3L1 5" fill="none" stroke="#526b78" stroke-width="1"/></marker>
+</defs>
+<g font-family="Lato, Arial, sans-serif" fill="#282828" stroke-linecap="round" stroke-linejoin="round">
+<text x="88" y="22" font-size="15" fill="#282828" text-anchor="middle" font-weight="400">Generated prefix</text>
+<text x="270" y="22" font-size="15" fill="#282828" text-anchor="middle" font-weight="400">Current frame</text>
+<rect x="13" y="43" width="30" height="29" stroke="#777777" fill="white" stroke-width="1"/>
+<text x="28.0" y="63" font-size="15" fill="#282828" text-anchor="middle" font-weight="400">x¹</text>
+<rect x="53" y="43" width="30" height="29" stroke="#777777" fill="white" stroke-width="1"/>
+<text x="68.0" y="63" font-size="15" fill="#282828" text-anchor="middle" font-weight="400">x²</text>
+<text x="108.0" y="63" font-size="15" fill="#282828" text-anchor="middle" font-weight="400">…</text>
+<rect x="133" y="43" width="30" height="29" stroke="#777777" fill="white" stroke-width="1"/>
+<text x="148.0" y="63" font-size="15" fill="#282828" text-anchor="middle" font-weight="400">xⁱ⁻¹</text>
+<path d="M88 80V122" fill="none" stroke="#777777" stroke-width="1.15" marker-end="url(#arrow-gray)"/>
+<text x="100" y="101" font-size="13" fill="#777777" text-anchor="start" font-weight="400">encode</text>
+<text x="100" y="116" font-size="13" fill="#777777" text-anchor="start" font-weight="400">no grad</text>
+<text x="26" y="144" font-size="13" fill="#777777" text-anchor="middle" font-weight="400">K</text>
+<text x="26" y="164" font-size="13" fill="#777777" text-anchor="middle" font-weight="400">V</text>
+<rect x="38.0" y="132" width="22.5" height="13" stroke="#d8d8d8" fill="white" stroke-width="1"/>
+<rect x="64.5" y="132" width="22.5" height="13" stroke="#d8d8d8" fill="white" stroke-width="1"/>
+<rect x="91.0" y="132" width="22.5" height="13" stroke="#d8d8d8" fill="white" stroke-width="1"/>
+<rect x="117.5" y="132" width="22.5" height="13" stroke="#d8d8d8" fill="white" stroke-width="1"/>
+<rect x="38.0" y="152" width="22.5" height="13" stroke="#d8d8d8" fill="white" stroke-width="1"/>
+<rect x="64.5" y="152" width="22.5" height="13" stroke="#d8d8d8" fill="white" stroke-width="1"/>
+<rect x="91.0" y="152" width="22.5" height="13" stroke="#d8d8d8" fill="white" stroke-width="1"/>
+<rect x="117.5" y="152" width="22.5" height="13" stroke="#d8d8d8" fill="white" stroke-width="1"/>
+<text x="88" y="190" font-size="13" fill="#526b78" text-anchor="middle" font-weight="400">stop-gradient KV</text>
+<text x="270" y="65" font-size="14" fill="#282828" text-anchor="middle" font-weight="400">noisy xⁱ at tₛ</text>
+<path d="M270 77V124" fill="none" stroke="#282828" stroke-width="1.15" marker-end="url(#arrow-ink)"/>
+<text x="270" y="156" font-size="24" fill="#526b78" text-anchor="middle" font-weight="400">Gθ</text>
+<text x="270" y="181" font-size="13" fill="#526b78" text-anchor="middle" font-weight="400">gradients on</text>
+<text x="270" y="199" font-size="13" fill="#777777" text-anchor="middle" font-weight="400">selected call</text>
+<path d="M146 147H232" fill="none" stroke="#282828" stroke-width="1.15" marker-end="url(#arrow-ink)"/>
+<text x="188" y="133" font-size="13" fill="#777777" text-anchor="middle" font-weight="400">condition</text>
+<path d="M232 167H160" fill="none" stroke="#526b78" stroke-width="1.15" marker-end="url(#arrow-accent)" stroke-dasharray="4 4"/>
+<path d="M153 160V174" fill="none" stroke="#526b78" stroke-width="1.15"/>
+<path d="M270 208V239" fill="none" stroke="#282828" stroke-width="1.15" marker-end="url(#arrow-ink)"/>
+<rect x="249" y="246" width="42" height="30" stroke="#777777" fill="white" stroke-width="1"/>
+<text x="270" y="267" font-size="17" fill="#282828" text-anchor="middle" font-weight="400">x̂ⁱ₀</text>
+<text x="270" y="297" font-size="13" fill="#777777" text-anchor="middle" font-weight="400">generated output</text>
+<text x="14" y="260" font-size="13" fill="#777777" text-anchor="start" font-weight="400">Earlier outputs keep</text>
+<text x="14" y="278" font-size="13" fill="#777777" text-anchor="start" font-weight="400">their own loss paths.</text>
+</g>
+</svg>

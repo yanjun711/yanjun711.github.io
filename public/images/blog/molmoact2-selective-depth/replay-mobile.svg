@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="312" viewBox="0 0 360 312" role="img" aria-labelledby="title desc">
+<title id="title">Replay and predict within the current depth prefix</title>
+<desc id="desc">In causal raster order, cached codes 12, 33, 7, 80 and update mask 0, 1, 0, 1 produce current prefix 12, 35, 7, 81. Codes 12 and 7 are replayed as inputs in the current context. Codes 35 and 81 are predicted conditioned on the preceding filled prefix. All four codes are consumed; two are newly predicted.</desc>
+<rect width="360" height="312" fill="white"/>
+<g font-family="Lato,Arial,sans-serif">
+<text x="16" y="22" font-size="14" fill="#282828" text-anchor="start" font-weight="bold">Fill the current depth prefix</text>
+<text x="16" y="43" font-size="13" fill="#777" text-anchor="start" font-weight="normal">Causal raster order: read from left to right</text>
+<text x="16" y="68" font-size="13" fill="#777" text-anchor="start" font-weight="normal">Cell</text>
+<text x="127.5" y="68" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">1</text>
+<text x="186.5" y="68" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">2</text>
+<text x="245.5" y="68" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">3</text>
+<text x="304.5" y="68" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">4</text>
+<text x="16" y="100" font-size="14" fill="#282828" text-anchor="start" font-weight="normal">Cached</text>
+<text x="16" y="134" font-size="14" fill="#282828" text-anchor="start" font-weight="normal">Mask</text>
+<text x="16" y="186" font-size="14" fill="#282828" text-anchor="start" font-weight="bold">Prefix</text>
+<text x="127.5" y="100" font-size="17" fill="#777" text-anchor="middle" font-weight="normal">12</text>
+<text x="127.5" y="134" font-size="14" fill="#777" text-anchor="middle" font-weight="normal">0</text>
+<rect x="101" y="162" width="53" height="36" fill="#d8d8d8" fill-opacity=".55"/>
+<text x="127.5" y="186" font-size="18" fill="#282828" text-anchor="middle" font-weight="normal">12</text>
+<text x="127.5" y="223" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">replay</text>
+<text x="186.5" y="100" font-size="17" fill="#777" text-anchor="middle" font-weight="normal">33</text>
+<text x="186.5" y="134" font-size="14" fill="#526b78" text-anchor="middle" font-weight="normal">1</text>
+<rect x="160" y="162" width="53" height="36" fill="#526b78" fill-opacity=".15"/>
+<text x="186.5" y="186" font-size="18" fill="#526b78" text-anchor="middle" font-weight="normal">35</text>
+<text x="186.5" y="223" font-size="13" fill="#526b78" text-anchor="middle" font-weight="normal">predict</text>
+<text x="245.5" y="100" font-size="17" fill="#777" text-anchor="middle" font-weight="normal">7</text>
+<text x="245.5" y="134" font-size="14" fill="#777" text-anchor="middle" font-weight="normal">0</text>
+<rect x="219" y="162" width="53" height="36" fill="#d8d8d8" fill-opacity=".55"/>
+<text x="245.5" y="186" font-size="18" fill="#282828" text-anchor="middle" font-weight="normal">7</text>
+<text x="245.5" y="223" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">replay</text>
+<text x="304.5" y="100" font-size="17" fill="#777" text-anchor="middle" font-weight="normal">80</text>
+<text x="304.5" y="134" font-size="14" fill="#526b78" text-anchor="middle" font-weight="normal">1</text>
+<rect x="278" y="162" width="53" height="36" fill="#526b78" fill-opacity=".15"/>
+<text x="304.5" y="186" font-size="18" fill="#526b78" text-anchor="middle" font-weight="normal">81</text>
+<text x="304.5" y="223" font-size="13" fill="#526b78" text-anchor="middle" font-weight="normal">predict</text>
+<line x1="98" y1="200" x2="334" y2="200" stroke="#d8d8d8" stroke-width="1"/>
+<text x="16" y="251" font-size="13" fill="#282828" text-anchor="start" font-weight="normal">All 4 codes consumed; only 2 newly predicted.</text>
+<text x="16" y="275" font-size="13" fill="#777" text-anchor="start" font-weight="normal">Replay uses code IDs in the current context.</text>
+<text x="16" y="299" font-size="13" fill="#777" text-anchor="start" font-weight="normal">Prediction uses the preceding filled codes.</text>
+</g>
+</svg>

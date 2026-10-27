@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="270" viewBox="0 0 620 270" role="img" aria-labelledby="title desc">
+<title id="title">Replay and predict within the current depth prefix</title>
+<desc id="desc">In causal raster order, cached codes 12, 33, 7, 80 and update mask 0, 1, 0, 1 produce current prefix 12, 35, 7, 81. Codes 12 and 7 are replayed as inputs in the current context. Codes 35 and 81 are predicted conditioned on the preceding filled prefix. All four codes are consumed; two are newly predicted.</desc>
+<rect width="620" height="270" fill="white"/>
+<g font-family="Lato,Arial,sans-serif">
+<text x="20" y="22" font-size="14" fill="#282828" text-anchor="start" font-weight="bold">Fill the current depth prefix</text>
+<text x="20" y="43" font-size="13" fill="#777" text-anchor="start" font-weight="normal">Causal raster order: read from left to right</text>
+<text x="20" y="62" font-size="13" fill="#777" text-anchor="start" font-weight="normal">Cell</text>
+<text x="204.0" y="62" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">1</text>
+<text x="312.0" y="62" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">2</text>
+<text x="420.0" y="62" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">3</text>
+<text x="528.0" y="62" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">4</text>
+<text x="20" y="96" font-size="14" fill="#282828" text-anchor="start" font-weight="normal">Cached codes</text>
+<text x="20" y="128" font-size="14" fill="#282828" text-anchor="start" font-weight="normal">Update mask</text>
+<text x="20" y="176" font-size="14" fill="#282828" text-anchor="start" font-weight="bold">Current prefix</text>
+<text x="204.0" y="96" font-size="17" fill="#777" text-anchor="middle" font-weight="normal">12</text>
+<text x="204.0" y="128" font-size="14" fill="#777" text-anchor="middle" font-weight="normal">0</text>
+<rect x="153" y="152" width="102" height="36" fill="#d8d8d8" fill-opacity=".55"/>
+<text x="204.0" y="176" font-size="18" fill="#282828" text-anchor="middle" font-weight="normal">12</text>
+<text x="204.0" y="213" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">replay</text>
+<text x="312.0" y="96" font-size="17" fill="#777" text-anchor="middle" font-weight="normal">33</text>
+<text x="312.0" y="128" font-size="14" fill="#526b78" text-anchor="middle" font-weight="normal">1</text>
+<rect x="261" y="152" width="102" height="36" fill="#526b78" fill-opacity=".15"/>
+<text x="312.0" y="176" font-size="18" fill="#526b78" text-anchor="middle" font-weight="normal">35</text>
+<text x="312.0" y="213" font-size="13" fill="#526b78" text-anchor="middle" font-weight="normal">predict</text>
+<text x="420.0" y="96" font-size="17" fill="#777" text-anchor="middle" font-weight="normal">7</text>
+<text x="420.0" y="128" font-size="14" fill="#777" text-anchor="middle" font-weight="normal">0</text>
+<rect x="369" y="152" width="102" height="36" fill="#d8d8d8" fill-opacity=".55"/>
+<text x="420.0" y="176" font-size="18" fill="#282828" text-anchor="middle" font-weight="normal">7</text>
+<text x="420.0" y="213" font-size="13" fill="#777" text-anchor="middle" font-weight="normal">replay</text>
+<text x="528.0" y="96" font-size="17" fill="#777" text-anchor="middle" font-weight="normal">80</text>
+<text x="528.0" y="128" font-size="14" fill="#526b78" text-anchor="middle" font-weight="normal">1</text>
+<rect x="477" y="152" width="102" height="36" fill="#526b78" fill-opacity=".15"/>
+<text x="528.0" y="176" font-size="18" fill="#526b78" text-anchor="middle" font-weight="normal">81</text>
+<text x="528.0" y="213" font-size="13" fill="#526b78" text-anchor="middle" font-weight="normal">predict</text>
+<line x1="150" y1="190" x2="582" y2="190" stroke="#d8d8d8" stroke-width="1"/>
+<text x="20" y="235" font-size="13" fill="#282828" text-anchor="start" font-weight="normal">All 4 codes are consumed; only 2 require a new prediction.</text>
+<text x="20" y="254" font-size="13" fill="#777" text-anchor="start" font-weight="normal">Replay processes cached code IDs under the current observation and prefix.</text>
+</g>
+</svg>
