@@ -1,0 +1,64 @@
+---
+import type { publications } from '../data/site';
+type Paper = (typeof publications)[number];
+const { paper } = Astro.props as { paper: Paper };
+const preview = 'preview' in paper ? paper.preview : undefined;
+const href = paper.project || 'https://arxiv.org/abs/' + paper.arxiv;
+const label = paper.name + (paper.project ? ' project page' : ' paper');
+---
+{preview ? <div class="paper-preview" data-name={paper.name} data-playing="false">
+  <a class="paper-image" href={href} aria-label={label}>
+    <video muted loop playsinline preload="metadata" poster={preview.poster} width="480" height="480" aria-label={preview.alt}>
+      <source src={preview.src} type="video/mp4" />
+      <img src={preview.poster} alt={preview.alt} width="480" height="480" loading="lazy" />
+    </video>
+  </a>
+  <button class="preview-toggle" type="button" aria-label={'Play ' + paper.name + ' preview'} hidden>
+    <svg class="preview-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.5 3v8M9.5 3v8" stroke="currentColor" stroke-width="2" /></svg>
+    <svg class="preview-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="m4 2 7 5-7 5Z" fill="currentColor" /></svg>
+  </button>
+</div> : <a class="paper-image" href={href} aria-label={label}><img src={paper.image} alt={paper.imageAlt} width="600" height="360" loading="lazy" /></a>}
+
+<script>
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll<HTMLElement>('.paper-preview').forEach(preview => {
+    const video = preview.querySelector('video');
+    const toggle = preview.querySelector<HTMLButtonElement>('.preview-toggle');
+    if (!video || !toggle) return;
+    let wantsPlay = !reducedMotion.matches;
+    let inView = false;
+    video.muted = true;
+    toggle.hidden = false;
+
+    const syncButton = () => {
+      preview.dataset.playing = String(!video.paused);
+      const label = `${video.paused ? 'Play' : 'Pause'} ${preview.dataset.name} preview`;
+      toggle.setAttribute('aria-label', label);
+      toggle.title = label;
+    };
+    const syncPlayback = () => {
+      if (wantsPlay && inView && !document.hidden) {
+        void video.play().catch(() => syncButton());
+      } else {
+        video.pause();
+      }
+    };
+    toggle.addEventListener('click', () => {
+      wantsPlay = video.paused;
+      syncPlayback();
+    });
+    video.addEventListener('play', syncButton);
+    video.addEventListener('pause', syncButton);
+    video.addEventListener('error', () => { toggle.hidden = true; });
+    reducedMotion.addEventListener('change', () => {
+      wantsPlay = !reducedMotion.matches;
+      syncPlayback();
+    });
+    document.addEventListener('visibilitychange', syncPlayback);
+    new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      syncPlayback();
+    }, { threshold: 0.1 }).observe(video);
+    syncButton();
+  });
+</script>
