@@ -67,8 +67,8 @@ export type Experience = {
 };
 
 export const researchExperience: Experience[] = [
-  { organization: 'EGI Lab, Peking University', role: 'Research Assistant', date: 'Jan 2026 — Present', advisor: 'Prof. Hao Tang', advisorUrl: 'https://github.com/Ha0Tang', topic: 'World models', url: 'https://www.pku.edu.cn/', logo: '/images/logos/pku.webp', logoAlt: 'Peking University emblem' },
-  { organization: 'Vision Lab, HUST', role: 'Research Intern', date: 'Jan — May 2025', advisor: 'Prof. Xinggang Wang', advisorUrl: 'https://github.com/xinggangw', topic: 'Efficient VLA', url: 'https://www.hust.edu.cn/', logo: '/images/logos/hust.webp', logoAlt: 'Huazhong University of Science and Technology emblem' },
+  { organization: 'EGI Lab, Peking University', role: 'Research Assistant', date: 'Jan 2026 — Present', advisor: 'Prof. Hao Tang', advisorUrl: 'https://ha0tang.github.io/', topic: 'World models', url: 'https://www.pku.edu.cn/', logo: '/images/logos/pku.webp', logoAlt: 'Peking University emblem' },
+  { organization: 'Vision Lab, HUST', role: 'Research Intern', date: 'Jan — May 2025', advisor: 'Prof. Xinggang Wang', advisorUrl: 'https://xwcv.github.io/', topic: 'Efficient VLA', url: 'https://www.hust.edu.cn/', logo: '/images/logos/hust.webp', logoAlt: 'Huazhong University of Science and Technology emblem' },
 ];
 
 export const internshipExperience: Experience[] = [
