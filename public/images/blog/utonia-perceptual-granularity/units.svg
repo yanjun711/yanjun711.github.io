@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="408" viewBox="0 0 480 408" role="img" aria-labelledby="title desc">
+<title id="title">Comparable spatial units for two local patterns</title><desc id="desc">A small square with one centimeter edges and a larger square with ten centimeter edges become equal unit squares after division by different chosen granularities.</desc>
+<rect width="480" height="408" fill="white"/>
+<g font-family="Lato,Arial,sans-serif" font-size="18" fill="#222"><text x="24" y="30">Metric coordinates</text><text x="36" y="178">edge: 0.01 m</text><text x="272" y="178">edge: 0.10 m</text><text x="36" y="218">divide by 0.01 m</text><text x="272" y="218">divide by 0.10 m</text><text x="24" y="260">Granularity-aligned coordinates</text><text x="70" y="387">edge: 1</text><text x="312" y="387">edge: 1</text></g>
+<g stroke="#555" stroke-width="2" fill="none"><path d="M84 92h28v28H84Z"/><path d="M278 56h100v100H278Z"/></g>
+<g fill="#555"><circle cx="84" cy="92" r="4"/><circle cx="112" cy="92" r="4"/><circle cx="84" cy="120" r="4"/><circle cx="112" cy="120" r="4"/><circle cx="278" cy="56" r="4"/><circle cx="378" cy="56" r="4"/><circle cx="278" cy="156" r="4"/><circle cx="378" cy="156" r="4"/></g>
+<g stroke="#1772d0" stroke-width="2" fill="#f3f8fc"><path d="M70 282h76v76H70Z"/><path d="M312 282h76v76H312Z"/></g>
+<g fill="#1772d0"><circle cx="70" cy="282" r="4"/><circle cx="146" cy="282" r="4"/><circle cx="70" cy="358" r="4"/><circle cx="146" cy="358" r="4"/><circle cx="312" cy="282" r="4"/><circle cx="388" cy="282" r="4"/><circle cx="312" cy="358" r="4"/><circle cx="388" cy="358" r="4"/></g>
+</svg>

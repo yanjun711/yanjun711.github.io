@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="340" viewBox="0 0 480 340" role="img" aria-labelledby="title desc">
+<title id="title">Two latent streams on a shared physical clock</title><desc id="desc">At half a second, video index one corresponds to audio index four. Rescaling video indices by four makes both rotary positions equal to four.</desc>
+<rect width="480" height="340" fill="white"/>
+<g font-family="Lato,Arial,sans-serif" fill="#222" font-size="17">
+<text x="24" y="28">Physical time</text><text x="105" y="64">0 s</text><text x="249" y="64">0.5 s</text><text x="408" y="64">1 s</text>
+<text x="24" y="104">Video: 2 latent frames/s</text><text x="24" y="200">Audio: 8 latent frames/s</text>
+<text x="105" y="151">0</text><text x="257" y="151">1</text><text x="409" y="151">2</text>
+<text x="24" y="303">Aligned positions at 0.5 s:</text><text x="24" y="328" fill="#1772d0">video 4 × 1 = 4; audio 4</text>
+</g>
+<path d="M112 123H416M112 222H416" fill="none" stroke="#999"/>
+<path d="M264 130V214" fill="none" stroke="#1772d0" stroke-width="2" stroke-dasharray="4 4"/>
+<g fill="#1772d0"><circle cx="112" cy="123" r="5"/><circle cx="264" cy="123" r="5"/><circle cx="416" cy="123" r="5"/></g>
+<g fill="#555"><circle cx="112" cy="222" r="4"/><circle cx="150" cy="222" r="4"/><circle cx="188" cy="222" r="4"/><circle cx="226" cy="222" r="4"/><circle cx="264" cy="222" r="5" fill="#1772d0"/><circle cx="302" cy="222" r="4"/><circle cx="340" cy="222" r="4"/><circle cx="378" cy="222" r="4"/><circle cx="416" cy="222" r="4"/></g>
+<g font-family="Lato,Arial,sans-serif" text-anchor="middle" fill="#555" font-size="16"><text x="112" y="250">0</text><text x="150" y="250">1</text><text x="188" y="250">2</text><text x="226" y="250">3</text><text x="264" y="250">4</text><text x="302" y="250">5</text><text x="340" y="250">6</text><text x="378" y="250">7</text><text x="416" y="250">8</text></g>
+</svg>
