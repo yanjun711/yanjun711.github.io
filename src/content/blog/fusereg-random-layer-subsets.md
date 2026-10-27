@@ -97,13 +97,6 @@ $$
 
 For these features, $V=\operatorname{diag}(0,2/3)$ and $c_3(1/2)=15/28$, so $c_3(1/2)V=\operatorname{diag}(0,5/14)$, exactly as enumeration predicts.
 
-<figure>
-  <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/fusereg-random-layer-subsets/subsets-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/fusereg-random-layer-subsets/subsets.svg" alt="Seven subset means vary only along the disagreement coordinate, with three subsets at zero. A second plot shows the three-layer variance coefficient rising with drop probability and reaching fifteen twenty-eighths at probability one-half." loading="lazy" width="595" height="307" />
-  </picture>
-  <figcaption>Figure 1. Exact subset statistics for K = 3. (a) All seven equiprobable subset means at p = 0.5, with coincident values stacked. (b) c₃(p) controls variance strength. Shared features are unchanged at every drop rate.</figcaption>
-</figure>
 
 Now give a linear decoder $D=(0,2)$ the target $y=0$. It produces zero from the full mean, but its expected squared error under subset sampling is
 

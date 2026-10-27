@@ -65,12 +65,12 @@ $$
 m_t=[0,\;1,\;0,\;1].
 $$
 
-<figure>
+<figure class="figure-mechanism">
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/molmoact2-selective-depth/replay-mobile.svg" width="346" height="302" />
-    <img src="/images/blog/molmoact2-selective-depth/replay.svg" alt="Cosine similarities at four depth-code positions lie above or below the 0.996 threshold. Positions one and three replay codes twelve and seven; positions two and four replace codes thirty-three and eighty with thirty-five and eighty-one." loading="lazy" width="595" height="302" />
+    <source media="(max-width: 620px)" srcset="/images/blog/molmoact2-selective-depth/replay-mobile.svg" width="360" height="312" />
+    <img src="/images/blog/molmoact2-selective-depth/replay.svg" alt="Cached codes twelve, thirty-three, seven, and eighty combine with update mask zero, one, zero, one. The current causal prefix contains replayed code twelve, predicted code thirty-five, replayed code seven, and predicted code eighty-one. All four codes are consumed in the current context; only two are newly predicted." loading="lazy" width="620" height="270" />
   </picture>
-  <figcaption>Figure 1. The four-patch example. Similarities at or above 0.996 reuse cached codes; those below it trigger new predictions. The supplied replacement codes illustrate the rule rather than model quality.</figcaption>
+  <figcaption>Figure 1. A four-cell teaching example. Zeros replay cached code IDs into the current prefix; ones predict updated codes in raster order. All four codes condition the action; only two are newly predicted.</figcaption>
 </figure>
 
 The decoder handles the cells in order:

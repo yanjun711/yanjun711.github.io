@@ -105,7 +105,9 @@ h1, h2, h3, p { margin: 0; }
 .prose h2[id], .prose h3[id] { scroll-margin-top: 24px; }
 .prose figure { margin: 28px 0; }
 .prose figure img { width: 100%; max-width: 560px; height: auto; margin: 0 auto; }
-.prose figure.figure-wide img { max-width: 100%; }
+.prose figure.figure-plot img { max-width: 480px; }
+.prose figure.figure-plot figcaption { max-width: 480px; margin-inline: auto; }
+.prose figure.figure-mechanism img { max-width: 620px; }
 .prose figcaption { margin-top: 10px; font-size: 12px; line-height: 1.5; color: #555; }
 .prose .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding-block: 5px; }
 .prose .katex { font-size: 1.08em; }

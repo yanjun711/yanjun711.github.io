@@ -91,12 +91,12 @@ With native indices, the simultaneous pair scores $\cos((4-1)/2)\approx0.0707$. 
 
 This does not mean real attention must peak at the aligned timestamp: real query and key contents are learned, and meaningful sounds can precede or follow visible events. It demonstrates that positional coordinates should not systematically reverse the timing preference before content is considered.
 
-<figure>
+<figure class="figure-mechanism">
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/mova-aligned-rope/clocks-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/mova-aligned-rope/clocks.svg" alt="Rotary scores plotted against audio time for a video query at half a second. Native indices peak at one eighth of a second; aligned positions peak at half a second." loading="lazy" width="595" height="307" />
+    <source media="(max-width: 620px)" srcset="/images/blog/mova-aligned-rope/clocks-mobile.svg" width="360" height="320" />
+    <img src="/images/blog/mova-aligned-rope/clocks.svg" alt="At illustrative latent rates of video 2 Hz and audio 8 Hz, video index one and audio index four both describe half a second. Their native rotary positions differ by three. Multiplying video positions by four puts both at position four." loading="lazy" width="620" height="258" />
   </picture>
-  <figcaption>Figure 1. The half-second example with identical unit content vectors and one rotary frequency pair. A shared clock moves the positional maximum to the matching timestamp. This is an analytical positional score, not measured audio–video synchronization.</figcaption>
+  <figcaption>Figure 1. Filled tokens mark the same 0.5-second event; the dashed connector pairs them. Native indices place them at 1 and 4. Multiplying video indices by four puts both at rotary position 4. The rates are illustrative, and matching coordinates alone does not guarantee synchronized content.</figcaption>
 </figure>
 
 The [runnable NumPy example](/code/mova-aligned-rope.py) verifies these values, the rotary dot-product identity, and invariance to a common physical-time shift. Its essential calculation is:

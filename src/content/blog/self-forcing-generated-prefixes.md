@@ -44,6 +44,14 @@ First, Algorithm 1 samples an index $s$ uniformly from $\{1,\ldots,T\}$ for a tr
 
 Second, the model computes the frame's cached keys and values without gradients. Later frames can read those values, but their losses cannot differentiate through the cache into the earlier frame's computation.
 
+<figure class="figure-mechanism">
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/self-forcing-generated-prefixes/prefix-drift-mobile.svg" width="360" height="305" />
+    <img src="/images/blog/self-forcing-generated-prefixes/prefix-drift.svg" alt="Previous generated frames are encoded into a detached KV prefix. The selected denoising call conditions on that prefix to produce the current frame, with gradients stopped before the cached context." width="620" height="260" />
+  </picture>
+  <figcaption>Figure 1. For frame i, earlier generated frames supply a detached KV prefix. The selected denoising call receives gradients; the conditioning cache does not. Earlier outputs retain their own loss paths.</figcaption>
+</figure>
+
 A schematic version is:
 
 ```python
@@ -105,14 +113,6 @@ h_1=1.05,\qquad
 h_2=1.095,\qquad
 h_3=1.1355.
 $$
-
-<figure>
-  <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/self-forcing-generated-prefixes/prefix-drift-mobile.svg" width="346" height="307" />
-    <img src="/images/blog/self-forcing-generated-prefixes/prefix-drift.svg" alt="A scalar toy recurrence stays at 1.05 with clean prefixes, but drifts to 1.1355 when conditioned on its own outputs." width="595" height="307" />
-  </picture>
-  <figcaption>Figure 1. A toy recurrence, not a video-model measurement. The one-step error is small under clean prefixes; feeding predictions back changes the later inputs.</figcaption>
-</figure>
 
 Now use $L=\frac12\sum_{i=1}^{3}(h_i-1)^2$. Full differentiation with respect to $b$ follows the recurrence
 

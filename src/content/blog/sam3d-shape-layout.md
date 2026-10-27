@@ -83,13 +83,6 @@ This tiny calculation exposes the coupling. The projected location is not a prop
 
 Now double both $s$ and $t$. The camera point becomes $(2,4,8)$, but its projection remains $(25,50)$. Every point transformed this way preserves its image projection. Without an additional metric cue, the image cannot distinguish those globally scaled configurations.
 
-<figure>
-  <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/sam3d-shape-layout/joint-geometry-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/sam3d-shape-layout/joint-geometry.svg" alt="A camera ray passes through points at depth four, height two and depth eight, height four. Original and doubled-scale configurations produce identical image projections." loading="lazy" width="595" height="307" />
-  </picture>
-  <figcaption>Figure 1. Scale ambiguity in the worked example. Doubling both scale and translation moves a camera-space point along its viewing ray; the projected image points remain unchanged. This is exact pinhole geometry, not a SAM 3D result.</figcaption>
-</figure>
 
 The [runnable NumPy example](/code/sam3d-shape-layout.py) checks the transformation and this scale ambiguity:
 

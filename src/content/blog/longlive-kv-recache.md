@@ -69,6 +69,14 @@ $$
 
 The first mixes a new current instruction with an old representation of the past. The second evaluates the available visual history under the active instruction. This is a conditional forward pass through the model, not an algebraic subtraction of an “old prompt vector” from projected keys.
 
+<figure class="figure-mechanism">
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/longlive-kv-recache/conditional-cache-mobile.svg" width="360" height="310" />
+    <img src="/images/blog/longlive-kv-recache/conditional-cache.svg" alt="The same visual prefix is encoded under the old and new prompts. Text cross-attention changes downstream video states, requiring their self-attention keys and values to be recomputed after a prompt switch." width="620" height="270" />
+  </picture>
+  <figcaption>Figure 1. Both branches encode the same generated prefix. Changing the prompt changes downstream video states, so their K,V must be recomputed. The diagram shows prompt-dependent layers; states computed before text conditioning may remain unchanged.</figcaption>
+</figure>
+
 LongLive also includes the operation in training, extending the generated-prefix rollout setting of [Self Forcing](https://arxiv.org/abs/2506.08009v1) to prompt switches. At a sampled prompt switch it re-caches once, continues the rollout with the updated cache, and supplies the new prompt to the distillation teacher. The student therefore encounters the post-switch condition it will use during generation. An inference-only cache patch would not by itself provide that training experience.
 
 ## Two visual tokens and one changed condition
@@ -119,14 +127,6 @@ $$
 0.6698(1,1)+0.3302(0,1)
 \approx(0.6698,1).
 $$
-
-<figure>
-  <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/longlive-kv-recache/conditional-cache-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/longlive-kv-recache/conditional-cache.svg" alt="In a two-token toy example, re-caching changes attention weights from equal weights to approximately 0.67 and 0.33, and changes the returned value despite unchanged visual inputs." width="595" height="307" />
-  </picture>
-  <figcaption>Figure 1. Analytical outputs from the toy conditional cache. The query and visual inputs are fixed. These points illustrate a representation change, not measured prompt adherence or video quality.</figcaption>
-</figure>
 
 Nothing in this calculation moved either visual vector. The changed output comes entirely from re-evaluating their hidden representations under the new condition. Conversely, changing a prompt variable in application code while retaining the old arrays would still return the stale result.
 

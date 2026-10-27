@@ -79,13 +79,6 @@ $$
 
 Every nonzero $\hat A_t$ therefore retains the sign of $A$. If $A=0$, all token advantages are zero. Setting $\lambda=0$ recovers uniform sequence-level advantages; increasing it permits more redistribution.
 
-<figure>
-  <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/rlsd-update-sign-magnitude/credit-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/rlsd-update-sign-magnitude/credit.svg" alt="Clipped token advantages versus teacher-student evidence ratio for positive and negative response advantages. Magnitudes vary between 0.9 and 1.1 while signs stay fixed." loading="lazy" width="595" height="307" />
-  </picture>
-  <figcaption>Figure 1. The coefficient as a function of evidence ratio, with clipping width 0.2 and mixing coefficient 0.5. Markers are the ratios used in the example. The horizontal reference is the unmodified response advantage.</figcaption>
-</figure>
 
 ## Three tokens are enough to see the effect
 

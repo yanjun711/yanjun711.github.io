@@ -115,12 +115,12 @@ $$
 
 After ten identical mixing steps, the difference is multiplied by $2^{-10}=1/1024$. Its disappearance is compatible with the nonexpansive bound. “Norm bounded by one” does not mean every direction retains its magnitude or all information remains recoverable.
 
-<figure>
+<figure class="figure-mechanism">
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/mhc-sinkhorn-residual-mixing/mixing-depth-mobile.svg" width="346" height="307" />
-    <img src="/images/blog/mhc-sinkhorn-residual-mixing/mixing-depth.svg" alt="Logarithmic norm ratios for repeated toy mixing. An unconstrained gain grows, the shared mode stays constant, and the difference mode halves at every step." loading="lazy" width="595" height="307" />
+    <source media="(max-width: 620px)" srcset="/images/blog/mhc-sinkhorn-residual-mixing/mixing-depth-mobile.svg" width="360" height="290" />
+    <img src="/images/blog/mhc-sinkhorn-residual-mixing/mixing-depth.svg" alt="The matrix with diagonal entries 0.75 and off-diagonal entries 0.25 has row and column sums one. Multiplying the vector (1,1) leaves it unchanged; multiplying (1,−1) gives (0.5,−0.5)." loading="lazy" width="620" height="238" />
   </picture>
-  <figcaption>Figure 1. Exact norm ratios for fixed toy matrices. Doubly stochastic mixing preserves the shared mode and contracts the difference mode; an unconstrained gain accumulates across depth. This is a residual-path calculation, not a whole-network stability measurement.</figcaption>
+  <figcaption>Figure 1. Every row and column of this nonnegative matrix sums to one. The shared mode is fixed, while the difference mode halves. These exact calculations concern a fixed residual mixing matrix; they do not bound the full network's input-dependent Jacobian.</figcaption>
 </figure>
 
 The [runnable NumPy example](/code/mhc-sinkhorn-residual-mixing.py) checks these calculations and reports the actual normalization residuals for a random matrix. The core iteration is:

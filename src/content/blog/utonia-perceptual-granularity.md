@@ -72,13 +72,6 @@ For a single rotary plane with $\theta=1$, an edge displacement along the first 
 
 Now add a distant point to one cloud. A bounding-box normalizer would change the coordinates of the original square because the full extent has changed. Holding $g$ fixed leaves its local normalized distances unchanged. Conversely, if the task calls for a different perceptual granularity, changing $g$ deliberately changes those distances even when the bounding box stays fixed.
 
-<figure>
-  <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/utonia-perceptual-granularity/units-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/utonia-perceptual-granularity/units.svg" alt="One plot maps metric separation to aligned separation for two granularities. A second shows a fixed local edge shrinking under bounding-box scaling as cloud extent grows, while its fixed-granularity distance stays constant." loading="lazy" width="595" height="307" />
-  </picture>
-  <figcaption>Figure 1. Coordinate scaling in the worked example. (a) g sets the meaning of a spatial unit. (b) a distant point changes bounding-box scaling but leaves a fixed-g local distance unchanged. Curves are analytic, not Utonia measurements.</figcaption>
-</figure>
 
 [Run the NumPy example](/code/utonia-perceptual-granularity.py) to verify the distance and phase equalities. It also adds a translated copy and checks that pairwise displacements are unchanged after consistent recentering. The script illustrates the coordinate mechanism; it does not reproduce Utonia's training procedure or select granularities automatically.
 

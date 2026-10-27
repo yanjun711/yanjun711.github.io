@@ -81,13 +81,6 @@ Q=\begin{bmatrix}
 \end{bmatrix}.
 $$
 
-<figure>
-  <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/latent-to-4d-alignment/interface-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/latent-to-4d-alignment/interface.svg" alt="Linear interpolation of two latent channels at four times, followed by a supplied projection into three output channels." loading="lazy" width="595" height="307" />
-  </picture>
-  <figcaption>Figure 1. The one-dimensional alignment example: resampling changes the time grid, and the supplied matrix W converts channels. Points show the four target times. These are exact toy values, not learned geometry predictions.</figcaption>
-</figure>
 
 Four samples now occupy the target time grid, and each has three output channels. Those are separate accomplishments: interpolation supplied the additional positions, while $W$ supplied the channel conversion. Neither operation created new observed information between the endpoints.
 

@@ -61,12 +61,12 @@ Consider four blocks of two tokens each. Query token 8 belongs to block 4. Let $
 
 Group 1's block maxima are $(3,1,0.2,-1)$; group 2's are $(0.2,3,0.3,-1)$. Group 1 selects blocks 1 and 4. Group 2 selects blocks 2 and 4. Both retain block 4 even though its score is lowest.
 
-<figure>
+<figure class="figure-mechanism">
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/minimax-group-block-selection/selection-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/minimax-group-block-selection/selection.svg" alt="Maximum index scores for four blocks in each of two groups. Group one selects block one, group two selects block two, and both reserve the lower-scoring local block four." loading="lazy" width="595" height="307" />
+    <source media="(max-width: 620px)" srcset="/images/blog/minimax-group-block-selection/selection-mobile.svg" width="360" height="300" />
+    <img src="/images/blog/minimax-group-block-selection/selection.svg" alt="A two-group, eight-token support matrix. Group one reads tokens one, two, seven, and eight; group two reads three, four, seven, and eight. Local block four uses one of each group's two block slots. Heads share token support but have separate attention weights. The indexer first scores all visible tokens." loading="lazy" width="620" height="260" />
   </picture>
-  <figcaption>Figure 1. Supplied block maxima in the eight-token example. Blue marks the learned nonlocal selection; gray marks the reserved local block. An unfilled bar is not selected. The local block consumes one of the two available slots.</figcaption>
+  <figcaption>Figure 1. Selected supports for the eight-token example. Each group reserves block 4 within its two-block budget. Query heads in a group share these tokens but compute separate attention weights.</figcaption>
 </figure>
 
 To see the output consequence, choose scalar values

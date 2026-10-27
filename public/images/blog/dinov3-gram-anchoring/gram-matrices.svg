@@ -38,14 +38,14 @@ z
    </g>
    <g clip-path="url(#p5dfec7ffa3)">
     <image xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAkAjIRsEYyQ0tHjQLqFCliAAvUDJN2ccEv7jkKXnHnLcfz5/ZAxvXre3rCiMfpAfAfhE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ2H5+b1v0yMmPK8f0xNGvDztpieM8OgkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKETsKyP71v0yMm3F4P0xNGrG+X6QkjPDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShk/AHKUUR6fhd0WQAAAAASUVORK5CYII=" id="image956ab73ace" transform="scale(1 -1) translate(0 -133.92)" x="12.30024" y="-17.632674" width="133.92" height="133.92"/>
+iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRklEQVR4nO3UoXECARRFUZZaEHHpBUsJ2Ig4BpvBYbEUhItIHys3XfDFPaeCJ+685Xp/bDsyXr9/0xNG7KcHwDsInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROwrKu6zY9YsLp6zo9YcTnx2F6wgiPToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkLMfz9zY9YsLzdpmeMOLn8ZyeMMKjkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJ/ztFEgSFRK6MAAAAAElFTkSuQmCC" id="image54e7fde139" transform="scale(1 -1) translate(0 -133.92)" x="12.30024" y="-17.632674" width="133.92" height="133.92"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1"/>
      <g id="text_1">
       <!-- 1 -->
-      <g style="fill: #687580" transform="translate(31.65016 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(31.65016 162.418299) scale(0.1 -0.1)">
        <defs>
         <path id="Lato-Regular-31" d="M 3258 435
 L 3258 0
@@ -75,7 +75,7 @@ z
      <g id="line2d_2"/>
      <g id="text_2">
       <!-- 2 -->
-      <g style="fill: #687580" transform="translate(76.15 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(76.15 162.418299) scale(0.1 -0.1)">
        <defs>
         <path id="Lato-Regular-32" d="M 3158 541
 Q 3251 541 3305 486
@@ -128,7 +128,7 @@ z
      <g id="line2d_3"/>
      <g id="text_3">
       <!-- 3 -->
-      <g style="fill: #687580" transform="translate(120.64984 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(120.64984 162.418299) scale(0.1 -0.1)">
        <defs>
         <path id="Lato-Regular-33" d="M 416 3344
 Q 461 3658 589 3899
@@ -193,7 +193,7 @@ z
     </g>
     <g id="text_4">
      <!-- Patch -->
-     <g style="fill: #30383e" transform="translate(65.347266 176.236111) scale(0.11 -0.11)">
+     <g style="fill: #282828" transform="translate(65.347266 176.236111) scale(0.11 -0.11)">
       <defs>
        <path id="Lato-Regular-50" d="M 1939 2208
 Q 2205 2208 2408 2278
@@ -376,7 +376,7 @@ z
      <g id="line2d_4"/>
      <g id="text_5">
       <!-- 1 -->
-      <g style="fill: #687580" transform="translate(3.00024 43.985886) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(3.00024 43.985886) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-31"/>
       </g>
      </g>
@@ -385,7 +385,7 @@ z
      <g id="line2d_5"/>
      <g id="text_6">
       <!-- 2 -->
-      <g style="fill: #687580" transform="translate(3.00024 88.485726) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(3.00024 88.485726) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-32"/>
       </g>
      </g>
@@ -394,7 +394,7 @@ z
      <g id="line2d_6"/>
      <g id="text_7">
       <!-- 3 -->
-      <g style="fill: #687580" transform="translate(3.00024 132.985566) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(3.00024 132.985566) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-33"/>
       </g>
      </g>
@@ -469,7 +469,7 @@ z
    </g>
    <g id="text_9">
     <!-- 0.00 -->
-    <g style="fill: #30383e" transform="translate(69.170313 43.128074) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(69.170313 43.128074) scale(0.1 -0.1)">
      <use xlink:href="#Lato-Regular-30"/>
      <use xlink:href="#Lato-Regular-2e" transform="translate(58 0)"/>
      <use xlink:href="#Lato-Regular-30" transform="translate(81.600006 0)"/>
@@ -507,7 +507,7 @@ z
    </g>
    <g id="text_11">
     <!-- 0.00 -->
-    <g style="fill: #30383e" transform="translate(24.670473 87.627914) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(24.670473 87.627914) scale(0.1 -0.1)">
      <use xlink:href="#Lato-Regular-30"/>
      <use xlink:href="#Lato-Regular-2e" transform="translate(58 0)"/>
      <use xlink:href="#Lato-Regular-30" transform="translate(81.600006 0)"/>
@@ -561,7 +561,7 @@ z
    </g>
    <g id="text_17">
     <!-- Reference -->
-    <g style="fill: #30383e" transform="translate(56.607813 12.053154) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(56.607813 12.053154) scale(0.1 -0.1)">
      <defs>
       <path id="Lato-Regular-52" d="M 1856 2365
 Q 2125 2365 2331 2430
@@ -736,14 +736,14 @@ z
    </g>
    <g clip-path="url(#pbc2f22e6d6)">
     <image xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAkAjIRsEYyQ0tHjQLqFCliAAvUDJN2ccEv7jkKXnHnLcfz5/ZAxvXre3rCiMfpAfAfhE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ2H5+b1v0yMmPK8f0xNGvDztpieM8OgkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKETsKyP71v0yMm3F4P0xNGrG+X6QkjPDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShk/AHKUUR6fhd0WQAAAAASUVORK5CYII=" id="image956ab73ace" transform="scale(1 -1) translate(0 -133.92)" x="161.10024" y="-17.632674" width="133.92" height="133.92"/>
+iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRklEQVR4nO3UoXECARRFUZZaEHHpBUsJ2Ig4BpvBYbEUhItIHys3XfDFPaeCJ+685Xp/bDsyXr9/0xNG7KcHwDsInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROwrKu6zY9YsLp6zo9YcTnx2F6wgiPToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkLMfz9zY9YsLzdpmeMOLn8ZyeMMKjkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJ/ztFEgSFRK6MAAAAAElFTkSuQmCC" id="image54e7fde139" transform="scale(1 -1) translate(0 -133.92)" x="161.10024" y="-17.632674" width="133.92" height="133.92"/>
    </g>
    <g id="matplotlib.axis_3">
     <g id="xtick_4">
      <g id="line2d_7"/>
      <g id="text_18">
       <!-- 1 -->
-      <g style="fill: #687580" transform="translate(180.45016 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(180.45016 162.418299) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-31"/>
       </g>
      </g>
@@ -752,7 +752,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAk
      <g id="line2d_8"/>
      <g id="text_19">
       <!-- 2 -->
-      <g style="fill: #687580" transform="translate(224.95 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(224.95 162.418299) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-32"/>
       </g>
      </g>
@@ -761,14 +761,14 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAk
      <g id="line2d_9"/>
      <g id="text_20">
       <!-- 3 -->
-      <g style="fill: #687580" transform="translate(269.44984 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(269.44984 162.418299) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-33"/>
       </g>
      </g>
     </g>
     <g id="text_21">
      <!-- Patch -->
-     <g style="fill: #30383e" transform="translate(214.147266 176.236111) scale(0.11 -0.11)">
+     <g style="fill: #282828" transform="translate(214.147266 176.236111) scale(0.11 -0.11)">
       <use xlink:href="#Lato-Regular-50"/>
       <use xlink:href="#Lato-Regular-61" transform="translate(60.050003 0)"/>
       <use xlink:href="#Lato-Regular-74" transform="translate(109.750015 0)"/>
@@ -782,7 +782,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAk
      <g id="line2d_10"/>
      <g id="text_22">
       <!-- 1 -->
-      <g style="fill: #687580" transform="translate(151.80024 43.985886) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(151.80024 43.985886) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-31"/>
       </g>
      </g>
@@ -791,7 +791,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAk
      <g id="line2d_11"/>
      <g id="text_23">
       <!-- 2 -->
-      <g style="fill: #687580" transform="translate(151.80024 88.485726) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(151.80024 88.485726) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-32"/>
       </g>
      </g>
@@ -800,7 +800,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAk
      <g id="line2d_12"/>
      <g id="text_24">
       <!-- 3 -->
-      <g style="fill: #687580" transform="translate(151.80024 132.985566) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(151.80024 132.985566) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-33"/>
       </g>
      </g>
@@ -817,7 +817,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAk
    </g>
    <g id="text_26">
     <!-- 0.00 -->
-    <g style="fill: #30383e" transform="translate(217.970313 43.128074) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(217.970313 43.128074) scale(0.1 -0.1)">
      <use xlink:href="#Lato-Regular-30"/>
      <use xlink:href="#Lato-Regular-2e" transform="translate(58 0)"/>
      <use xlink:href="#Lato-Regular-30" transform="translate(81.600006 0)"/>
@@ -835,7 +835,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAk
    </g>
    <g id="text_28">
     <!-- 0.00 -->
-    <g style="fill: #30383e" transform="translate(173.470473 87.627914) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(173.470473 87.627914) scale(0.1 -0.1)">
      <use xlink:href="#Lato-Regular-30"/>
      <use xlink:href="#Lato-Regular-2e" transform="translate(58 0)"/>
      <use xlink:href="#Lato-Regular-30" transform="translate(81.600006 0)"/>
@@ -889,7 +889,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACTklEQVR4nO3UMVEDARRFURYVkRAMUCAk
    </g>
    <g id="text_34">
     <!-- Rotated features -->
-    <g style="fill: #30383e" transform="translate(191.010938 12.053154) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(191.010938 12.053154) scale(0.1 -0.1)">
      <defs>
       <path id="Lato-Regular-6f" d="M 1818 3293
 Q 2173 3293 2457 3174
@@ -1062,14 +1062,14 @@ z
    </g>
    <g clip-path="url(#p4a84819fa9)">
     <image xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAABEUQXAuK4HgyaWUW/sXbRXDFm1sez9f9E3Qd2/SEEet+Tk8Y8Ts9AL5B6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0Epb33/89PWLCup/TE0ZcxzY9YYRHJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQSlsfzdU+PmHAd2/SEEet+Tk8Y4dFJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInYQPaOcSo9CUX0QAAAAASUVORK5CYII=" id="image4276fedb43" transform="scale(1 -1) translate(0 -133.92)" x="309.90024" y="-17.632674" width="133.92" height="133.92"/>
+iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACQElEQVR4nO3UobGDABRFwZASYykhFhHH4GmDGpH8Lv4TZ7eCK87c5fP9Pa+g69ynJ4xYt2N6woj39AD4D0InQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZMgdBKEToLQSRA6CUInQegkCJ0EoZOw3Pf9TI+YsG7H9IQR17lPTxjh0UkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidBKGTIHQShE6C0EkQOglCJ0HoJAidhOXz/T3TIyZc5z49YcS6HdMTRnh0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQidB6CQInQShkyB0EoROgtBJEDoJQifhD3rHEr7Nf5zSAAAAAElFTkSuQmCC" id="image8eeb2d5152" transform="scale(1 -1) translate(0 -133.92)" x="309.90024" y="-17.632674" width="133.92" height="133.92"/>
    </g>
    <g id="matplotlib.axis_5">
     <g id="xtick_7">
      <g id="line2d_13"/>
      <g id="text_35">
       <!-- 1 -->
-      <g style="fill: #687580" transform="translate(329.25016 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(329.25016 162.418299) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-31"/>
       </g>
      </g>
@@ -1078,7 +1078,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
      <g id="line2d_14"/>
      <g id="text_36">
       <!-- 2 -->
-      <g style="fill: #687580" transform="translate(373.75 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(373.75 162.418299) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-32"/>
       </g>
      </g>
@@ -1087,14 +1087,14 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
      <g id="line2d_15"/>
      <g id="text_37">
       <!-- 3 -->
-      <g style="fill: #687580" transform="translate(418.24984 162.418299) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(418.24984 162.418299) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-33"/>
       </g>
      </g>
     </g>
     <g id="text_38">
      <!-- Patch -->
-     <g style="fill: #30383e" transform="translate(362.947266 176.236111) scale(0.11 -0.11)">
+     <g style="fill: #282828" transform="translate(362.947266 176.236111) scale(0.11 -0.11)">
       <use xlink:href="#Lato-Regular-50"/>
       <use xlink:href="#Lato-Regular-61" transform="translate(60.050003 0)"/>
       <use xlink:href="#Lato-Regular-74" transform="translate(109.750015 0)"/>
@@ -1108,7 +1108,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
      <g id="line2d_16"/>
      <g id="text_39">
       <!-- 1 -->
-      <g style="fill: #687580" transform="translate(300.60024 43.985886) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(300.60024 43.985886) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-31"/>
       </g>
      </g>
@@ -1117,7 +1117,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
      <g id="line2d_17"/>
      <g id="text_40">
       <!-- 2 -->
-      <g style="fill: #687580" transform="translate(300.60024 88.485726) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(300.60024 88.485726) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-32"/>
       </g>
      </g>
@@ -1126,7 +1126,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
      <g id="line2d_18"/>
      <g id="text_41">
       <!-- 3 -->
-      <g style="fill: #687580" transform="translate(300.60024 132.985566) scale(0.1 -0.1)">
+      <g style="fill: #666666" transform="translate(300.60024 132.985566) scale(0.1 -0.1)">
        <use xlink:href="#Lato-Regular-33"/>
       </g>
      </g>
@@ -1143,7 +1143,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
    </g>
    <g id="text_43">
     <!-- 0.00 -->
-    <g style="fill: #30383e" transform="translate(366.770313 43.128074) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(366.770313 43.128074) scale(0.1 -0.1)">
      <use xlink:href="#Lato-Regular-30"/>
      <use xlink:href="#Lato-Regular-2e" transform="translate(58 0)"/>
      <use xlink:href="#Lato-Regular-30" transform="translate(81.600006 0)"/>
@@ -1161,7 +1161,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
    </g>
    <g id="text_45">
     <!-- 0.00 -->
-    <g style="fill: #30383e" transform="translate(322.270473 87.627914) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(322.270473 87.627914) scale(0.1 -0.1)">
      <use xlink:href="#Lato-Regular-30"/>
      <use xlink:href="#Lato-Regular-2e" transform="translate(58 0)"/>
      <use xlink:href="#Lato-Regular-30" transform="translate(81.600006 0)"/>
@@ -1179,7 +1179,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
    </g>
    <g id="text_47">
     <!-- 0.00 -->
-    <g style="fill: #30383e" transform="translate(411.270153 87.627914) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(411.270153 87.627914) scale(0.1 -0.1)">
      <use xlink:href="#Lato-Regular-30"/>
      <use xlink:href="#Lato-Regular-2e" transform="translate(58 0)"/>
      <use xlink:href="#Lato-Regular-30" transform="translate(81.600006 0)"/>
@@ -1197,7 +1197,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
    </g>
    <g id="text_49">
     <!-- 0.00 -->
-    <g style="fill: #30383e" transform="translate(366.770313 132.127754) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(366.770313 132.127754) scale(0.1 -0.1)">
      <use xlink:href="#Lato-Regular-30"/>
      <use xlink:href="#Lato-Regular-2e" transform="translate(58 0)"/>
      <use xlink:href="#Lato-Regular-30" transform="translate(81.600006 0)"/>
@@ -1215,7 +1215,7 @@ iVBORw0KGgoAAAANSUhEUgAAALoAAAC6CAYAAAAZDlfxAAACRUlEQVR4nO3UMXHDABREwShojEBQhMAA
    </g>
    <g id="text_51">
     <!-- Changed patch 3 -->
-    <g style="fill: #30383e" transform="translate(339.489063 12.053154) scale(0.1 -0.1)">
+    <g style="fill: #282828" transform="translate(339.489063 12.053154) scale(0.1 -0.1)">
      <defs>
       <path id="Lato-Regular-43" d="M 3805 947
 Q 3856 947 3894 906

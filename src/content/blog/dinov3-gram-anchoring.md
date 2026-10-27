@@ -114,10 +114,10 @@ $$
 
 <figure>
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/dinov3-gram-anchoring/gram-matrices-mobile.svg" width="346" height="192" />
-    <img src="/images/blog/dinov3-gram-anchoring/gram-matrices.svg" alt="Toy patch-similarity matrices. The reference and a shared feature rotation have identical entries, while replacing patch 3 changes its similarities to patches 1 and 2." width="595" height="240" />
+    <source media="(max-width: 620px)" srcset="/images/blog/dinov3-gram-anchoring/gram-matrices-mobile.svg" width="259" height="144" />
+    <img src="/images/blog/dinov3-gram-anchoring/gram-matrices.svg" alt="Toy patch-similarity matrices. The reference and a shared feature rotation have identical entries, while replacing patch 3 changes its similarities to patches 1 and 2." width="446" height="180" />
   </picture>
-  <figcaption>Figure 1. Cosine similarities for the three-patch example. These are analytical toy features, not similarity maps measured from DINOv3. Darker blue indicates greater similarity.</figcaption>
+  <figcaption>Figure 1. Pairwise cosine similarities in the three-patch example. Rotating all features together preserves the Gram matrix; changing one patch alters its relations to the others.</figcaption>
 </figure>
 
 The full calculation is small:

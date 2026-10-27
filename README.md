@@ -81,8 +81,9 @@ version, rather than relying on later revisions.
 Each note develops a concrete problem, the relevant equation or structure, a
 worked minimal example, and its applicability limits. The series covers video
 and image generation, LLM optimization, embodied control, and 3D perception.
-Every note includes an analytical figure or a structured comparison and a
-downloadable Python example. Each References section cites three or four papers,
+Every note includes a downloadable Python example. Figures are included only
+where they clarify a dependency, constraint, or diagnostic curve; short numeric
+examples stay in equations and tables. Each References section cites three or four papers,
 with citations placed in the relevant parts of the explanation. Examples are analytical toys or symbolic audits, not reproductions of
 the papers' model evaluations.
 
@@ -132,7 +133,9 @@ regular 22px section headings, and 800px maximum page width. The blog is a
 separate page reached through the Blogs link beside Email, Scholar, and GitHub.
 The archive follows [Thinking Machines Lab's blog](https://thinkingmachines.ai/blog/):
 dates beside article titles and authors, with a thin rule between entries.
-The homepage, archive, and articles share Lato and the same profile navigation.
+The homepage, archive, and articles share Lato. The homepage links to Blogs;
+the archive and articles show an explicit Home link. Articles also link back
+to the archive through All blogs.
 Institutional logos occupy an 80 × 80 pixel area, preserving their proportions.
 
 Publication figures are reproduced from the author's own papers. MotionVLA and
@@ -169,12 +172,21 @@ archive, and every article report no axe WCAG 2 A/AA or WCAG 2.1 AA violations
 at mobile and desktop sizes. RSS contains seventeen entries, the sitemap
 contains the matching article routes, and drafts stay excluded.
 
-### Editing the analytical figures
+### Editing article figures
 
-`python scripts/render-blog-figures.py` regenerates the analytical SVGs from the
-worked examples. It requires NumPy and Matplotlib. Use `--only sam latent` to
-regenerate a subset; `--font-dir /path/to/lato` uses Lato-Regular.ttf and
-Lato-Bold.ttf. SVGs embed outlined glyphs, so readers do not need those fonts
-installed. Desktop and mobile variants have separately arranged panels and
-legends. Figures illustrate equations or measured quantities in the toy examples;
-conceptual framework boxes are not used as substitutes for those explanations.
+`python scripts/render-blog-figures.py` regenerates the retained diagnostic
+curves, Gram matrices, action timeline, and BPTT graph. It requires NumPy and
+Matplotlib. Use `--only gspo rae` for a subset, and
+`--font-dir /path/to/lato` for Lato-Regular.ttf and Lato-Bold.ttf. Matplotlib
+SVGs contain outlined glyphs.
+
+The mechanism illustrations have separate standard-library generators under
+`scripts/figures/`. Run those scripts directly after editing the corresponding
+mechanism. Desktop and mobile variants have separate layouts. Their restrained
+palette uses ink, gray, and one muted accent, with no surrounding panel border.
+
+Avoid adding charts that merely repeat a few numbers in a worked example.
+Use a figure to expose something the equations alone make harder to see:
+conditioning and gradient boundaries, group-specific support, temporal
+coordinates, or which tokens are replayed into a causal prefix. Curves use a
+compact 480px maximum width; mechanism diagrams may use the article width.

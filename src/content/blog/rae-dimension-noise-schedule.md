@@ -74,12 +74,12 @@ $$
 
 For $m>n$, every interior timestep moves toward noise. Applying this map to sampled training times changes how frequently the model encounters different corruption levels. It does not require changing the interpolation endpoints.
 
-<figure>
+<figure class="figure-plot">
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/rae-dimension-noise-schedule/schedule-mobile.svg" width="346" height="307" />
-    <img src="/images/blog/rae-dimension-noise-schedule/schedule.svg" alt="Analytical noise schedule curves for dimension ratios one, four and sixteen. Larger ratios shift interior timesteps toward more noise." loading="lazy" width="595" height="307" />
+    <source media="(max-width: 620px)" srcset="/images/blog/rae-dimension-noise-schedule/schedule-mobile.svg" width="259" height="180" />
+    <img src="/images/blog/rae-dimension-noise-schedule/schedule.svg" alt="Analytical noise schedule curves for dimension ratios one, four and sixteen. Larger ratios shift interior timesteps toward more noise." loading="lazy" width="446" height="180" />
   </picture>
-  <figcaption>Figure 1. The exact schedule transformation for three dimension ratios. Increasing latent dimension moves an interior timestep toward stronger corruption. These curves do not measure generation quality.</figcaption>
+  <figcaption>Figure 1. The schedule map for dimension ratios 1, 4, and 16. Larger ratios assign more noise to the same interior reference time; both endpoints remain fixed.</figcaption>
 </figure>
 
 ## A minimal model of redundant information

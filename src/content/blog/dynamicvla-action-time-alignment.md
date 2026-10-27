@@ -64,12 +64,12 @@ The first three inference calls behave as follows:
 
 At tick 2, only $A_0$ is ready. Execute its action for tick 2, then its action for tick 3. At tick 4, $A_2$ becomes available and takes over. Its action for tick 4 replaces the still-unexecuted action for tick 4 in $A_0$.
 
-<figure>
+<figure class="figure-plot">
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/dynamicvla-action-time-alignment/timeline-mobile.svg" width="346" height="288" />
-    <img src="/images/blog/dynamicvla-action-time-alignment/timeline.svg" alt="Three action chunks become ready after two ticks. Their first two control periods expire, their next two are executed, and the remaining predictions are superseded by the next chunk." loading="lazy" width="595" height="288" />
+    <source media="(max-width: 620px)" srcset="/images/blog/dynamicvla-action-time-alignment/timeline-mobile.svg" width="259" height="162" />
+    <img src="/images/blog/dynamicvla-action-time-alignment/timeline.svg" alt="Three action chunks become ready after two ticks. Their first two control periods expire, their next two are executed, and the remaining predictions are superseded by the next chunk." loading="lazy" width="446" height="162" />
   </picture>
-  <figcaption>Figure 1. A two-tick inference delay at 20 Hz. Each band spans six control periods; the open marker shows when inference finishes. Blue periods execute before the next chunk arrives. The first action is available after 100 ms.</figcaption>
+  <figcaption>Figure 1. Six-period action chunks with a two-tick inference delay. The first two predictions expire; the next two execute before a newer chunk takes over. Open markers indicate inference completion.</figcaption>
 </figure>
 
 For ticks 2 through 7, the source observation ticks are $0,0,2,2,4,4$. Observation age alternates between $100$ and $150$ ms. Dropping expired actions aligns the execution timestamp; it does not reduce that age to zero.

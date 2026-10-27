@@ -74,10 +74,10 @@ Thus an out-of-range response is not automatically removed from the gradient. Cl
 
 <figure>
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/gspo-sequence-importance-ratios/clipping-mobile.svg" width="346" height="451" />
-    <img src="/images/blog/gspo-sequence-importance-ratios/clipping.svg" alt="GSPO's clipped objective is flat above the upper ratio threshold for positive advantage, and below the lower threshold for negative advantage." width="595" height="307" />
+    <source media="(max-width: 620px)" srcset="/images/blog/gspo-sequence-importance-ratios/clipping-mobile.svg" width="259" height="259" />
+    <img src="/images/blog/gspo-sequence-importance-ratios/clipping.svg" alt="GSPO's clipped objective is flat above the upper ratio threshold for positive advantage, and below the lower threshold for negative advantage." width="446" height="180" />
   </picture>
-  <figcaption>Figure 1. Analytical clipping curves with the illustrative choice ε = 0.1. These values explain the branches; they are not a recommended GSPO clipping setting or paper measurements.</figcaption>
+  <figcaption>Figure 1. Clipping with advantages +1 and −1 and illustrative ε = 0.1. Dashed curves show the unclipped objective; the flat branches stop rewarding ratio changes beyond the relevant threshold.</figcaption>
 </figure>
 
 Inside an active, unclipped branch, differentiation gives

@@ -13,8 +13,8 @@ The procedure is ordinary reverse-mode differentiation applied to an unfolded re
 
 <figure>
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/bptt/unrolled-mobile.svg" width="346" height="221" />
-    <img src="/images/blog/bptt/unrolled.svg" alt="Three recurrent steps share the same transition parameters. Gray arrows carry states forward, while blue arrows carry gradients back from each loss and from later states." width="595" height="221" />
+    <source media="(max-width: 620px)" srcset="/images/blog/bptt/unrolled-mobile.svg" width="259" height="166" />
+    <img src="/images/blog/bptt/unrolled.svg" alt="Three recurrent steps share the same transition parameters. Gray arrows carry states forward, while blue arrows carry gradients back from each loss and from later states." width="446" height="166" />
   </picture>
   <figcaption>Figure 1. Unfolding a recurrence makes its dependencies explicit. Each state receives a gradient from its own loss and from the states that follow it.</figcaption>
 </figure>
@@ -188,12 +188,12 @@ $$
 
 If every Jacobian on a path has operator norm at most $q<1$, the norm of this contribution is bounded by $q^{s-t}\|r_s\|$. The signal can become very small over a long sequence. Expanding directions can instead amplify gradients; in a multidimensional model, the directions and alignment of successive Jacobians also matter.
 
-<figure>
+<figure class="figure-plot">
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/bptt/gradient-paths-mobile.svg" width="346" height="307" />
-    <img src="/images/blog/bptt/gradient-paths.svg" alt="A logarithmic plot of gradient magnitude versus the number of recurrent steps. A local multiplier of 0.8 decays, 1.0 remains constant, and 1.2 grows." loading="lazy" width="595" height="307" />
+    <source media="(max-width: 620px)" srcset="/images/blog/bptt/gradient-paths-mobile.svg" width="259" height="180" />
+    <img src="/images/blog/bptt/gradient-paths.svg" alt="A logarithmic plot of gradient magnitude versus the number of recurrent steps. A local multiplier of 0.8 decays, 1.0 remains constant, and 1.2 grows." loading="lazy" width="446" height="180" />
   </picture>
-  <figcaption>Figure 2. For the scalar recurrence h<sub>t</sub> = a h<sub>t−1</sub>, the state-to-state derivative over k steps has magnitude |a|<sup>k</sup>. These are exact values for a toy recurrence, not measurements from a trained RNN.</figcaption>
+  <figcaption>Figure 2. For the scalar recurrence h<sub>t</sub> = a h<sub>t−1</sub>, the state-to-state derivative over k steps has magnitude |a|<sup>k</sup>. Repeated multipliers below one suppress distant gradients; multipliers above one amplify them.</figcaption>
 </figure>
 
 For a tanh RNN, $J_t=\operatorname{diag}(1-h_t\odot h_t)W$. Saturated tanh units have small derivatives, so even a recurrent weight matrix with moderate norm can produce weak long-range gradients.
