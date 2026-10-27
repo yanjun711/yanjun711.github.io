@@ -30,15 +30,9 @@ h1, h2, h3, p { margin: 0; }
 .publication { display: grid; grid-template-columns: 160px minmax(0, 1fr); align-items: center; gap: 24px; padding: 16px 0; margin-bottom: 10px; }
 .paper-image { width: 160px; }
 .paper-image img { width: 160px; height: 160px; object-fit: contain; background: #fff; }
-.paper-preview { position: relative; width: 160px; }
+.paper-preview { width: 160px; }
 .paper-preview .paper-image { width: 100%; }
 .paper-preview video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #fff; }
-.preview-toggle { position: absolute; right: 5px; bottom: 5px; display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 2px; color: #333; background: rgb(255 255 255 / 90%); }
-.preview-toggle[hidden] { display: none; }
-.paper-preview[data-playing="true"] .preview-toggle { opacity: 0; }
-.paper-preview:hover .preview-toggle, .paper-preview:focus-within .preview-toggle { opacity: 1; }
-.paper-preview[data-playing="true"] .preview-play, .paper-preview[data-playing="false"] .preview-pause { display: none; }
-@media (hover: none) { .paper-preview[data-playing="true"] .preview-toggle { opacity: 1; } }
 
 .paper-content h3 { font-size: 14px; font-weight: 700; line-height: normal; }
 .authors { margin-top: 0; font-size: 14px; line-height: normal; }

@@ -35,7 +35,7 @@ export const publications = [
     project: 'https://aigeeksgroup.github.io/HumanoidTTT',
     code: 'https://github.com/AIGeeksGroup/HumanoidTTT',
     image: '/images/humanoidttt.webp',
-    preview: { src: '/videos/publications/humanoidttt.mp4', poster: '/videos/publications/humanoidttt-poster.webp', alt: 'Real-world humanoid waving and squatting, excerpted from the HumanoidTTT project demonstrations.' },
+    preview: { src: '/videos/publications/humanoidttt-grid.mp4', poster: '/videos/publications/humanoidttt-grid-poster.webp', alt: 'Four HumanoidTTT real-robot demonstrations playing simultaneously in a two-by-two grid.' },
     imageAlt: 'HumanoidTTT paper diagram showing motion reuse and capability consolidation.',
   },
   {
@@ -51,7 +51,7 @@ export const publications = [
     project: 'https://aigeeksgroup.github.io/MotionVLA',
     code: 'https://github.com/AIGeeksGroup/MotionVLA',
     image: '/images/motionvla.webp',
-    preview: { src: '/videos/publications/motionvla.mp4', poster: '/videos/publications/motionvla-poster.webp', alt: 'Real-world humanoid turning and walking, excerpted from the MotionVLA project demonstrations.' },
+    preview: { src: '/videos/publications/motionvla-grid.mp4', poster: '/videos/publications/motionvla-grid-poster.webp', alt: 'Four MotionVLA real-robot demonstrations playing simultaneously, with an inset ego-camera view in the upper-left demonstration.' },
     imageAlt: 'MotionVLA paper figure comparing generated humanoid motion sequences.',
   },
 ];

@@ -140,14 +140,14 @@ Institutional logos occupy an 80 × 80 pixel area, preserving their proportions.
 HUST uses the classic full-color emblem from its official visual identity guide,
 with the original blue, red, white, and dark-gray artwork.
 
-HumanoidTTT and MotionVLA use silent, looping real-robot video excerpts from
-their official project pages in place of static publication figures. Each has
-a 480 × 480 video and a matching static poster. Playback starts when the preview
-is visible and pauses offscreen or in a background tab. A small pause/play
-button appears on hover or keyboard focus, and stays visible on touch devices.
-Reduced-motion preferences start the previews paused. Source URLs, crop windows,
-and timestamps are documented in `public/videos/publications/SOURCES.md`;
-`python scripts/render-publication-previews.py` regenerates them with ffmpeg.
+HumanoidTTT and MotionVLA each use a 2 × 2 video grid from their official
+project pages. Four real-robot demonstrations play simultaneously in every grid. MotionVLA
+also includes an ego-camera picture-in-picture beside its upper-left robot.
+Each silent 640 × 640 preview loops continuously using native autoplay, muted,
+loop, and playsinline attributes, with no pause buttons or scripted pausing.
+Clicking the grid opens the project page. Source URLs, crop windows, and times
+are documented in `public/videos/publications/SOURCES.md`;
+`python scripts/render-publication-previews.py` regenerates the grids with ffmpeg.
 
 Publication figures are reproduced from the author's own papers. MotionVLA and
 HumanoidTTT identify their arXiv licenses as CC BY-NC-SA 4.0; Language-Forcing
