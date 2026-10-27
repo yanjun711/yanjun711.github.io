@@ -3,7 +3,7 @@ title: "Test post 2: Figures, tables, and code"
 description: "A sample post for checking figures, table layout, and syntax highlighting."
 date: 2026-10-25
 tags: [Test]
-draft: false
+draft: true
 ---
 
 This is a second test post. The figure comes from my Language-Forcing paper; the table and code below are illustrative examples.

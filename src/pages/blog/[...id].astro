@@ -1,18 +1,30 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import 'katex/dist/katex.min.css';
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft && data.date <= new Date());
   return posts.map(post => ({ params: { id: post.id }, props: { post } }));
 }
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const contents = headings.filter(heading => heading.depth === 2);
 ---
 <Base title={post.data.title} description={post.data.description} article>
   <article class="blog-article">
     <a class="back-link" href="/blog/">← All blogs</a>
     <header class="article-heading"><h1>{post.data.title}</h1><p class="article-meta"><a href="/">Yanjun Li</a><span aria-hidden="true">·</span><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time></p></header>
-    <div class="prose"><Content /></div>
+    {post.data.toc && <details class="mobile-contents">
+      <summary>Contents</summary>
+      <nav aria-label="Table of contents"><ol>{contents.map(heading => <li><a href={'#' + heading.slug}>{heading.text}</a></li>)}</ol></nav>
+    </details>}
+    <div class:list={['article-body', { 'with-contents': post.data.toc }]}>
+      {post.data.toc && <nav class="article-toc" aria-label="Table of contents">
+        <p>Contents</p>
+        <ol>{contents.map(heading => <li><a href={'#' + heading.slug}>{heading.text}</a></li>)}</ol>
+      </nav>}
+      <div class="prose"><Content /></div>
+    </div>
     <a class="back-link" href="/blog/">← All blogs</a>
   </article>
 </Base>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="330" viewBox="0 0 800 330" role="img" aria-labelledby="title desc">
+  <title id="title">A recurrent computation unfolded into three steps</title>
+  <desc id="desc">The same transition f with parameters theta maps h zero to h one, h two, and h three. Inputs enter from above, and each state contributes a loss below. Gray arrows show the forward computation; blue arrows carry gradients back from losses and future states.</desc>
+  <defs>
+    <marker id="forward" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#777"/></marker>
+    <marker id="backward" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#1772d0"/></marker>
+  </defs>
+  <rect width="800" height="330" fill="white"/>
+  <g fill="none" stroke="#777" stroke-width="1.4" marker-end="url(#forward)">
+    <path d="M116 139H234"/><path d="M316 139H434"/><path d="M516 139H634"/>
+    <path d="M275 57V116"/><path d="M475 57V116"/><path d="M675 57V116"/>
+    <path d="M282 166V232"/><path d="M482 166V232"/><path d="M682 166V232"/>
+  </g>
+  <g fill="none" stroke="#1772d0" stroke-width="1.7" marker-end="url(#backward)">
+    <path d="M235 155H116"/><path d="M435 155H316"/><path d="M635 155H516"/>
+    <path d="M267 232V167"/><path d="M467 232V167"/><path d="M667 232V167"/>
+  </g>
+  <g fill="#fff" stroke="#999" stroke-width="1">
+    <rect x="35" y="117" width="80" height="50" rx="3"/>
+    <rect x="235" y="117" width="80" height="50" rx="3"/>
+    <rect x="435" y="117" width="80" height="50" rx="3"/>
+    <rect x="635" y="117" width="80" height="50" rx="3"/>
+  </g>
+  <g font-family="Lato, Arial, sans-serif" text-anchor="middle" fill="#222" font-size="20">
+    <text x="75" y="150">h₀</text><text x="275" y="150">h₁</text><text x="475" y="150">h₂</text><text x="675" y="150">h₃</text>
+    <text x="275" y="45">x₁</text><text x="475" y="45">x₂</text><text x="675" y="45">x₃</text>
+    <text x="275" y="258">ℓ₁</text><text x="475" y="258">ℓ₂</text><text x="675" y="258">ℓ₃</text>
+  </g>
+  <g font-family="Lato, Arial, sans-serif" text-anchor="middle" fill="#666" font-size="15">
+    <text x="175" y="113">fθ</text><text x="375" y="113">fθ</text><text x="575" y="113">fθ</text>
+    <text x="75" y="191">fixed initial state</text>
+    <text x="400" y="300">The parameters θ are shared across all three transitions.</text>
+  </g>
+  <g font-family="Lato, Arial, sans-serif" font-size="14">
+    <text x="45" y="24" fill="#666">Forward computation</text>
+    <text x="45" y="45" fill="#1772d0">Reverse gradient</text>
+  </g>
+</svg>

@@ -3,7 +3,7 @@ title: "Test post 1: Text and links"
 description: "A sample post for checking paragraphs, headings, lists, and links."
 date: 2026-10-26
 tags: [Test]
-draft: false
+draft: true
 ---
 
 This is a test post for the website. It contains sample text to check the article layout.

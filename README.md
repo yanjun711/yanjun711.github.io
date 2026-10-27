@@ -61,10 +61,15 @@ are excluded from the archive, generated pages, RSS, and sitemap.
 Future-dated posts appear after a build on or after their date. The included
 `first-note.md` is an unpublished template, not a real post.
 
-Two published samples, `test-post-text.md` and `test-post-media.md`, are included
-to check the blog archive and article formatting. They are explicitly labeled
-as test posts. Delete them, or set `draft: true`, when they are no longer needed.
-They never appear on the homepage.
+The first published article is `backpropagation-through-time.md`, with equations,
+original figures, references, and a runnable NumPy implementation at
+`public/code/bptt.py`. Run `python public/code/bptt.py` to check its analytical
+gradients against central differences. Set `toc: true` to add a desktop sidebar
+and a collapsible contents list on smaller screens. Math uses KaTeX with
+`remark-math` and `rehype-katex` through Astro's unified Markdown processor.
+
+The earlier samples, `test-post-text.md` and `test-post-media.md`, remain as
+drafts for formatting checks. They are excluded from the archive and homepage.
 
 ## Deploy to GitHub Pages
 

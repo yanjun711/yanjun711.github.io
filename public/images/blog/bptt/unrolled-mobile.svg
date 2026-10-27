@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="450" viewBox="0 0 380 450" role="img" aria-labelledby="title desc">
+  <title id="title">Three recurrent steps and their reverse gradients</title>
+  <desc id="desc">States run from h zero at the top to h three at the bottom. Inputs enter from the left, losses are on the right, and the transition parameters are shared. Gray arrows compute forward; blue arrows propagate gradients backward.</desc>
+  <defs>
+    <marker id="f" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#777"/></marker>
+    <marker id="b" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#1772d0"/></marker>
+  </defs>
+  <rect width="380" height="450" fill="white"/>
+  <g fill="none" stroke="#777" stroke-width="1.4" marker-end="url(#f)">
+    <path d="M183 73V127"/><path d="M183 173V227"/><path d="M183 273V327"/>
+    <path d="M65 145H154"/><path d="M65 245H154"/><path d="M65 345H154"/>
+    <path d="M226 145H310"/><path d="M226 245H310"/><path d="M226 345H310"/>
+  </g>
+  <g fill="none" stroke="#1772d0" stroke-width="1.7" marker-end="url(#b)">
+    <path d="M197 127V73"/><path d="M197 227V173"/><path d="M197 327V273"/>
+    <path d="M310 159H226"/><path d="M310 259H226"/><path d="M310 359H226"/>
+  </g>
+  <g fill="white" stroke="#999">
+    <rect x="155" y="28" width="70" height="44" rx="3"/>
+    <rect x="155" y="128" width="70" height="44" rx="3"/>
+    <rect x="155" y="228" width="70" height="44" rx="3"/>
+    <rect x="155" y="328" width="70" height="44" rx="3"/>
+  </g>
+  <g font-family="Lato, Arial, sans-serif" text-anchor="middle" fill="#222" font-size="20">
+    <text x="190" y="57">h₀</text><text x="190" y="157">h₁</text><text x="190" y="257">h₂</text><text x="190" y="357">h₃</text>
+    <text x="45" y="157">x₁</text><text x="45" y="257">x₂</text><text x="45" y="357">x₃</text>
+    <text x="330" y="157">ℓ₁</text><text x="330" y="257">ℓ₂</text><text x="330" y="357">ℓ₃</text>
+  </g>
+  <g font-family="Lato, Arial, sans-serif" fill="#666" font-size="14">
+    <text x="237" y="55">fixed initial state</text>
+    <text x="214" y="106">fθ</text><text x="214" y="206">fθ</text><text x="214" y="306">fθ</text>
+    <text x="190" y="409" text-anchor="middle">The same θ is used at every step.</text>
+    <text x="45" y="439">Forward computation</text><text x="220" y="439" fill="#1772d0">Reverse gradient</text>
+  </g>
+</svg>
