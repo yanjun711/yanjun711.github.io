@@ -13,7 +13,7 @@ An autoregressive video generator produces a frame, adds it to its context, and 
 
 ## The problem with a correct previous frame
 
-Write a video as $x^{1:N}$, where $x^i$ is a frame or a generated chunk. An autoregressive model factorizes its distribution as
+Write a video as $x^{1:N}$, where $x^i$ is a frame or a generated chunk, as in [CausVid](https://arxiv.org/abs/2412.07772v2). An autoregressive model factorizes its distribution as
 
 $$
 p_\theta(x^{1:N})
@@ -75,7 +75,7 @@ There is a further qualification: an early-exit training sample need not have ex
 
 ### What evaluates the generated video?
 
-Self Forcing combines its rollout with distribution-matching objectives. For the DMD version, a useful schematic expression is
+Self Forcing combines its rollout with distribution-matching objectives. For the version based on [Distribution Matching Distillation (DMD)](https://arxiv.org/abs/2311.18828v1), a useful schematic expression is
 
 $$
 \mathbb{E}_{\tau}
@@ -108,8 +108,8 @@ $$
 
 <figure>
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/self-forcing-generated-prefixes/prefix-drift-mobile.svg" />
-    <img src="/images/blog/self-forcing-generated-prefixes/prefix-drift.svg" alt="A scalar toy recurrence stays at 1.05 with clean prefixes, but drifts to 1.1355 when conditioned on its own outputs." width="710" height="380" />
+    <source media="(max-width: 620px)" srcset="/images/blog/self-forcing-generated-prefixes/prefix-drift-mobile.svg" width="346" height="307" />
+    <img src="/images/blog/self-forcing-generated-prefixes/prefix-drift.svg" alt="A scalar toy recurrence stays at 1.05 with clean prefixes, but drifts to 1.1355 when conditioned on its own outputs." width="595" height="307" />
   </picture>
   <figcaption>Figure 1. A toy recurrence, not a video-model measurement. The one-step error is small under clean prefixes; feeding predictions back changes the later inputs.</figcaption>
 </figure>
@@ -149,6 +149,8 @@ Detached caches reduce memory, but remove a path for learning how an early decis
 
 Finally, training on generated prefixes is not a guarantee of unlimited-horizon stability. The paper reports deterioration far beyond the training horizon. The length of training rollouts, the quality of the distribution-matching teacher, and the retained context still constrain what the model can learn. The narrow result is that the training inputs now include the consequences of the generator's own earlier predictions.
 
-## Source
+## References
 
-[Self Forcing: Bridging the Train-Test Gap in Autoregressive Video Diffusion, v1](https://arxiv.org/html/2506.08009v1), especially Sections 3.2–3.3, Algorithm 1, and Section 5. The recurrence and its plot above are original illustrative examples.
+1. Xun Huang et al. [Self Forcing: Bridging the Train-Test Gap in Autoregressive Video Diffusion](https://arxiv.org/html/2506.08009v1). 2025.
+2. Tianwei Yin et al. [From Slow Bidirectional to Fast Autoregressive Video Diffusion Models](https://arxiv.org/abs/2412.07772v2). CVPR, 2025.
+3. Tianwei Yin et al. [One-step Diffusion with Distribution Matching Distillation](https://arxiv.org/abs/2311.18828v1). CVPR, 2024; first preprint, 2023.

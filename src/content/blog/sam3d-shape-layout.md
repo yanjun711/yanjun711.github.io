@@ -9,7 +9,7 @@ toc: true
 
 A reconstruction system produces a plausible chair from a photograph. Its legs, back, and seat look reasonable in isolation. Yet when we place it back into the camera view, it faces the wrong direction and floats above the floor. Generating a convincing object and explaining the object in the photograph are different requirements.
 
-SAM 3D addresses this distinction by generating coarse shape and camera-space layout jointly. Its geometry model predicts an occupancy representation together with rotation, translation, and scale. This note examines that coupling: what the variables mean, how their tokens interact, and why a rotation prediction is incomplete without a shape convention.
+SAM 3D [\[1\]](https://arxiv.org/abs/2511.16624v1) addresses this distinction by generating coarse shape and camera-space layout jointly. Its geometry model predicts an occupancy representation together with rotation, translation, and scale. This note examines that coupling: what the variables mean, how their tokens interact, and why a rotation prediction is incomplete without a shape convention.
 
 ## A shape does not specify its placement
 
@@ -19,7 +19,7 @@ $$
 p(O,R,t,s\mid I,M).
 $$
 
-Here $O$ is a coarse $64^3$ occupancy representation, $R$ is rotation represented by six parameters, $t\in\mathbb R^3$ is translation, and $s\in\mathbb R^3$ gives scale along the object axes. The six rotation parameters encode a three-dimensional rotation; they do not imply six physical rotational degrees of freedom.
+Here $O$ is a coarse $64^3$ occupancy representation, $R$ is rotation represented by six parameters, $t\in\mathbb R^3$ is translation, and $s\in\mathbb R^3$ gives scale along the object axes. The six rotation parameters encode a three-dimensional rotation; they do not imply six physical rotational degrees of freedom. This continuous rotation representation follows Zhou et al. [\[2\]](https://arxiv.org/abs/1812.07035v1).
 
 The output variables answer related questions. Shape determines which points constitute the object. Rotation and scale determine how those points are oriented and stretched. Translation locates the result relative to the camera. The final rendered silhouette depends on all of them.
 
@@ -27,26 +27,22 @@ It is possible to factor the same distribution as $p(O\mid I,M)p(R,t,s\mid O,I,M
 
 ## Two views of the evidence
 
-The model conditions on four sets of DINOv2 tokens: a cropped object image, its cropped mask, the full image, and the full-image mask. The crop emphasizes object detail. The full image retains scene context that the crop can remove, such as nearby objects and surfaces.
+The model conditions on four sets of DINOv2 [\[3\]](https://arxiv.org/abs/2304.07193v1) tokens: a cropped object image, its cropped mask, the full image, and the full-image mask. The crop emphasizes object detail. The full image retains scene context that the crop can remove, such as nearby objects and surfaces.
 
 The masks identify which object the model should explain. Without the full view, a tightly cropped image may make a small nearby object and a large distant object look similar. Without the crop, a small object can receive relatively few pixels in the full-image representation. The two views serve different geometric purposes.
 
 These cues do not make single-view reconstruction uniquely determined. An occluded back surface can have several plausible shapes, and absolute scale may remain ambiguous. Conditioning supplies evidence and learned priors; it does not turn every hidden quantity into an observation.
 
-<figure>
-  <img src="/images/blog/sam3d-shape-layout/joint-geometry.svg" alt="Cropped object and full-image context condition a geometry model. Shape tokens exchange information with rotation, translation, and scale tokens, and the resulting shape and placement combine in camera coordinates." width="540" height="530" />
-  <figcaption>Figure 1. A conceptual view of the geometry model. Shape and layout communicate during denoising. The arrows summarize information flow; they are not a reproduction of the model's structured attention mask.</figcaption>
-</figure>
 
 ## What is actually mixed?
 
-Appendix C.1 makes the tokenization concrete. The $64^3$ occupancy grid is represented in a coarser $16^3\times8$ latent. Its $4096$ spatial positions become shape tokens. Rotation, translation, and scale each contribute one layout token.
+Appendix C.1 makes the tokenization concrete. Following the structured-latent approach of Xiang et al. [\[4\]](https://arxiv.org/abs/2412.01506v1), the $64^3$ occupancy grid is represented in a coarser $16^3\times8$ latent. Its $4096$ spatial positions become shape tokens. Rotation, translation, and scale each contribute one layout token.
 
 Modality-specific input projections map those tokens into a shared feature width of $1024$. Output projections return predictions to the appropriate parameter spaces. A Mixture of Transformers uses one transformer for shape and another whose parameters are shared across the layout modalities. Joint self-attention permits information exchange between them.
 
 This arrangement matters because shared attention and shared parameters are different choices. Rotation need not use the same input projection as an eight-channel shape latent merely because both participate in an attention operation. Conversely, separate modality processing does not require the streams to ignore one another.
 
-The paper also uses a structured attention mask to support training on datasets with incomplete modality labels, and to permit selective fine-tuning. For example, shape-only supervision need not require reliable camera-space placement annotations. The exact mask is an architectural detail beyond this diagram; the essential point here is that modality-specific processing retains a route for joint context.
+The paper also uses a structured attention mask to support training on datasets with incomplete modality labels, and to permit selective fine-tuning. For example, shape-only supervision need not require reliable camera-space placement annotations. The exact mask is beyond the shape–layout coupling considered here; the essential point here is that modality-specific processing retains a route for joint context.
 
 Why should shape influence rotation? Imagine a shape generator that chooses a different canonical orientation for a chair. A fixed camera rotation that was correct for the old canonical orientation is now wrong. The output rotation only has meaning relative to the output shape's coordinate frame. Independent plausibility is insufficient; their composition must explain the same image.
 
@@ -87,6 +83,14 @@ This tiny calculation exposes the coupling. The projected location is not a prop
 
 Now double both $s$ and $t$. The camera point becomes $(2,4,8)$, but its projection remains $(25,50)$. Every point transformed this way preserves its image projection. Without an additional metric cue, the image cannot distinguish those globally scaled configurations.
 
+<figure>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/sam3d-shape-layout/joint-geometry-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/sam3d-shape-layout/joint-geometry.svg" alt="A camera ray passes through points at depth four, height two and depth eight, height four. Original and doubled-scale configurations produce identical image projections." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. Scale ambiguity in the worked example. Doubling both scale and translation moves a camera-space point along its viewing ray; the projected image points remain unchanged. This is exact pinhole geometry, not a SAM 3D result.</figcaption>
+</figure>
+
 The [runnable NumPy example](/code/sam3d-shape-layout.py) checks the transformation and this scale ambiguity:
 
 ~~~python
@@ -113,6 +117,9 @@ The geometry model is also only one stage of SAM 3D. A later model handles textu
 
 The practical distinction is straightforward: an object can look good in its own viewer and still fail to explain its source image. Joint shape-and-layout generation puts those two requirements into the same conditional modeling problem.
 
-## Reference
+## References
 
-- [*SAM 3D: 3Dfy Anything in Images*](https://arxiv.org/abs/2511.16624v1), November 2025. This note follows the first version, particularly Sections 2.1–2.2 and Appendix C.1.
+1. SAM 3D Team et al. [SAM 3D: 3Dfy Anything in Images](https://arxiv.org/abs/2511.16624v1). 2025.
+2. Yi Zhou, Connelly Barnes, Jingwan Lu, Jimei Yang, and Hao Li. [On the Continuity of Rotation Representations in Neural Networks](https://arxiv.org/abs/1812.07035v1). CVPR 2019; preprint 2018.
+3. Maxime Oquab et al. [DINOv2: Learning Robust Visual Features without Supervision](https://arxiv.org/abs/2304.07193v1). 2023.
+4. Jianfeng Xiang et al. [Structured 3D Latents for Scalable and Versatile 3D Generation](https://arxiv.org/abs/2412.01506v1). CVPR 2025; preprint 2024.

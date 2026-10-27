@@ -49,7 +49,7 @@ The normalization is a consequential change of objective. $s_i$ is a length-norm
 
 ## Clipping one answer at a time
 
-For a group of $G$ answers to the same prompt, let $r_i$ be the reward. GSPO normalizes rewards within the group:
+For a group of $G$ answers to the same prompt, let $r_i$ be the reward. As in GRPO, introduced in [DeepSeekMath](https://arxiv.org/abs/2402.03300v1), GSPO normalizes rewards within the group:
 
 $$
 A_i=\frac{r_i-\operatorname{mean}(r_1,\ldots,r_G)}
@@ -58,7 +58,7 @@ $$
 
 Rewards, advantages, and rollout-policy log probabilities are held fixed during the policy update. If all rewards are equal, the denominator needs a numerical guard or the group needs explicit handling; the equation alone is undefined in that case.
 
-The sampled objective to maximize is
+The clipping construction follows [Proximal Policy Optimization (PPO)](https://arxiv.org/abs/1707.06347v1), with GSPO applying it to the length-normalized response ratio. The sampled objective to maximize is
 
 $$
 J(\theta)=\frac{1}{G}\sum_{i=1}^{G}
@@ -74,8 +74,8 @@ Thus an out-of-range response is not automatically removed from the gradient. Cl
 
 <figure>
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/gspo-sequence-importance-ratios/clipping-mobile.svg" />
-    <img src="/images/blog/gspo-sequence-importance-ratios/clipping.svg" alt="GSPO's clipped objective is flat above the upper ratio threshold for positive advantage, and below the lower threshold for negative advantage." width="800" height="340" />
+    <source media="(max-width: 620px)" srcset="/images/blog/gspo-sequence-importance-ratios/clipping-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/gspo-sequence-importance-ratios/clipping.svg" alt="GSPO's clipped objective is flat above the upper ratio threshold for positive advantage, and below the lower threshold for negative advantage." width="595" height="307" />
   </picture>
   <figcaption>Figure 1. Analytical clipping curves with the illustrative choice ε = 0.1. These values explain the branches; they are not a recommended GSPO clipping setting or paper measurements.</figcaption>
 </figure>
@@ -152,6 +152,8 @@ The group advantage adds another limitation: the same answer can receive differe
 
 These boundaries do not make the response-level choice arbitrary. A scalar completion reward and a shared response update are a coherent pairing. The precise mechanism is that GSPO averages **log probability changes**, exponentiates that average, and clips the resulting response contribution. Its empirical behavior should be assessed with that surrogate in mind, rather than treating it as exact joint importance sampling.
 
-## Source
+## References
 
-[Group Sequence Policy Optimization, v1](https://arxiv.org/html/2507.18071v1), Sections 4.1–4.2, especially Equations 6–8. The numeric ratios, finite-difference checks, and clipping plots above are illustrative calculations, not reported training results.
+1. Chujie Zheng et al. [Group Sequence Policy Optimization](https://arxiv.org/html/2507.18071v1). 2025.
+2. Zhihong Shao et al. [DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models](https://arxiv.org/abs/2402.03300v1). 2024.
+3. John Schulman et al. [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347v1). 2017.

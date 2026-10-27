@@ -9,13 +9,13 @@ toc: true
 
 A robot observes a moving object, predicts six actions, and starts executing them. That description hides a timing question: how old is the first predicted action by the time inference finishes?
 
-If producing the chunk takes two control periods, its first two actions refer to times that have already passed. Executing the chunk from its beginning creates a systematic delay. DynamicVLA's action-streaming rule makes the intended execution time explicit: discard expired actions and, where chunks overlap, use the chunk based on the newer observation.
+If producing the chunk takes two control periods, its first two actions refer to times that have already passed. Executing the chunk from its beginning creates a systematic delay. DynamicVLA's action-streaming rule [\[1\]](https://arxiv.org/abs/2601.22153v1) makes the intended execution time explicit: discard expired actions and, where chunks overlap, use the chunk based on the newer observation.
 
 This note isolates that scheduling mechanism. It does not attempt to explain every component of the model or its dynamic-manipulation benchmark.
 
 ## A chunk has a clock
 
-Use discrete control ticks $k=0,1,2,\ldots$, separated by $\Delta$ seconds. An observation at tick $t$ produces the chunk
+Predicting several future actions in one call is action chunking, as used in ACT [\[2\]](https://arxiv.org/abs/2304.13705v1). To make the timing explicit, use discrete control ticks $k=0,1,2,\ldots$, separated by $\Delta$ seconds. An observation at tick $t$ produces the chunk
 
 $$
 A_t=\{a_t^{(t)},a_{t+1}^{(t)},\ldots,a_{t+n}^{(t)}\}.
@@ -56,7 +56,7 @@ Set the control rate to $20$ Hz, so $\Delta=50$ ms. Let inference take $m=2$ tic
 
 The first three inference calls behave as follows:
 
-| Chunk | Observation tick | Intended action ticks | Ready tick | Expired prefix |
+| Chunk | From tick | Action ticks | Ready | Expired |
 | --- | ---: | --- | ---: | --- |
 | $A_0$ | 0 | 0–5 | 2 | 0, 1 |
 | $A_2$ | 2 | 2–7 | 4 | 2, 3 |
@@ -65,13 +65,16 @@ The first three inference calls behave as follows:
 At tick 2, only $A_0$ is ready. Execute its action for tick 2, then its action for tick 3. At tick 4, $A_2$ becomes available and takes over. Its action for tick 4 replaces the still-unexecuted action for tick 4 in $A_0$.
 
 <figure>
-  <img src="/images/blog/dynamicvla-action-time-alignment/timeline.svg" alt="Three six-action chunks begin at ticks zero, two, and four and arrive two ticks later. Each loses a two-action prefix. Execution uses A0 at ticks two and three, A2 at four and five, and A4 at six and seven." width="540" height="410" />
-  <figcaption>Figure 1. An illustrative 20 Hz schedule with a two-tick inference delay. Gray cells are expired before arrival. Blue cells are executed before a newer chunk becomes available. Pale cells are valid predictions superseded by a newer chunk.</figcaption>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/dynamicvla-action-time-alignment/timeline-mobile.svg" width="346" height="288" />
+    <img src="/images/blog/dynamicvla-action-time-alignment/timeline.svg" alt="Three action chunks become ready after two ticks. Their first two control periods expire, their next two are executed, and the remaining predictions are superseded by the next chunk." loading="lazy" width="595" height="288" />
+  </picture>
+  <figcaption>Figure 1. A two-tick inference delay at 20 Hz. Each band spans six control periods; the open marker shows when inference finishes. Blue periods execute before the next chunk arrives. The first action is available after 100 ms.</figcaption>
 </figure>
 
 For ticks 2 through 7, the source observation ticks are $0,0,2,2,4,4$. Observation age alternates between $100$ and $150$ ms. Dropping expired actions aligns the execution timestamp; it does not reduce that age to zero.
 
-For scale, an object moving at $0.5$ m/s travels $5$ cm in $100$ ms. This is a constant-velocity illustration, not a DynamicVLA benchmark result. Whether the action suffix handles that motion depends on what the policy predicted about the future. A queue operation alone cannot recover a future state the model never anticipated.
+For scale, an object moving at $0.5$ m/s travels $5$ cm in $100$ ms. This is a constant-velocity illustration, not a DynamicVLA benchmark result. Whether the action suffix handles that motion depends on what the policy predicted about the future. A queue operation alone cannot recover a future state the model never anticipated. Related work such as VLASH [\[3\]](https://arxiv.org/abs/2512.01031v1) explicitly studies future-state-aware asynchronous inference, highlighting why execution timing and future-state conditioning are connected concerns.
 
 ## A minimal scheduler
 
@@ -105,6 +108,8 @@ Real queues may implement the same decision by replacing future entries when eac
 
 The useful contribution is narrower: a policy produces time-indexed predictions, inference consumes time, and the execution layer respects both facts. Removing expired entries and preferring fresher observations makes that temporal contract explicit.
 
-## Reference
+## References
 
-- Xie et al., [*DynamicVLA: A Vision-Language-Action Model for Dynamic Object Manipulation*](https://arxiv.org/abs/2601.22153v1), January 2026. This note follows the first version, particularly Sections III-A, III-C, and III-D.
+1. Haozhe Xie et al. [DynamicVLA: A Vision-Language-Action Model for Dynamic Object Manipulation](https://arxiv.org/abs/2601.22153v1). 2026.
+2. Tony Z. Zhao, Vikash Kumar, Sergey Levine, and Chelsea Finn. [Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware](https://arxiv.org/abs/2304.13705v1). 2023.
+3. Jiaming Tang et al. [VLASH: Real-Time VLAs via Future-State-Aware Asynchronous Inference](https://arxiv.org/abs/2512.01031v1). 2025.

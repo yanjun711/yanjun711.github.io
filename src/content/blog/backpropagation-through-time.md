@@ -7,14 +7,14 @@ draft: false
 toc: true
 ---
 
-A recurrent model uses its previous state to compute its next state. A mistake at the end of a sequence can therefore depend on a computation that happened many steps earlier. Backpropagation through time (BPTT) computes how much each of those earlier computations contributed to the loss.
+A recurrent model uses its previous state to compute its next state. A mistake at the end of a sequence can therefore depend on a computation that happened many steps earlier. [Backpropagation through time (BPTT)](https://doi.org/10.1109/5.58337) computes how much each of those earlier computations contributed to the loss.
 
 The procedure is ordinary reverse-mode differentiation applied to an unfolded recurrent computation. The same parameters appear at every step, so their gradient is the **sum of the contributions from every use**. Keeping track of that sum is the main idea behind the algorithm.
 
 <figure>
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/bptt/unrolled-mobile.svg" />
-    <img src="/images/blog/bptt/unrolled.svg" alt="Three recurrent steps share the same transition parameters. Gray arrows carry states forward, while blue arrows carry gradients back from each loss and from later states." width="800" height="330" />
+    <source media="(max-width: 620px)" srcset="/images/blog/bptt/unrolled-mobile.svg" width="346" height="221" />
+    <img src="/images/blog/bptt/unrolled.svg" alt="Three recurrent steps share the same transition parameters. Gray arrows carry states forward, while blue arrows carry gradients back from each loss and from later states." width="595" height="221" />
   </picture>
   <figcaption>Figure 1. Unfolding a recurrence makes its dependencies explicit. Each state receives a gradient from its own loss and from the states that follow it.</figcaption>
 </figure>
@@ -189,19 +189,22 @@ $$
 If every Jacobian on a path has operator norm at most $q<1$, the norm of this contribution is bounded by $q^{s-t}\|r_s\|$. The signal can become very small over a long sequence. Expanding directions can instead amplify gradients; in a multidimensional model, the directions and alignment of successive Jacobians also matter.
 
 <figure>
-  <img src="/images/blog/bptt/gradient-paths.svg" alt="A logarithmic plot of gradient magnitude versus the number of recurrent steps. A local multiplier of 0.8 decays, 1.0 remains constant, and 1.2 grows." width="720" height="360" loading="lazy" />
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/bptt/gradient-paths-mobile.svg" width="346" height="307" />
+    <img src="/images/blog/bptt/gradient-paths.svg" alt="A logarithmic plot of gradient magnitude versus the number of recurrent steps. A local multiplier of 0.8 decays, 1.0 remains constant, and 1.2 grows." loading="lazy" width="595" height="307" />
+  </picture>
   <figcaption>Figure 2. For the scalar recurrence h<sub>t</sub> = a h<sub>t−1</sub>, the state-to-state derivative over k steps has magnitude |a|<sup>k</sup>. These are exact values for a toy recurrence, not measurements from a trained RNN.</figcaption>
 </figure>
 
 For a tanh RNN, $J_t=\operatorname{diag}(1-h_t\odot h_t)W$. Saturated tanh units have small derivatives, so even a recurrent weight matrix with moderate norm can produce weak long-range gradients.
 
-Gradient clipping limits the magnitude of an update when the gradient becomes too large. For a gradient vector $g$ and threshold $\tau>0$, clipping by global norm uses
+[Pascanu et al.](https://arxiv.org/abs/1211.5063) analyze these long-path difficulties and motivate gradient norm clipping. Clipping limits the magnitude of an update when the gradient becomes too large. For a gradient vector $g$ and threshold $\tau>0$, clipping by global norm uses
 
 $$
 g \leftarrow g\min\left(1,\frac{\tau}{\|g\|_2}\right),
 $$
 
-with a zero gradient left unchanged. Clipping does not recover a signal that has already vanished. Gated architectures such as LSTMs provide additive state paths that can help preserve gradients, but they do not guarantee successful learning over arbitrary horizons.
+with a zero gradient left unchanged. Clipping does not recover a signal that has already vanished. Gated architectures such as [LSTMs](https://doi.org/10.1162/neco.1997.9.8.1735) provide additive state paths that can help preserve gradients, but they do not guarantee successful learning over arbitrary horizons.
 
 ## Truncated BPTT
 
@@ -226,7 +229,7 @@ for x_chunk, y_chunk in chunks:
 
 This snippet assumes `torch` is imported and chunks belong to one continuing sequence. Reset the state for a new independent sequence. An LSTM carries a tuple of hidden and cell states; detach both tensors at a boundary.
 
-With non-overlapping chunks, paths are at most $K$ steps long, and often shorter near a boundary. Overlapping windows and other update schedules make different tradeoffs. In general, truncation changes the gradient estimate; it is not merely a memory-saving way to compute the full gradient. Activation checkpointing offers a different tradeoff: it recomputes activations during the backward pass while retaining the full gradient paths.
+With non-overlapping chunks, paths are at most $K$ steps long, and often shorter near a boundary. Overlapping windows and other update schedules make different tradeoffs. In general, truncation changes the gradient estimate; it is not merely a memory-saving way to compute the full gradient. [Activation checkpointing](https://arxiv.org/abs/1604.06174v1) offers a different tradeoff: it recomputes activations during the backward pass while retaining the full gradient paths.
 
 ## Practical notes
 
@@ -243,6 +246,6 @@ The same reasoning applies to a differentiable world model rolled forward over s
 ## References
 
 1. Paul J. Werbos. [Backpropagation through time: what it does and how to do it](https://doi.org/10.1109/5.58337). *Proceedings of the IEEE*, 78(10), 1550–1560, 1990.
-2. Razvan Pascanu, Tomas Mikolov, and Yoshua Bengio. [On the difficulty of training recurrent neural networks](https://arxiv.org/abs/1211.5063). *ICML*, 2013. Analysis of vanishing and exploding gradients, including gradient norm clipping.
+2. Razvan Pascanu, Tomas Mikolov, and Yoshua Bengio. [On the difficulty of training recurrent neural networks](https://arxiv.org/abs/1211.5063). *ICML*, 2013.
 3. Sepp Hochreiter and Jürgen Schmidhuber. [Long Short-Term Memory](https://doi.org/10.1162/neco.1997.9.8.1735). *Neural Computation*, 9(8), 1735–1780, 1997.
-4. PyTorch documentation. [Autograd mechanics](https://docs.pytorch.org/docs/stable/notes/autograd.html). How the framework constructs and differentiates computation graphs.
+4. Tianqi Chen et al. [Training Deep Nets with Sublinear Memory Cost](https://arxiv.org/abs/1604.06174v1). 2016.

@@ -21,18 +21,14 @@ $$
 
 Equal physical times require $i/f_v=j/f_a$. Equal indices require $i=j$. Those are different statements whenever the latent rates differ.
 
-This matters because cross-attention compares a query from one modality with keys from the other. The content projections can learn whether a visible impact and a sound belong together. Positional encoding supplies additional information about when they occur. An inconsistent clock makes that second signal disagree with the first.
+This matters because cross-attention compares a query from one modality with keys from the other, using the query–key interaction introduced in [Attention Is All You Need](https://arxiv.org/abs/1706.03762v1). The content projections can learn whether a visible impact and a sound belong together. Positional encoding supplies additional information about when they occur. An inconsistent clock makes that second signal disagree with the first.
 
 The mismatch is not repaired by giving both streams the same number of channels. Channel dimension determines the size of the vectors being compared; latent frame rate determines the physical meaning of their temporal positions. Nor does padding the shorter sequence change which event each token represents.
 
-<figure>
-  <img src="/images/blog/mova-aligned-rope/clocks.svg" alt="Video tokens at two frames per second and audio tokens at eight frames per second. Video index one and audio index four describe the same half-second timestamp. Their aligned rotary positions are both four." width="480" height="340" />
-  <figcaption>Figure 1. An illustrative pair of latent rates. Matching native indices would connect different moments; converting video positions to audio time units aligns the half-second event. These rates are chosen for the example, not reported MOVA settings.</figcaption>
-</figure>
 
 ## Rotary attention measures relative phase
 
-Consider one two-dimensional frequency pair in rotary position embedding. For an angular coordinate $\phi$, define
+Consider one two-dimensional frequency pair in rotary position embedding, introduced in [RoFormer](https://arxiv.org/abs/2104.09864v1). For an angular coordinate $\phi$, define
 
 $$
 R(\phi)=
@@ -95,6 +91,14 @@ With native indices, the simultaneous pair scores $\cos((4-1)/2)\approx0.0707$. 
 
 This does not mean real attention must peak at the aligned timestamp: real query and key contents are learned, and meaningful sounds can precede or follow visible events. It demonstrates that positional coordinates should not systematically reverse the timing preference before content is considered.
 
+<figure>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/mova-aligned-rope/clocks-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/mova-aligned-rope/clocks.svg" alt="Rotary scores plotted against audio time for a video query at half a second. Native indices peak at one eighth of a second; aligned positions peak at half a second." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. The half-second example with identical unit content vectors and one rotary frequency pair. A shared clock moves the positional maximum to the matching timestamp. This is an analytical positional score, not measured audio–video synchronization.</figcaption>
+</figure>
+
 The [runnable NumPy example](/code/mova-aligned-rope.py) verifies these values, the rotary dot-product identity, and invariance to a common physical-time shift. Its essential calculation is:
 
 ```python
@@ -116,5 +120,6 @@ Finally, this mechanism operates on latent time. A waveform sample index, a vide
 
 ## References
 
-1. [MOVA: Towards Scalable and Synchronized Video-Audio Generation](https://arxiv.org/abs/2602.08794v1), February 2026 version. Section 2.2, especially “Aligned RoPE,” defines the latent-rate conversion and rotary positions.
-2. [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864), 2021. The relative-rotation identity used in the derivation.
+1. [MOVA: Towards Scalable and Synchronized Video-Audio Generation](https://arxiv.org/abs/2602.08794v1). 2026.
+2. [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864v1). 2021.
+3. [Attention Is All You Need](https://arxiv.org/abs/1706.03762v1). 2017.

@@ -9,7 +9,7 @@ toc: true
 
 Suppose a diffusion transformer trains successfully on a compact image latent. We replace the encoder with a pretrained visual representation, keeping the same number of spatial tokens but increasing the channels per token. Can we keep sampling noise levels in exactly the same way?
 
-The RAE paper, *Diffusion Transformers with Representation Autoencoders*, identifies a problem with this substitution: a noise level that usefully corrupts a small latent can leave too much recoverable information in a larger representation. Section 4.2 adjusts the schedule using the **total latent dimension**, including channels. The mechanism is a one-dimensional change of variables. Understanding it does not require treating the whole autoencoder or transformer architecture as a single intervention.
+The RAE paper, *Diffusion Transformers with Representation Autoencoders* [\[1\]](https://arxiv.org/abs/2510.11690v1), identifies a problem with this substitution: a noise level that usefully corrupts a small latent can leave too much recoverable information in a larger representation. Section 4.2 adjusts the schedule using the **total latent dimension**, including channels. The mechanism is a one-dimensional change of variables. Understanding it does not require treating the whole autoencoder or transformer architecture as a single intervention.
 
 ## What does a timestep mean?
 
@@ -31,13 +31,13 @@ $$
 
 If signal and noise have the same variance per coordinate, their variance ratio is $r(t)^2$. The ratio of coefficients and the ratio of variances are different quantities. The schedule below scales the former.
 
-Why could dimension matter? Gaussian noise is sampled independently across coordinates, while useful structure can be redundant across spatial locations and channels. A denoiser can combine several noisy clues about the same content. More coordinates can therefore make information easier to recover at the same nominal $t$. Counting spatial tokens alone misses the extra clues carried by a wider representation.
+Why could dimension matter? Gaussian noise is sampled independently across coordinates, while useful structure can be redundant across spatial locations and channels. A denoiser can combine several noisy clues about the same content. More coordinates can therefore make information easier to recover at the same nominal $t$. Counting spatial tokens alone misses the extra clues carried by a wider representation. Earlier studies of noise scheduling [\[2\]](https://arxiv.org/abs/2301.10972v1) and high-resolution diffusion [\[3\]](https://arxiv.org/abs/2301.11093v1) discuss the related need to adjust corruption as image resolution changes.
 
 This is an argument about representation structure. Ambient dimension by itself does not universally improve signal-to-noise ratio: appending unrelated, equally scaled signal and noise coordinates need not make any particular coordinate easier to recover.
 
 ## A shift in noise-to-signal odds
 
-Let $n$ be a reference dimension and $m$ the target dimension. RAE uses $n=4096$ and sets $m$ to the number of tokens multiplied by the number of channels in each token. Define
+RAE adopts the schedule transformation used by Esser et al. [\[4\]](https://arxiv.org/abs/2403.03206v1) and extends the dimension count to include latent channels. Let $n$ be a reference dimension and $m$ the target dimension. RAE uses $n=4096$ and sets $m$ to the number of tokens multiplied by the number of channels in each token. Define
 
 $$
 \alpha=\sqrt{\frac{m}{n}}.
@@ -75,8 +75,11 @@ $$
 For $m>n$, every interior timestep moves toward noise. Applying this map to sampled training times changes how frequently the model encounters different corruption levels. It does not require changing the interpolation endpoints.
 
 <figure>
-  <img src="/images/blog/rae-dimension-noise-schedule/schedule.svg" alt="Analytical curves showing reference time mapped to shifted time. Dimension ratios of four and sixteen move interior times above the identity line, toward higher noise." width="540" height="400" />
-  <figcaption>Figure 1. The schedule transformation for three dimension ratios. These curves are calculated from the equation, not measured generation results. Larger latent dimension moves the same reference time toward stronger corruption.</figcaption>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/rae-dimension-noise-schedule/schedule-mobile.svg" width="346" height="307" />
+    <img src="/images/blog/rae-dimension-noise-schedule/schedule.svg" alt="Analytical noise schedule curves for dimension ratios one, four and sixteen. Larger ratios shift interior timesteps toward more noise." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. The exact schedule transformation for three dimension ratios. Increasing latent dimension moves an interior timestep toward stronger corruption. These curves do not measure generation quality.</figcaption>
 </figure>
 
 ## A minimal model of redundant information
@@ -154,6 +157,9 @@ Dimension also does not specify the latent's covariance, semantic redundancy, or
 
 RAE's contribution here is precise: extend the dimension-dependent shift to account for channel width as well as token count, and evaluate that choice in its latent-generation setting. The mechanism can be understood as multiplying noise-to-signal odds, with a simple redundancy model explaining the square root.
 
-## Reference
+## References
 
-- Zheng et al., [*Diffusion Transformers with Representation Autoencoders*](https://arxiv.org/abs/2510.11690v1), October 2025. This note follows the first version, particularly Section 4.2.
+1. Boyang Zheng, Nanye Ma, Shengbang Tong, and Saining Xie. [Diffusion Transformers with Representation Autoencoders](https://arxiv.org/abs/2510.11690v1). 2025.
+2. Ting Chen. [On the Importance of Noise Scheduling for Diffusion Models](https://arxiv.org/abs/2301.10972v1). 2023.
+3. Emiel Hoogeboom, Jonathan Heek, and Tim Salimans. [Simple diffusion: End-to-end diffusion for high resolution images](https://arxiv.org/abs/2301.11093v1). 2023.
+4. Patrick Esser et al. [Scaling Rectified Flow Transformers for High-Resolution Image Synthesis](https://arxiv.org/abs/2403.03206v1). 2024.

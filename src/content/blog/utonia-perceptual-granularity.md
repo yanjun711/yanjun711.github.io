@@ -17,14 +17,10 @@ Consider an object scan with a 0.1-meter extent and a room scan with a 10-meter 
 
 Normalizing every bounding box to unit width answers one particular question: where is a point relative to the full sample? It also couples every local displacement to the sample's outermost points. Adding a distant wall changes the normalized size of an otherwise identical chair. Removing empty space changes it again. This can be useful for some tasks, but it is a different choice from setting the spatial resolution at which local structure should be interpreted.
 
-Section 3.2 of Utonia starts from this mismatch. Across sensors and domains, spatial extents, sampling patterns, and coordinate conventions differ. The same architectural unit can then correspond to very different metric extents. The proposed rescaling makes the input coordinates express a more comparable perceptual granularity before those coordinates enter positional encoding.
+Utonia pretrains a [Point Transformer V3](https://arxiv.org/abs/2312.10035v1) encoder across these domains. Section 3.2 starts from this mismatch: spatial extents, sampling patterns, and coordinate conventions differ across sensors and domains. The same architectural unit can then correspond to very different metric extents. The proposed rescaling makes the input coordinates express a more comparable perceptual granularity before those coordinates enter positional encoding.
 
 The paper describes sampling rescaling factors according to the original desired granularity; it does not give one universal estimator that turns an arbitrary point cloud into a uniquely correct scale. That matters when implementing the idea. Choosing the target granularity is part of the representation design, not a quantity that follows from point count alone.
 
-<figure>
-  <img src="/images/blog/utonia-perceptual-granularity/units.svg" alt="Two identical four-point patterns have metric spacings of one centimeter and ten centimeters. Dividing each by its chosen granularity produces the same unit-spaced square." loading="lazy" />
-  <figcaption>A coordinate illustration, not Utonia hyperparameters. The same local pattern can be expressed in comparable units without making the full point clouds the same size.</figcaption>
-</figure>
 
 ## Change the coordinates before encoding them
 
@@ -44,7 +40,7 @@ Translation cancels. A separation of $g$ meters becomes a displacement of one co
 
 Why do this before positional encoding? Once a position has been turned into a nonlinear signal, scaling that signal generally does not equal encoding a scaled position. For a single rotary plane, a displacement $\delta$ produces a phase difference proportional to $\delta/\theta$, where $\theta$ is the frequency scale for that plane. Rescaling the coordinates first instead produces $\delta/(g\theta)$.
 
-Utonia's next section applies RoPE to granularity-aligned coordinates. Attention receives continuous relative-position hints whose spatial unit has already been adjusted. A useful scalar illustration is
+Utonia's next section applies RoPE, introduced in [RoFormer](https://arxiv.org/abs/2104.09864v1), to granularity-aligned coordinates. Attention receives continuous relative-position hints whose spatial unit has already been adjusted. A useful scalar illustration is
 
 $$
 \phi_{ij}=\frac{x_i^{(1)}-x_j^{(1)}}{g\theta}.
@@ -76,6 +72,14 @@ For a single rotary plane with $\theta=1$, an edge displacement along the first 
 
 Now add a distant point to one cloud. A bounding-box normalizer would change the coordinates of the original square because the full extent has changed. Holding $g$ fixed leaves its local normalized distances unchanged. Conversely, if the task calls for a different perceptual granularity, changing $g$ deliberately changes those distances even when the bounding box stays fixed.
 
+<figure>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/utonia-perceptual-granularity/units-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/utonia-perceptual-granularity/units.svg" alt="One plot maps metric separation to aligned separation for two granularities. A second shows a fixed local edge shrinking under bounding-box scaling as cloud extent grows, while its fixed-granularity distance stays constant." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. Coordinate scaling in the worked example. (a) g sets the meaning of a spatial unit. (b) a distant point changes bounding-box scaling but leaves a fixed-g local distance unchanged. Curves are analytic, not Utonia measurements.</figcaption>
+</figure>
+
 [Run the NumPy example](/code/utonia-perceptual-granularity.py) to verify the distance and phase equalities. It also adds a translated copy and checks that pairwise displacements are unchanged after consistent recentering. The script illustrates the coordinate mechanism; it does not reproduce Utonia's training procedure or select granularities automatically.
 
 ## Scale is not the only coordinate convention
@@ -98,7 +102,8 @@ Absolute scale may itself be essential. Distinguishing a miniature from a full-s
 
 Finally, a good granularity for one task may be too coarse for another. Rescaling changes the positional frequencies associated with a physical displacement. It makes a specific spatial comparison easier to share; its usefulness still depends on which comparisons the task requires.
 
-## Sources
+## References
 
-- [Utonia: Toward One Encoder for All Point Clouds, original March 2026 version](https://arxiv.org/abs/2603.03283v1), sections 3.2–3.3: perceptual granularity rescaling, gravity priors, coordinate perturbations, and RoPE.
-- The square example and diagram above are explanatory constructions. Their scale factors are not reported training settings.
+1. [Utonia: Toward One Encoder for All Point Clouds](https://arxiv.org/abs/2603.03283v1). 2026.
+2. [Point Transformer V3: Simpler, Faster, Stronger](https://arxiv.org/abs/2312.10035v1). 2023 preprint; CVPR 2024.
+3. [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864v1). 2021.

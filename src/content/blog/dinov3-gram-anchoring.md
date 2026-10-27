@@ -15,7 +15,7 @@ One response would be to keep every patch embedding close to an earlier checkpoi
 
 Suppose two patches belong to a person's shirt and another belongs to the background. A dense representation should make the two shirt patches relate differently from a shirt patch and a background patch. The relevant structure is a set of relations between spatial positions, rather than the value of one particular feature channel.
 
-The paper visualizes this issue with patch cosine-similarity maps. As training continues, those maps become less localized even while global classification improves. A global objective can accept many representations with adequate image-level discrimination; not all of them provide equally useful local structure.
+The paper visualizes this issue with patch cosine-similarity maps and notes a related degradation during extended [DINOv2](https://arxiv.org/abs/2304.07193v1) training. As training continues, those maps become less localized even while global classification improves. A global objective can accept many representations with adequate image-level discrimination; not all of them provide equally useful local structure.
 
 An earlier checkpoint with good dense features supplies a reference. The goal is not to declare every relation from that checkpoint permanently correct. It is to give continued training a stable constraint on relations that its other objectives may neglect.
 
@@ -63,7 +63,7 @@ The invariance is specific. Rotating each patch independently does not generally
 
 ### How the target enters training
 
-DINOv3 computes Gram anchoring on global crops and combines it with the DINO, iBOT, and diversity objectives. It is an additional relation-preserving constraint, not a replacement for the rest of self-supervised training.
+DINOv3 computes Gram anchoring on global crops and combines it with the image-level [DINO](https://arxiv.org/abs/2104.14294v1), patch-level [iBOT](https://arxiv.org/abs/2111.07832v1), and diversity objectives. It is an additional relation-preserving constraint, not a replacement for the rest of self-supervised training.
 
 The reported refinement phase starts after one million iterations. Its initial Gram teacher comes from an earlier teacher checkpoint with good dense features. Importantly, that teacher is **not frozen forever**: every 10,000 iterations it is refreshed from the main exponential-moving-average teacher. It is a stable target between refreshes, distinct from the main teacher's ongoing EMA updates.
 
@@ -114,8 +114,8 @@ $$
 
 <figure>
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/dinov3-gram-anchoring/gram-matrices-mobile.svg" />
-    <img src="/images/blog/dinov3-gram-anchoring/gram-matrices.svg" alt="Toy patch-similarity matrices. The reference and a shared feature rotation have identical entries, while replacing patch 3 changes its similarities to patches 1 and 2." width="900" height="370" />
+    <source media="(max-width: 620px)" srcset="/images/blog/dinov3-gram-anchoring/gram-matrices-mobile.svg" width="346" height="192" />
+    <img src="/images/blog/dinov3-gram-anchoring/gram-matrices.svg" alt="Toy patch-similarity matrices. The reference and a shared feature rotation have identical entries, while replacing patch 3 changes its similarities to patches 1 and 2." width="595" height="240" />
   </picture>
   <figcaption>Figure 1. Cosine similarities for the three-patch example. These are analytical toy features, not similarity maps measured from DINOv3. Darker blue indicates greater similarity.</figcaption>
 </figure>
@@ -152,6 +152,9 @@ The high-resolution refinement in Section 4.3 keeps this same basic objective. I
 
 Finally, forming a dense $P\times P$ matrix has quadratic storage in patch count. The compact equation does not make high-resolution matching free. Its practical scope depends on crop sizes, feature extraction, and implementation choices. What the objective deliberately preserves is a particular geometry of patch relations; feature coordinates, teacher quality, and compute requirements remain separate concerns.
 
-## Source
+## References
 
-[DINOv3, v1](https://arxiv.org/html/2508.10104v1), Sections 4.1–4.3, especially Equation 2. The matrices, rotation, and numerical checks above are original examples.
+1. Oriane Siméoni et al. [DINOv3](https://arxiv.org/html/2508.10104v1). 2025.
+2. Maxime Oquab et al. [DINOv2: Learning Robust Visual Features without Supervision](https://arxiv.org/abs/2304.07193v1). 2023 preprint; TMLR, 2024.
+3. Mathilde Caron et al. [Emerging Properties in Self-Supervised Vision Transformers](https://arxiv.org/abs/2104.14294v1). ICCV, 2021.
+4. Jinghao Zhou et al. [iBOT: Image BERT Pre-Training with Online Tokenizer](https://arxiv.org/abs/2111.07832v1). 2021 preprint.

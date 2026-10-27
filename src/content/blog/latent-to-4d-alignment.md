@@ -42,12 +42,8 @@ $\mathcal S_\phi$ is a learned 3D convolution. It converts the channel dimension
 
 The order separates geometry of the grid from meaning of the features. Interpolation determines where samples are placed; the learned convolution determines how local appearance and motion evidence should be represented for the downstream hierarchy. Interpolation alone does not assign metric depth to a channel or establish a 3D correspondence.
 
-<figure>
-  <img src="/images/blog/latent-to-4d-alignment/interface.svg" alt="Video VAE latents pass through fixed trilinear resampling, a learned 3D convolution, and spatial flattening before reaching geometry tokens. Observed and generated latents use the same VAE convention." width="480" height="486" />
-  <figcaption>Figure 1. The alignment interface. The fixed operation matches the grid; the learned operation converts local features. Observed-video and generated latents can share the pathway only within the same VAE representation convention.</figcaption>
-</figure>
 
-Alignment is followed by refinement rather than immediate geometric decoding. For a batch of tokens shaped $(B,T,M,d)$, frame-wise attention treats frames as separate batch elements, yielding $(BT,M,d)$. Global attention instead uses $(B,TM,d)$ to exchange evidence across frames. Alternating these operations supplies long-range information beyond the alignment convolution's local receptive field.
+The refinement hierarchy and prediction heads are initialized from [4RC](https://arxiv.org/abs/2602.10094v1). Alignment is followed by refinement rather than immediate geometric decoding. For a batch of tokens shaped $(B,T,M,d)$, frame-wise attention treats frames as separate batch elements, yielding $(BT,M,d)$. Global attention instead uses $(B,TM,d)$ to exchange evidence across frames. Alternating these operations supplies long-range information beyond the alignment convolution's local receptive field.
 
 This distinction matters when describing the mechanism: the adapter makes features consumable by the geometry hierarchy; the adapter alone is not the complete reconstructor.
 
@@ -85,6 +81,14 @@ Q=\begin{bmatrix}
 \end{bmatrix}.
 $$
 
+<figure>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/latent-to-4d-alignment/interface-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/latent-to-4d-alignment/interface.svg" alt="Linear interpolation of two latent channels at four times, followed by a supplied projection into three output channels." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. The one-dimensional alignment example: resampling changes the time grid, and the supplied matrix W converts channels. Points show the four target times. These are exact toy values, not learned geometry predictions.</figcaption>
+</figure>
+
 Four samples now occupy the target time grid, and each has three output channels. Those are separate accomplishments: interpolation supplied the additional positions, while $W$ supplied the channel conversion. Neither operation created new observed information between the endpoints.
 
 The [runnable example](/code/latent-to-4d-alignment.py) checks this matrix with NumPy. Its central operations are:
@@ -103,7 +107,7 @@ For this artificial swap, multiplying $W$ by the inverse channel permutation res
 
 ## What is trained, and where the latent comes from
 
-During training, a frozen video VAE encodes observed videos with metric 4D annotations. The pathway uses the VAE posterior mean,
+During training, the frozen [Wan](https://arxiv.org/abs/2503.20314v1) video VAE encodes observed videos with metric 4D annotations. The pathway uses the VAE posterior mean,
 
 $$
 z^{\mathrm{obs}}=\mu(E_v(V)),
@@ -131,6 +135,8 @@ Trilinear resampling also cannot recover fine detail that the VAE discarded. If 
 
 The useful claim is consequently precise: a learned alignment can replace the RGB interface between a compatible video latent space and a 4D hierarchy. It removes an intermediate representation conversion while retaining the need for geometric supervision, global reasoning, and an explicit account of latent conventions.
 
-## Source
+## References
 
-[Beyond Pixels: From Video Priors to 4D Worlds, v1](https://arxiv.org/abs/2608.10744v1), August 2026. The Method section, especially “Shared-Latent Interface across Compatible DiTs” and “L4AR for Structured 4D Decoding,” defines the compatibility boundary, alignment Equation 5, and pointmap Equation 6. The one-dimensional interpolation and channel-swap experiment above are explanatory calculations.
+1. [Beyond Pixels: From Video Priors to 4D Worlds](https://arxiv.org/abs/2608.10744v1). 2026.
+2. Yihang Luo et al. [4RC: 4D Reconstruction via Conditional Querying Anytime and Anywhere](https://arxiv.org/abs/2602.10094v1). 2026.
+3. Wan Team. [Wan: Open and Advanced Large-Scale Video Generative Models](https://arxiv.org/abs/2503.20314v1). 2025.

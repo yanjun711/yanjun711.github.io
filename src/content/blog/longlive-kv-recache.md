@@ -15,7 +15,7 @@ A video generator has been producing a person walking through a room. The prompt
 
 A self-attention KV cache stores projected hidden states from earlier positions. It does not generally store a prompt-independent encoding of the raw frames.
 
-In the video diffusion transformer considered by LongLive, text cross-attention and causal video self-attention are interleaved. Once cross-attention has injected prompt information into a video hidden state, later operations can write that information into the keys and values used by self-attention.
+LongLive uses the diffusion-transformer backbone family introduced by [Peebles and Xie](https://arxiv.org/abs/2212.09748v2). In LongLive's video architecture, text cross-attention and causal video self-attention are interleaved. Once cross-attention has injected prompt information into a video hidden state, later operations can write that information into the keys and values used by self-attention.
 
 For a cached visual position $j$ at an affected layer $\ell$, write
 
@@ -69,7 +69,7 @@ $$
 
 The first mixes a new current instruction with an old representation of the past. The second evaluates the available visual history under the active instruction. This is a conditional forward pass through the model, not an algebraic subtraction of an “old prompt vector” from projected keys.
 
-LongLive also includes the operation in training. At a sampled prompt switch it re-caches once, continues the rollout with the updated cache, and supplies the new prompt to the distillation teacher. The student therefore encounters the post-switch condition it will use during generation. An inference-only cache patch would not by itself provide that training experience.
+LongLive also includes the operation in training, extending the generated-prefix rollout setting of [Self Forcing](https://arxiv.org/abs/2506.08009v1) to prompt switches. At a sampled prompt switch it re-caches once, continues the rollout with the updated cache, and supplies the new prompt to the distillation teacher. The student therefore encounters the post-switch condition it will use during generation. An inference-only cache patch would not by itself provide that training experience.
 
 ## Two visual tokens and one changed condition
 
@@ -122,10 +122,10 @@ $$
 
 <figure>
   <picture>
-    <source media="(max-width: 620px)" srcset="/images/blog/longlive-kv-recache/conditional-cache-mobile.svg" />
-    <img src="/images/blog/longlive-kv-recache/conditional-cache.svg" alt="In a two-token toy example, re-caching changes attention weights from equal weights to approximately 0.67 and 0.33, and changes the returned value despite unchanged visual inputs." width="800" height="370" />
+    <source media="(max-width: 620px)" srcset="/images/blog/longlive-kv-recache/conditional-cache-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/longlive-kv-recache/conditional-cache.svg" alt="In a two-token toy example, re-caching changes attention weights from equal weights to approximately 0.67 and 0.33, and changes the returned value despite unchanged visual inputs." width="595" height="307" />
   </picture>
-  <figcaption>Figure 1. Analytical outputs from the toy conditional cache. The query and visual inputs are fixed. These bars illustrate a representation change, not measured prompt adherence or video quality.</figcaption>
+  <figcaption>Figure 1. Analytical outputs from the toy conditional cache. The query and visual inputs are fixed. These points illustrate a representation change, not measured prompt adherence or video quality.</figcaption>
 </figure>
 
 Nothing in this calculation moved either visual vector. The changed output comes entirely from re-evaluating their hidden representations under the new condition. Conversely, changing a prompt variable in application code while retaining the old arrays would still return the stale result.
@@ -144,6 +144,8 @@ Finally, the argument relies on a model that can re-encode a fixed visual prefix
 
 For this video setting, the useful intervention is precise: when the instruction changes, reuse the rendered past and rebuild the conditional state used to continue it.
 
-## Source
+## References
 
-[LongLive: Real-time Interactive Long Video Generation, v1](https://arxiv.org/html/2509.22622v1), Section 3.1, Section 4.4, and Appendix Algorithm 2. The two-token attention example and plot are original illustrations.
+1. Shuai Yang et al. [LongLive: Real-time Interactive Long Video Generation](https://arxiv.org/html/2509.22622v1). 2025.
+2. Xun Huang et al. [Self Forcing: Bridging the Train-Test Gap in Autoregressive Video Diffusion](https://arxiv.org/abs/2506.08009v1). 2025.
+3. William Peebles and Saining Xie. [Scalable Diffusion Models with Transformers](https://arxiv.org/abs/2212.09748v2). ICCV, 2023.

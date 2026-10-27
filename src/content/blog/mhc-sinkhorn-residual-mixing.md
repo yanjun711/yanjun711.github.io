@@ -9,11 +9,11 @@ toc: true
 
 A standard residual connection carries a state forward through an identity map. If we replace that state with several parallel streams, we can learn how to mix them before the next layer. But an unconstrained mixing matrix can amplify the state every time it is applied. Small per-layer gains become large gains across depth.
 
-mHC, *Manifold-Constrained Hyper-Connections*, restricts this residual mixing matrix to be doubly stochastic: nonnegative, with every row and every column summing to one. This note focuses on that constraint. It gives a precise statement about a frozen linear residual path, while leaving important qualifications for the full nonlinear network.
+mHC, *Manifold-Constrained Hyper-Connections* [\[1\]](https://arxiv.org/abs/2512.24880v1), restricts this residual mixing matrix to be doubly stochastic: nonnegative, with every row and every column summing to one. This note focuses on that constraint. It gives a precise statement about a frozen linear residual path, while leaving important qualifications for the full nonlinear network.
 
 ## A residual path with several streams
 
-Write the expanded state as $X_l\in\mathbb R^{n\times C}$: $n$ streams, each with feature width $C$. A schematic layer is
+The expanded residual stream comes from Hyper-Connections [\[2\]](https://arxiv.org/abs/2409.19606v1). Write its state as $X_l\in\mathbb R^{n\times C}$: $n$ streams, each with feature width $C$. A schematic layer is
 
 $$
 X_{l+1}
@@ -24,7 +24,7 @@ where $B_l\in\mathbb R^{n\times n}$ mixes the residual streams, $p_l\in\mathbb R
 
 An unconstrained choice such as $B_l=1.1I$ multiplies the residual-path magnitude by $1.1$ at every layer. After $L$ repetitions, the factor is $1.1^L$. The nonlinear branch need not be active for this amplification to occur.
 
-Setting $B_l=I$ prevents that problem but also prevents direct communication between streams along this path. mHC instead chooses matrices in the set
+Setting $B_l=I$ prevents that problem but also prevents direct communication between streams along this path. The identity-path motivation follows the signal-propagation analysis of He et al. [\[3\]](https://arxiv.org/abs/1603.05027v1). mHC instead chooses matrices in the set
 
 $$
 \mathcal B_n=
@@ -71,7 +71,7 @@ Consequently, a chain of these **frozen linear mixing maps** remains nonexpansiv
 
 ## Turning logits into a mixing matrix
 
-mHC parameterizes positive entries with exponentiation, then approximately enforces the row and column constraints using Sinkhorn normalization. For a logit matrix $Z$, begin with $M^{(0)}=\exp(Z)$, element by element. Define
+mHC parameterizes positive entries with exponentiation, then approximately enforces the row and column constraints using the alternating scaling procedure studied by Sinkhorn and Knopp [\[4\]](https://msp.org/pjm/1967/21-2/p14.xhtml). For a logit matrix $Z$, begin with $M^{(0)}=\exp(Z)$, element by element. Define
 
 $$
 [T_c(M)]_{ij}=\frac{M_{ij}}{\sum_kM_{kj}},
@@ -116,8 +116,11 @@ $$
 After ten identical mixing steps, the difference is multiplied by $2^{-10}=1/1024$. Its disappearance is compatible with the nonexpansive bound. “Norm bounded by one” does not mean every direction retains its magnitude or all information remains recoverable.
 
 <figure>
-  <img src="/images/blog/mhc-sinkhorn-residual-mixing/mixing-depth.svg" alt="Analytical log-scale plot over repeated residual mixing. A common component stays at norm ratio one, a difference component halves at each step, and an unconstrained 1.1-times-identity map grows at each step." width="540" height="400" />
-  <figcaption>Figure 1. Repeated application of fixed toy matrices. The doubly stochastic matrix preserves a common mode and attenuates a difference mode. These are analytical residual-path calculations, not measurements of mHC training.</figcaption>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/mhc-sinkhorn-residual-mixing/mixing-depth-mobile.svg" width="346" height="307" />
+    <img src="/images/blog/mhc-sinkhorn-residual-mixing/mixing-depth.svg" alt="Logarithmic norm ratios for repeated toy mixing. An unconstrained gain grows, the shared mode stays constant, and the difference mode halves at every step." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. Exact norm ratios for fixed toy matrices. Doubly stochastic mixing preserves the shared mode and contracts the difference mode; an unconstrained gain accumulates across depth. This is a residual-path calculation, not a whole-network stability measurement.</figcaption>
 </figure>
 
 The [runnable NumPy example](/code/mhc-sinkhorn-residual-mixing.py) checks these calculations and reports the actual normalization residuals for a random matrix. The core iteration is:
@@ -160,6 +163,9 @@ The constraint still has a useful, concrete purpose: it permits stream mixing wh
 
 The constraint also preserves the sum across streams for every feature channel: $\mathbf1^{\mathsf T}BX=\mathbf1^{\mathsf T}X$. It therefore conserves a stream mean without conserving each stream's identity. That distinction is visible in the two-stream example: both streams approach their shared mean, while the original difference becomes harder to recover.
 
-## Reference
+## References
 
-- Xie et al., [*mHC: Manifold-Constrained Hyper-Connections*](https://arxiv.org/abs/2512.24880v1), December 2025. This note follows the first version, particularly Sections 3, 4.1, and 4.2.
+1. Zhenda Xie et al. [mHC: Manifold-Constrained Hyper-Connections](https://arxiv.org/abs/2512.24880v1). 2025.
+2. Defa Zhu et al. [Hyper-Connections](https://arxiv.org/abs/2409.19606v1). 2024.
+3. Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. [Identity Mappings in Deep Residual Networks](https://arxiv.org/abs/1603.05027v1). 2016.
+4. Richard Sinkhorn and Paul Knopp. [Concerning nonnegative matrices and doubly stochastic matrices](https://msp.org/pjm/1967/21-2/p14.xhtml). *Pacific Journal of Mathematics* 21(2), 343–348, 1967.

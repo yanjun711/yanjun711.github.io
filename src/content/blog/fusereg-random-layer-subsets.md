@@ -7,7 +7,7 @@ draft: false
 toc: true
 ---
 
-Several frozen encoder layers can describe the same image at different levels of detail. Averaging them gives a convenient latent, but a decoder trained on only that average may depend on a particular cancellation between layers. Change the layer composition and its prediction can change sharply.
+In a [representation autoencoder](https://arxiv.org/abs/2510.11690v1), several frozen encoder layers can describe the same image at different levels of detail. Averaging them gives a convenient latent, but a decoder trained on only that average may depend on a particular cancellation between layers. Change the layer composition and its prediction can change sharply.
 
 [FuseReg](https://arxiv.org/abs/2609.31620v1) trains downstream models on averages of random **nonempty layer subsets**. Its useful property is unusually precise: the operation preserves the full-layer mean in expectation, while injecting variation only where layers disagree. A three-layer example makes that property visible and explains the resulting regularizer under a linear squared-loss model.
 
@@ -25,7 +25,7 @@ $$
 z_S=\frac{1}{R}\sum_{k\in S}h_k.
 $$
 
-The denominator is the actual number retained. This is not the usual inverted-dropout scaling by a fixed keep probability, and an empty subset cannot be assigned an arbitrary zero latent without changing the distribution.
+The denominator is the actual number retained. This differs from the fixed keep-probability scaling used in [Dropout](https://jmlr.org/papers/v15/srivastava14a.html), and an empty subset cannot be assigned an arbitrary zero latent without changing the distribution.
 
 For $0<p<1$, every nonempty subset is possible. A particular subset of size $r$ has probability
 
@@ -98,8 +98,11 @@ $$
 For these features, $V=\operatorname{diag}(0,2/3)$ and $c_3(1/2)=15/28$, so $c_3(1/2)V=\operatorname{diag}(0,5/14)$, exactly as enumeration predicts.
 
 <figure>
-  <img src="/images/blog/fusereg-random-layer-subsets/subsets.svg" alt="Seven subset means on the disagreement coordinate: minus one, minus one-half, three coincident zeros, one-half, and one. The shared coordinate remains one for every subset." width="480" height="332" />
-  <figcaption>Figure 1. Exact subset means for the three-layer example. Each dot represents one equally likely subset; the three dots at zero are stacked to show multiplicity. Only the layer-disagreement coordinate changes.</figcaption>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/fusereg-random-layer-subsets/subsets-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/fusereg-random-layer-subsets/subsets.svg" alt="Seven subset means vary only along the disagreement coordinate, with three subsets at zero. A second plot shows the three-layer variance coefficient rising with drop probability and reaching fifteen twenty-eighths at probability one-half." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. Exact subset statistics for K = 3. (a) All seven equiprobable subset means at p = 0.5, with coincident values stacked. (b) c₃(p) controls variance strength. Shared features are unchanged at every drop rate.</figcaption>
 </figure>
 
 Now give a linear decoder $D=(0,2)$ the target $y=0$. It produces zero from the full mean, but its expected squared error under subset sampling is
@@ -141,6 +144,8 @@ A local Jacobian can help interpret small perturbations, but large subset change
 
 Finally, equal per-layer keep probabilities are essential to the simple mean-preservation argument. Biased layer sampling or a different normalization can shift the expected latent. Applying the mechanism requires preserving the sampling convention as carefully as the tensor dimensions.
 
-## Source
+## References
 
-[FuseReg, v1](https://arxiv.org/abs/2609.31620v1), September 2026. Sections 3.2–3.3 define normalized nonempty subsets and the two training targets; Section 4 and Appendix E derive the mean, covariance, and linear-loss identities. The seven-subset figure and decoder calculation above are exact toy examples, not reported generation results.
+1. [FuseReg: Regularizing Layer Fusion Mitigates the Reconstruction-Generation Gap in Representation Autoencoders](https://arxiv.org/abs/2609.31620v1). 2026.
+2. Boyang Zheng et al. [Diffusion Transformers with Representation Autoencoders](https://arxiv.org/abs/2510.11690v1). 2025.
+3. Nitish Srivastava et al. [Dropout: A Simple Way to Prevent Neural Networks from Overfitting](https://jmlr.org/papers/v15/srivastava14a.html). 2014.

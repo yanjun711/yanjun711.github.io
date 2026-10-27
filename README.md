@@ -81,8 +81,9 @@ version, rather than relying on later revisions.
 Each note develops a concrete problem, the relevant equation or structure, a
 worked minimal example, and its applicability limits. The series covers video
 and image generation, LLM optimization, embodied control, and 3D perception.
-Every note includes an original explanatory figure and a downloadable Python
-example. Examples are analytical toys or symbolic audits, not reproductions of
+Every note includes an analytical figure or a structured comparison and a
+downloadable Python example. Each References section cites three or four papers,
+with citations placed in the relevant parts of the explanation. Examples are analytical toys or symbolic audits, not reproductions of
 the papers' model evaluations.
 
 | Date | Mechanism | Original source |
@@ -167,3 +168,13 @@ All example scripts pass their numerical or symbolic checks. The homepage,
 archive, and every article report no axe WCAG 2 A/AA or WCAG 2.1 AA violations
 at mobile and desktop sizes. RSS contains seventeen entries, the sitemap
 contains the matching article routes, and drafts stay excluded.
+
+### Editing the analytical figures
+
+`python scripts/render-blog-figures.py` regenerates the analytical SVGs from the
+worked examples. It requires NumPy and Matplotlib. Use `--only sam latent` to
+regenerate a subset; `--font-dir /path/to/lato` uses Lato-Regular.ttf and
+Lato-Bold.ttf. SVGs embed outlined glyphs, so readers do not need those fonts
+installed. Desktop and mobile variants have separately arranged panels and
+legends. Figures illustrate equations or measured quantities in the toy examples;
+conceptual framework boxes are not used as substitutes for those explanations.

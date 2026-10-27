@@ -13,7 +13,7 @@ Suppose a query near the end of a long document needs an early definition and th
 
 ## Which heads should share a reading list?
 
-In grouped-query attention, or GQA, several query heads share one key head and one value head. Let there be $H_q$ query heads and $H_{kv}$ key–value heads, so each group contains $G=H_q/H_{kv}$ query heads. Sharing keys and values reduces cache size, but it does not make the query heads identical: they still have distinct queries and attention distributions.
+In [grouped-query attention](https://arxiv.org/abs/2305.13245v1), or GQA, several query heads share one key head and one value head. Let there be $H_q$ query heads and $H_{kv}$ key–value heads, so each group contains $G=H_q/H_{kv}$ query heads. Sharing keys and values reduces cache size, but it does not make the query heads identical: they still have distinct queries and attention distributions.
 
 A single global sparse mask would make all groups read the same locations. A separate mask for every query head offers more freedom, but introduces more selection and gathering work. MSA chooses an intermediate granularity: one mask per query position and GQA group.
 
@@ -62,8 +62,11 @@ Consider four blocks of two tokens each. Query token 8 belongs to block 4. Let $
 Group 1's block maxima are $(3,1,0.2,-1)$; group 2's are $(0.2,3,0.3,-1)$. Group 1 selects blocks 1 and 4. Group 2 selects blocks 2 and 4. Both retain block 4 even though its score is lowest.
 
 <figure>
-  <img src="/images/blog/minimax-group-block-selection/selection.svg" alt="Four blocks of two tokens. Group one reads blocks one and four; group two reads blocks two and four. The fourth block is reserved because it contains the current query." width="480" height="300" />
-  <figcaption>Figure 1. The two selected supports in the eight-token example. Blue indicates a learned nonlocal selection; gray indicates the reserved local block. This is a supplied-score calculation, not a trained MSA model.</figcaption>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/minimax-group-block-selection/selection-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/minimax-group-block-selection/selection.svg" alt="Maximum index scores for four blocks in each of two groups. Group one selects block one, group two selects block two, and both reserve the lower-scoring local block four." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. Supplied block maxima in the eight-token example. Blue marks the learned nonlocal selection; gray marks the reserved local block. An unfilled bar is not selected. The local block consumes one of the two available slots.</figcaption>
 </figure>
 
 To see the output consequence, choose scalar values
@@ -113,10 +116,12 @@ Both the teacher and the hidden-state input to the index projections are detache
 
 A block maximum ranks the best individual index match, not total main-attention mass. A block with several moderately important tokens can lose to one with a single high index score. The retained-mass bound describes the consequence of a selection; it does not prove the indexer will choose a good one.
 
-The local reservation provides immediate context but spends one slot even when a distant block would carry more attention mass. Group sharing likewise trades flexibility for reuse: a minority query head may need a block that its group's average teacher does not emphasize.
+Block-based selection also appears in [Native Sparse Attention](https://arxiv.org/abs/2502.11089v1); its compression and selection branches use a different routing design. In MSA, the local reservation provides immediate context but spends one slot even when a distant block would carry more attention mass. Group sharing likewise trades flexibility for reuse: a minority query head may need a block that its group's average teacher does not emphasize.
 
 Finally, the main branch reads at most $k$ blocks per query, but the index branch still scores the visible context. Fixed main-attention budget does not imply constant total layer cost or linear-cost prefill. MSA's mechanism is a practical division of labor: scan with a lightweight indexer, then apply the more expensive attention calculation to a group-specific subset.
 
-## Source
+## References
 
-[MiniMax Sparse Attention, v1](https://arxiv.org/html/2606.13392v1), June 2026. Sections 3.1–3.2 define group-specific indexing, block maxima, local reservation, and the selected-support KL teacher. The eight-token example and omitted-mass calculation above are explanatory examples.
+1. [MiniMax Sparse Attention](https://arxiv.org/abs/2606.13392v1). 2026.
+2. Joshua Ainslie et al. [GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints](https://arxiv.org/abs/2305.13245v1). 2023.
+3. Jingyang Yuan et al. [Native Sparse Attention: Hardware-Aligned and Natively Trainable Sparse Attention](https://arxiv.org/abs/2502.11089v1). 2025.

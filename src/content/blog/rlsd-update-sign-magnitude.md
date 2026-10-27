@@ -39,7 +39,7 @@ That observation alone is not a correctness label. A reference may favor a token
 
 ## Reverse the evidence ratio for a failed response
 
-For a group of sampled responses, let the verifier rewards have mean $\mu_G$ and nonzero standard deviation $\sigma_G$. A response receives the group-relative advantage
+Following the group-relative construction in [DeepSeekMath](https://arxiv.org/abs/2402.03300v1), let the verifier rewards for a group of sampled responses have mean $\mu_G$ and nonzero standard deviation $\sigma_G$. A response receives the group-relative advantage
 
 $$
 A=\frac{R-\mu_G}{\sigma_G}.
@@ -58,7 +58,7 @@ When $A>0$, a teacher-supported token receives more positive credit. When $A<0$,
 
 Using the same ratio in both cases would miss this distinction. Multiplying a negative advantage by a large teacher-support ratio would punish the teacher-supported token more strongly. The exponent changes which tokens receive the largest magnitudes when the verifier says the response should be discouraged.
 
-Algorithm 1 combines clipping with a mixing coefficient:
+Algorithm 1 combines clipping with a mixing coefficient. The paper motivates bounded reweighting through the clipping design in [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347v1), although the evidence ratio here compares two contexts rather than a current and old policy:
 
 $$
 c_t=\operatorname{clip}(w_t,1-\epsilon_w,1+\epsilon_w),
@@ -80,8 +80,11 @@ $$
 Every nonzero $\hat A_t$ therefore retains the sign of $A$. If $A=0$, all token advantages are zero. Setting $\lambda=0$ recovers uniform sequence-level advantages; increasing it permits more redistribution.
 
 <figure>
-  <img src="/images/blog/rlsd-update-sign-magnitude/credit.svg" alt="For evidence ratios two, one half, and one, a positive response advantage becomes 1.1, 0.9, and 1.0, while a negative response advantage becomes minus 0.9, minus 1.1, and minus 1.0. All coefficients retain their response sign." loading="lazy" />
-  <figcaption>With clipping width 0.2 and mixing coefficient 0.5, the privileged context changes each magnitude by at most ten percent. The numbers are a constructed example.</figcaption>
+  <picture>
+    <source media="(max-width: 620px)" srcset="/images/blog/rlsd-update-sign-magnitude/credit-mobile.svg" width="346" height="451" />
+    <img src="/images/blog/rlsd-update-sign-magnitude/credit.svg" alt="Clipped token advantages versus teacher-student evidence ratio for positive and negative response advantages. Magnitudes vary between 0.9 and 1.1 while signs stay fixed." loading="lazy" width="595" height="307" />
+  </picture>
+  <figcaption>Figure 1. The coefficient as a function of evidence ratio, with clipping width 0.2 and mixing coefficient 0.5. Markers are the ratios used in the example. The horizontal reference is the unmodified response advantage.</figcaption>
 </figure>
 
 ## Three tokens are enough to see the effect
@@ -152,7 +155,8 @@ If every reward in a group is identical, the displayed standardization has zero 
 
 Finally, bounded coefficients do not establish general immunity to reference leakage, convergence, or evaluation shortcuts. They establish the narrower property proved above: privileged evidence redistributes the magnitudes of the token advantages while their signs remain controlled by the group-relative reward signal.
 
-## Sources
+## References
 
-- [Self-Distilled RLVR, original April 2026 version](https://arxiv.org/abs/2604.03128v1), sections 4.1–4.3, equations 13–17, and Algorithm 1.
-- The coefficient table and finite-difference example are constructed illustrations, not measured training results.
+1. [Self-Distilled RLVR](https://arxiv.org/abs/2604.03128v1). 2026.
+2. [DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models](https://arxiv.org/abs/2402.03300v1). 2024.
+3. [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347v1). 2017.
