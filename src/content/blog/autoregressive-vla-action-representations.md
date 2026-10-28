@@ -41,24 +41,36 @@ The pressure that drove compression is easy to see. For an illustrative $H=16$ s
 
 FAST's concrete pipeline first normalizes action dimensions, applies a discrete cosine transform (DCT) along time, quantizes the coefficients, flattens them, and uses BPE to compress the resulting sequence. Smooth trajectories often concentrate information in lower temporal frequencies. The paper argues that predicting every nearly identical high-rate sample can reward copying the preceding token rather than learning the motion's underlying shape. FAST changes the learning target as well as its length. Its universal FAST+ tokenizer and $\pi_0$-FAST experiments showed that this route could make AR action generation competitive with flow-based VLAs on the evaluated settings [\[4\]](https://arxiv.org/abs/2501.09747v1).
 
+<figure class="figure-paper">
+  <a href="/images/blog/autoregressive-vla-action-representations/fast-tokenizer.webp" aria-label="Open the FAST tokenizer figure at full size">
+    <img src="/images/blog/autoregressive-vla-action-representations/fast-tokenizer.webp" alt="FAST converts a normalized action chunk into frequency coefficients with a DCT, quantizes them, flattens low-frequency coefficients first, then uses BPE to form a shorter sequence of action tokens." loading="lazy" decoding="async" width="2102" height="748" />
+  </a>
+  <figcaption>Figure 1. FAST compresses a trajectory before autoregressive prediction. The order matters: transform across time, quantize coefficients, then merge frequent symbol sequences with BPE. Select the image to inspect its labels at full size.<small class="figure-source">Source: <a href="https://arxiv.org/abs/2501.09747v1">FAST</a>, original Fig. 4, cropped; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</small></figcaption>
+</figure>
+
 ## A close reading of G0.5
 
 G0.5 is a useful 2026 case study because the action path is unambiguous. Its main policy initializes from a Qwen3.5 2B vision-language model. Multi-view images, embodiment identity, instruction, and proprioceptive state form the conditioning prefix. One decoder then emits optional reasoning fields—such as a subtask, bounding box, or motion trace—followed by discrete action codes. A codec decodes those codes into continuous commands. The training loss is next-token cross-entropy over the generated reasoning and action span, rather than a separate action-regression objective [\[8\]](https://arxiv.org/abs/2608.11739v1).
 
-The sequence can be read schematically as
-
-~~~text
-images + instruction + embodiment + state
-    → [subtask / box / trace / action hint, if requested]
-    → <left_control> codes ... <right_control> codes ...
-    → action codec → continuous action chunk
-~~~
+<figure class="figure-paper">
+  <a href="/images/blog/autoregressive-vla-action-representations/g05-stream.webp" aria-label="Open the G0.5 model diagram at full size">
+    <img src="/images/blog/autoregressive-vla-action-representations/g05-stream.webp" alt="G0.5 conditions one autoregressive VLM on multiview images, instruction, robot state and embodiment; it emits optional reasoning followed by body-part action codes, which an ActionCodec converts to continuous actions." loading="lazy" decoding="async" width="1344" height="660" />
+  </a>
+  <figcaption>Figure 2. In G0.5, optional subtask, box, and trace tokens precede the action codes in one autoregressive stream. The ActionCodec maps the generated codes to continuous commands.<small class="figure-source">Source: <a href="https://arxiv.org/abs/2608.11739v1">G0.5</a>, left panel of original Fig. 1, cropped; <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</small></figcaption>
+</figure>
 
 The distinctive piece is its **cross-embodiment ActionCodec**. G0.5 divides heterogeneous robots into semantic motion groups such as left arm, right arm, grippers, and lower body. It pads each group to a common dimension, learns a residual vector quantizer over grouped action chunks, and inserts group markers before the corresponding codes. Each active group contributes eight action codes per residual round; only groups involved in the current behavior need to be generated. Its tokenizer training also uses a temporal contrastive objective intended to keep nearby motions closer in the token representation [\[8\]](https://arxiv.org/abs/2608.11739v1). The codec is learned separately; the **policy** itself is trained with a shared next-token objective over reasoning and actions.
 
+<figure class="figure-paper">
+  <a href="/images/blog/autoregressive-vla-action-representations/g05-codec.webp" aria-label="Open the G0.5 structured action tokenizer diagram at full size">
+    <img src="/images/blog/autoregressive-vla-action-representations/g05-codec.webp" alt="G0.5 identifies active robot body parts, encodes action chunks with a temporal contrastive objective and residual vector quantizer, then emits part-labeled codes that a decoder reconstructs as continuous motions." loading="lazy" decoding="async" width="2064" height="622" />
+  </a>
+  <figcaption>Figure 3. G0.5 keeps active body parts explicit and refines their action codes through residual quantization. Inactive groups do not require action tokens.<small class="figure-source">Source: <a href="https://arxiv.org/abs/2608.11739v1">G0.5</a>, original Fig. 3, cropped; <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.</small></figcaption>
+</figure>
+
 That structure addresses a specific failure of flattening every robot into one long vector. A single-arm demonstration should not have to predict inactive right-arm or base coordinates merely because a universal output vector has slots for them. Group markers make the meaning of each code span explicit. Residual rounds let additional codes refine a coarse reconstruction. They do not remove the need for a reliable decoder: wrong codes still become physical commands.
 
-The paper reports 98.9% average success on LIBERO, 93.3% average across clean and randomized RoboTwin 2.0, and 87.3% on four Bridge-SimplerEnv tasks. Its LIBERO table compares the 98.9% result with 98.7% for Xiaomi-Robotics-0 and 98.5% for two other listed baselines [\[8\]](https://arxiv.org/abs/2608.11739v1). These are **paper-reported results under the paper's own training and evaluation protocols**. They support treating G0.5 as a strong AR VLA example, not as proof that it is the best controller on every robot or that AR decoding alone caused the gains. Pretraining data, model backbone, post-training, prompts, and embodiment coverage differ across systems. The paper also includes an optional flow-matching head for comparison; the figures above describe its main AR policy unless a particular experiment says otherwise.
+The paper reports 98.9% average success on LIBERO, 93.3% average across clean and randomized RoboTwin 2.0, and 87.3% on four Bridge-SimplerEnv tasks. Its LIBERO table compares the 98.9% result with 98.7% for Xiaomi-Robotics-0 and 98.5% for two other listed baselines [\[8\]](https://arxiv.org/abs/2608.11739v1). These are **paper-reported results under the paper's own training and evaluation protocols**. They support treating G0.5 as a strong AR VLA example, not as proof that it is the best controller on every robot or that AR decoding alone caused the gains. Pretraining data, model backbone, post-training, prompts, and embodiment coverage differ across systems. The paper also includes an optional flow-matching head for comparison; the reported scores above describe its main AR policy unless a particular experiment says otherwise.
 
 One appealing property of the shared stream is that a language instruction can influence the same decoder that chooses the action codes, and intermediate reasoning can be generated before control. Its cost is serial generation: extra reasoning tokens and residual code rounds add latency. A box or motion trace is also a *predicted* intermediate, not a verified geometric fact. For fast contact-rich control, the practical question remains whether better grounding pays for its added delay.
 

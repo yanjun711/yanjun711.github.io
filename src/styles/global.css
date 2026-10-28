@@ -109,7 +109,11 @@ h1, h2, h3, p { margin: 0; }
 .prose figure.figure-plot img { max-width: 480px; }
 .prose figure.figure-plot figcaption { max-width: 480px; margin-inline: auto; }
 .prose figure.figure-mechanism img { max-width: 620px; }
+.prose figure.figure-paper > a { display: block; max-width: 760px; margin-inline: auto; }
+.prose figure.figure-paper img { display: block; max-width: 760px; }
+.prose figure.figure-paper figcaption { max-width: 760px; margin-inline: auto; }
 .prose figcaption { margin-top: 10px; font-size: 12px; line-height: 1.5; color: #555; }
+.prose figcaption .figure-source { display: block; margin-top: 3px; font-size: 11px; color: #777; }
 .prose .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding-block: 5px; }
 .prose .katex { font-size: 1.08em; }
 .prose #references + ol { margin-top: 14px; padding-left: 22px; font-size: 13px; line-height: 1.6; }
@@ -123,6 +127,8 @@ h1, h2, h3, p { margin: 0; }
 .not-found { min-height: 60vh; }
 .not-found a { display: inline-block; margin-top: 20px; }
 @media (max-width: 620px) {
+  .prose figure.figure-paper > a { overflow-x: auto; }
+  .prose figure.figure-paper img { width: 660px; max-width: none; }
   .intro { padding-top: 12px; }
   .intro p { font-size: 14px; }
   .content-section { margin-top: 25px; }
