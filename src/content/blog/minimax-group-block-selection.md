@@ -108,17 +108,17 @@ P_j^g=\frac{1}{G}\sum_{h\in\mathcal H_g}
 \operatorname{softmax}_{S_i^g}(a^h_i)_j.
 $$
 
-The index branch produces its own softmax on that same support and minimizes $D_{\mathrm{KL}}(\operatorname{stopgrad}(P^g)\|P^{\mathrm{idx},g})$. Averaging logits before softmax would define a different teacher. During sparse training, this is also not a KL against the complete dense distribution: omitted tokens are outside the support being compared.
+The index branch produces its own softmax on that same support and minimizes $D_{\mathrm{KL}}(\operatorname{stopgrad}(P^g)\|P^{\mathrm{idx},g})$. The teacher averages head probabilities after softmax. During sparse training, both distributions are normalized over the selected tokens.
 
 Both the teacher and the hidden-state input to the index projections are detached. Consequently, this loss trains the index projections without pulling the backbone toward an easier indexing problem. A dense-attention warmup first gives the new indexer a learning signal before its selections control the main branch.
 
-## What the block budget cannot promise
+## Selection quality and attention cost
 
-A block maximum ranks the best individual index match, not total main-attention mass. A block with several moderately important tokens can lose to one with a single high index score. The retained-mass bound describes the consequence of a selection; it does not prove the indexer will choose a good one.
+A block maximum ranks the strongest individual index match. A block with several moderately important tokens can lose to one with a single high score, even when the former carries more total main-attention mass. The retained-mass bound connects that selection choice to the output error.
 
 Block-based selection also appears in [Native Sparse Attention](https://arxiv.org/abs/2502.11089v1); its compression and selection branches use a different routing design. In MSA, the local reservation provides immediate context but spends one slot even when a distant block would carry more attention mass. Group sharing likewise trades flexibility for reuse: a minority query head may need a block that its group's average teacher does not emphasize.
 
-Finally, the main branch reads at most $k$ blocks per query, but the index branch still scores the visible context. Fixed main-attention budget does not imply constant total layer cost or linear-cost prefill. MSA's mechanism is a practical division of labor: scan with a lightweight indexer, then apply the more expensive attention calculation to a group-specific subset.
+The main branch reads at most $k$ blocks per query, while the index branch scores the visible context. Total cost combines this lightweight scan with the selected main-attention blocks. MSA uses group-specific selection to spend the more expensive computation on a small part of the context.
 
 ## References
 

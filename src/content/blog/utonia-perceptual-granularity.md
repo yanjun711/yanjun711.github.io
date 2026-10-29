@@ -9,7 +9,7 @@ toc: true
 
 A local geometric pattern can occupy a few millimeters in an object scan and several centimeters in a scene scan. Feeding both point clouds to the same encoder does not make those distances comparable. A positional representation still sees the numbers supplied to it, including the unit and scale choices that produced them.
 
-[Utonia](https://arxiv.org/abs/2603.03283v1) introduces **perceptual granularity rescaling** before positional encoding. The narrow question here is how changing the coordinate unit can make shared geometric operators more useful across domains. The distinction that matters is between a point cloud's total extent and the spatial granularity at which we want to describe it.
+[Utonia](https://arxiv.org/abs/2603.03283v1) introduces **perceptual granularity rescaling** before positional encoding. Changing the coordinate unit lets shared geometric operators work at comparable local scales across domains. The chosen granularity describes the resolution of local structure, separately from the point cloud's total extent.
 
 ## What should one spatial unit mean?
 
@@ -19,7 +19,7 @@ Normalizing every bounding box to unit width answers one particular question: wh
 
 Utonia pretrains a [Point Transformer V3](https://arxiv.org/abs/2312.10035v1) encoder across these domains. Section 3.2 starts from this mismatch: spatial extents, sampling patterns, and coordinate conventions differ across sensors and domains. The same architectural unit can then correspond to very different metric extents. The proposed rescaling makes the input coordinates express a more comparable perceptual granularity before those coordinates enter positional encoding.
 
-The paper describes sampling rescaling factors according to the original desired granularity; it does not give one universal estimator that turns an arbitrary point cloud into a uniquely correct scale. That matters when implementing the idea. Choosing the target granularity is part of the representation design, not a quantity that follows from point count alone.
+The paper samples rescaling factors according to the original desired granularity. Choosing that granularity sets the spatial scale at which the representation describes local structure; point count and sample extent describe other properties of the input.
 
 
 ## Change the coordinates before encoding them
@@ -30,7 +30,7 @@ $$
 \tilde x_i=\frac{x_i-c}{g}.
 $$
 
-This is a simple model of the coordinate change, **not an official formula for Utonia's full preprocessing pipeline**. The paper also uses coordinate perturbations and samples rescaling factors from a range. The notation isolates what a scalar rescaling does to relative geometry:
+I use this notation to isolate scalar rescaling within the paper's broader preprocessing, which also includes coordinate perturbations and sampled scale factors. Relative displacements become:
 
 $$
 \tilde x_i-\tilde x_j=\frac{x_i-x_j}{g}.
@@ -48,7 +48,7 @@ $$
 
 Here $x^{(1)}$ selects one coordinate axis; this is one phase component, not the complete three-dimensional embedding. If corresponding local displacements differ by a factor of ten and their chosen granularities differ by the same factor, their phase components agree.
 
-RoPE itself does not change which points the architecture selects as neighbors. Section 3.3 explicitly distinguishes RoPE's continuous positional signal from neighborhood construction. A coordinate convention can improve how an existing interaction is represented while leaving sampling gaps and neighborhood choices unresolved.
+Section 3.3 separates RoPE's continuous positional signal from neighborhood construction. Neighborhood selection determines which points interact; RoPE describes their relative positions within those interactions.
 
 ## A four-point example
 
@@ -73,7 +73,7 @@ For a single rotary plane with $\theta=1$, an edge displacement along the first 
 Now add a distant point to one cloud. A bounding-box normalizer would change the coordinates of the original square because the full extent has changed. Holding $g$ fixed leaves its local normalized distances unchanged. Conversely, if the task calls for a different perceptual granularity, changing $g$ deliberately changes those distances even when the bounding box stays fixed.
 
 
-[Run the NumPy example](/code/utonia-perceptual-granularity.py) to verify the distance and phase equalities. It also adds a translated copy and checks that pairwise displacements are unchanged after consistent recentering. The script illustrates the coordinate mechanism; it does not reproduce Utonia's training procedure or select granularities automatically.
+[Run the NumPy example](/code/utonia-perceptual-granularity.py) to verify the distance and phase equalities for the chosen granularities. A translated copy also gives the same pairwise displacements after consistent recentering.
 
 ## Scale is not the only coordinate convention
 
@@ -83,15 +83,15 @@ An isolated object, by contrast, may need recognition under arbitrary orientatio
 
 Utonia therefore conditions its gravity prior on the original desired granularity. It preserves upright structure for scene-scale, coarser-granularity inputs and encourages arbitrary orientations for object-scale, finer-granularity inputs. Sharing a spatial unit does not require imposing one axis convention on every domain.
 
-The teacher and student views also use asymmetric scales, rotations, and shifts. Feature consistency across those views supplies a learning signal to tolerate coordinate changes. This learned consistency should be distinguished from the exact equality in the square example. Real augmentations need not produce identical normalized arrays, and a trained network is not mathematically guaranteed to output identical features for every transformed cloud.
+The teacher and student views also use asymmetric scales, rotations, and shifts. Feature consistency across those views trains the encoder to tolerate coordinate changes. The square example gives exact coordinate equalities; augmentation-based training extends the idea to views whose normalized arrays differ.
 
-## When this coordinate choice helps—and when it cannot
+## Choosing granularity for the task
 
 The mechanism is useful when joint training mixes point clouds whose numeric units make comparable geometric patterns look substantially different. The rescaling factor can also be adjusted at inference to match a desired granularity, as the paper describes. It gives a concrete control over the spatial unit that enters the positional signal.
 
-It cannot create geometry missing from a sparse scan. Two clouds can have equal normalized distances for some points while differing in coverage, occlusion, or sensor noise. Equalizing units does not equalize sampling density, and it does not make their neighborhoods identical.
+After rescaling, coverage, occlusion, sensor noise, and sampling density still determine which geometry is available. Comparable coordinate units make local patterns easier to share across domains; the observed points determine the neighborhoods those operators can use.
 
-Absolute scale may itself be essential. Distinguishing a miniature from a full-size object, estimating clearance for a robot, or measuring a structure requires metric information. A downstream system should retain or recover the relevant scale rather than assume that a convenient representation unit preserves every measurement it needs.
+Tasks such as distinguishing miniatures, estimating robot clearance, and measuring structures also use absolute scale. Retaining the chosen $g$ alongside the normalized coordinates preserves the conversion back to metric units.
 
 Finally, a good granularity for one task may be too coarse for another. Rescaling changes the positional frequencies associated with a physical displacement. It makes a specific spatial comparison easier to share; its usefulness still depends on which comparisons the task requires.
 

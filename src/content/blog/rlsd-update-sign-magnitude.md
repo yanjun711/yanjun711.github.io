@@ -9,7 +9,7 @@ toc: true
 
 A verifier can tell us that a generated answer is wrong without telling us which token led it astray. Giving every token the same negative advantage is simple, but it also penalizes useful steps that happened to appear in an unsuccessful response.
 
-[Self-Distilled RLVR](https://arxiv.org/abs/2604.03128v1) proposes RLSD, which uses privileged information to redistribute this token-level credit. Its central constraint is small enough to study directly: **the reward determines the sign of each token's advantage; the privileged context changes its magnitude**. This note follows that coefficient through the update and works out what the sign constraint actually guarantees.
+[Self-Distilled RLVR](https://arxiv.org/abs/2604.03128v1) proposes RLSD, which uses privileged information to redistribute token-level credit: **the group-relative reward signal determines each token advantage's sign; the privileged context changes its magnitude**. Following that coefficient through the update shows how RLSD reinforces useful tokens and concentrates negative credit on less supported ones.
 
 ## One response, two probability estimates
 
@@ -35,7 +35,7 @@ $$
 
 The stop-gradient operator $\operatorname{sg}$ makes this a fixed weighting signal within the policy update. A positive value means the reference makes the sampled token more likely. A negative value means it makes the token less likely.
 
-That observation alone is not a correctness label. A reference may favor a token inside an otherwise failed response, and a plausible token can still belong to a bad overall strategy. The verifier supplies the sequence-level judgment.
+Reference support measures a token's likelihood under additional context. The verifier supplies a separate sequence-level judgment, allowing RLSD to retain useful steps within an otherwise failed response.
 
 ## Reverse the evidence ratio for a failed response
 
@@ -123,7 +123,7 @@ L_{\mathrm{local}}(\theta)
 =-\sum_t\operatorname{sg}(\hat A_t)\log\pi_\theta(y_t\mid x,y_{<t}).
 $$
 
-This is a score-function surrogate for the example, not a complete GRPO training objective. A production GRPO update also needs its current-versus-old-policy treatment. That policy ratio and RLSD's teacher-versus-student **evidence ratio** have different roles and should not share an implementation variable merely because both are probability ratios.
+This local score-function surrogate isolates the detached coefficient. In GRPO, the current-versus-old-policy ratio additionally accounts for policy changes since rollout. RLSD's teacher-versus-student **evidence ratio** instead measures the effect of privileged context on the sampled token.
 
 For one categorical distribution with logits $z$, probabilities $p$, and sampled class $k$, the negative loss gradient is
 
@@ -132,21 +132,21 @@ $$
 =\hat A_t(e_k-p).
 $$
 
-The coefficient controls whether that sampled token is locally encouraged or discouraged. In a shared neural network, however, gradients from different positions interact. Preserving all coefficient signs does **not** preserve the direction of their summed parameter-gradient vector.
+The coefficient controls whether that sampled token is locally encouraged or discouraged. The parameter update sums these contributions across positions. Reweighting their magnitudes changes the direction of that sum even when every coefficient retains its sign.
 
 [The runnable NumPy example](/code/rlsd-update-sign-magnitude.py) computes both coefficient lists, checks their bounds, and verifies the detached local loss gradient by finite differences. It keeps the weights fixed during that check; recomputing them at every perturbation would test a different objective.
 
-A source-reading detail matters here: equation 16 and Algorithm 1's final update line do not explicitly provide the differentiable policy factor needed for a detached-weight implementation. The calculation above follows the explicit score-function gradient in equation 17 and the mixed coefficient in Algorithm 1. Taking a gradient of a batch sum of detached advantages alone would produce no policy-learning signal.
+The implementation above uses the score-function gradient in equation 17 and the mixed coefficient in Algorithm 1. The differentiable log-policy factor carries the learning signal; the detached advantage sets its weight. This makes the gradient path explicit where equation 16 and the algorithm's final update line leave it implicit.
 
-## What the constraint leaves unresolved
+## Reference support and reward quality
 
-The sign constraint gives a useful separation of responsibilities within each sampled response. It does not prove that the teacher identified the causally important reasoning step. Token likelihood can reflect style, a familiar phrase, or direct reference overlap. Reweighting such a token remains a heuristic credit assignment even when its algebra is well behaved.
+RLSD uses reference-conditioned likelihood as a credit-assignment heuristic. That likelihood can reflect a useful reasoning step, a familiar phrase, style, or direct reference overlap. The resulting weights express contextual support for the sampled tokens.
 
-The verifier can also be wrong or incomplete. A response with a spurious positive reward still receives positive token advantages. Positive multipliers preserve the supplied judgment; they cannot repair it.
+The verifier determines the sequence-level signal. A spurious positive reward reinforces the response, with RLSD redistributing that reinforcement according to reference support. Reward quality therefore shapes the update before token reweighting begins.
 
-If every reward in a group is identical, the displayed standardization has zero variance. An implementation needs an explicit numerical convention for that case. The example uses a nondegenerate group so that this issue does not disappear inside an arbitrary epsilon.
+Groups with identical rewards have zero variance. An implementation can skip those groups or guard the standardization denominator; the worked example uses rewards $[1,0]$ to expose the sign-and-magnitude calculation directly.
 
-Finally, bounded coefficients do not establish general immunity to reference leakage, convergence, or evaluation shortcuts. They establish the narrower property proved above: privileged evidence redistributes the magnitudes of the token advantages while their signs remain controlled by the group-relative reward signal.
+The positive, bounded multipliers give RLSD its defining property: privileged context redistributes token-advantage magnitudes while the group-relative reward signal controls their signs.
 
 ## References
 

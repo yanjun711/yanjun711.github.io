@@ -9,7 +9,7 @@ toc: true
 
 Suppose a diffusion transformer trains successfully on a compact image latent. We replace the encoder with a pretrained visual representation, keeping the same number of spatial tokens but increasing the channels per token. Can we keep sampling noise levels in exactly the same way?
 
-The RAE paper, *Diffusion Transformers with Representation Autoencoders* [\[1\]](https://arxiv.org/abs/2510.11690v1), identifies a problem with this substitution: a noise level that usefully corrupts a small latent can leave too much recoverable information in a larger representation. Section 4.2 adjusts the schedule using the **total latent dimension**, including channels. The mechanism is a one-dimensional change of variables. Understanding it does not require treating the whole autoencoder or transformer architecture as a single intervention.
+The RAE paper, *Diffusion Transformers with Representation Autoencoders* [\[1\]](https://arxiv.org/abs/2510.11690v1), identifies a problem with this substitution: a noise level that usefully corrupts a small latent can leave too much recoverable information in a larger representation. Section 4.2 adjusts the schedule using the **total latent dimension**, including channels, through a one-dimensional change of variables.
 
 ## What does a timestep mean?
 
@@ -33,7 +33,7 @@ If signal and noise have the same variance per coordinate, their variance ratio 
 
 Why could dimension matter? Gaussian noise is sampled independently across coordinates, while useful structure can be redundant across spatial locations and channels. A denoiser can combine several noisy clues about the same content. More coordinates can therefore make information easier to recover at the same nominal $t$. Counting spatial tokens alone misses the extra clues carried by a wider representation. Earlier studies of noise scheduling [\[2\]](https://arxiv.org/abs/2301.10972v1) and high-resolution diffusion [\[3\]](https://arxiv.org/abs/2301.11093v1) discuss the related need to adjust corruption as image resolution changes.
 
-This is an argument about representation structure. Ambient dimension by itself does not universally improve signal-to-noise ratio: appending unrelated, equally scaled signal and noise coordinates need not make any particular coordinate easier to recover.
+The key is redundant structure: several coordinates can supply noisy evidence about the same underlying content. Adding unrelated coordinates leaves that recovery problem unchanged.
 
 ## A shift in noise-to-signal odds
 
@@ -84,7 +84,7 @@ For $m>n$, every interior timestep moves toward noise. Applying this map to samp
 
 ## A minimal model of redundant information
 
-Consider a deliberately simple latent: a scalar value $z$, with unit variance, repeated in $D$ coordinates. Each coordinate receives independent unit-variance noise:
+Consider a scalar value $z$ with unit variance, repeated in $D$ latent coordinates. Each coordinate receives independent unit-variance noise:
 
 $$
 y_i=(1-t)z+t\varepsilon_i,
@@ -113,7 +113,7 @@ m\left(\frac{1-t_m}{t_m}\right)^2
 =n\left(\frac{1-t_n}{t_n}\right)^2.
 $$
 
-Taking positive square roots gives exactly the odds scaling above. This toy model explains why a square root of the dimension ratio is plausible when independent noise obscures redundant signal. It is not a claim that real RAE channels are copies, or a proof that their effective information dimension equals the number of coordinates.
+Taking positive square roots gives the odds scaling above. The repeated-signal model derives the square-root factor from independent noise acting on redundant coordinates, providing intuition for RAE's dimension-dependent schedule.
 
 Take $n=4096$, $m=16384$, and $t_n=1/2$. Then $\alpha=2$ and
 
@@ -123,7 +123,7 @@ $$
 
 In the repeated-signal example, both cases have SNR $4096$. Without the shift, the larger latent at $t=1/2$ would have SNR $16384$. The larger number here means the toy estimator has an easier recovery problem.
 
-For a wider illustrative latent with $256$ tokens and $768$ channels, $m=196608$, so $\alpha=\sqrt{48}$. The same reference midpoint moves to approximately $0.8739$. This is an arithmetic example, not a recommended setting independent of the representation's normalization and statistics.
+For a wider illustrative latent with $256$ tokens and $768$ channels, $m=196608$, so $\alpha=\sqrt{48}$. The same reference midpoint moves to approximately $0.8739$, showing how channel width changes the schedule even at a fixed token count.
 
 ## Checking the transformation
 
@@ -149,13 +149,13 @@ $$
 
 One common implementation error is to apply the correct expression to the opposite time convention. If a codebase uses $t=0$ for noise and $t=1$ for data, its numerical direction must be converted first. Another is to count only spatial positions despite using a much wider latent. The dimension convention and the interpolation convention must agree with the schedule.
 
-## Where the argument stops
+## Representation statistics and denoising difficulty
 
-The shift is useful when changing the amount of recoverable structure in a latent changes the difficulty of denoising. It is a low-cost way to move training examples toward a more useful corruption regime. It cannot fix an encoder that discarded needed details, a decoder that cannot reconstruct them, or a denoiser whose capacity is inadequate for the representation.
+The shift moves training examples toward stronger corruption when a wider representation makes information easier to recover. It changes the denoising difficulty while leaving the encoder, decoder, and denoiser architecture fixed.
 
-Dimension also does not specify the latent's covariance, semantic redundancy, or coordinate scale. Correlated noise would change the averaging calculation. Strong channel anisotropy would make a single scalar schedule an incomplete description of corruption. These are reasons to inspect representation statistics rather than interpret the dimension formula as a universal law.
+Covariance, redundancy, and coordinate scale determine how closely a real latent follows the repeated-signal intuition. Correlated noise changes the averaging calculation, while channel anisotropy gives different coordinates different corruption levels under the same scalar schedule.
 
-RAE's contribution here is precise: extend the dimension-dependent shift to account for channel width as well as token count, and evaluate that choice in its latent-generation setting. The mechanism can be understood as multiplying noise-to-signal odds, with a simple redundancy model explaining the square root.
+RAE extends the dimension-dependent shift to channel width as well as token count. Multiplying noise-to-signal odds provides a compact way to account for both, with the redundancy model explaining the square-root scaling.
 
 ## References
 

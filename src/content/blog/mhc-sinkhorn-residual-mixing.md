@@ -9,7 +9,7 @@ toc: true
 
 A standard residual connection carries a state forward through an identity map. If we replace that state with several parallel streams, we can learn how to mix them before the next layer. But an unconstrained mixing matrix can amplify the state every time it is applied. Small per-layer gains become large gains across depth.
 
-mHC, *Manifold-Constrained Hyper-Connections* [\[1\]](https://arxiv.org/abs/2512.24880v1), restricts this residual mixing matrix to be doubly stochastic: nonnegative, with every row and every column summing to one. This note focuses on that constraint. It gives a precise statement about a frozen linear residual path, while leaving important qualifications for the full nonlinear network.
+mHC, *Manifold-Constrained Hyper-Connections* [\[1\]](https://arxiv.org/abs/2512.24880v1), restricts this residual mixing matrix to be doubly stochastic: nonnegative, with every row and every column summing to one. For a fixed mixing matrix, these constraints preserve the stream mean and bound the linear transport's norm across depth.
 
 ## A residual path with several streams
 
@@ -85,9 +85,9 @@ $$
 M^{(k)}=T_r\bigl(T_c(M^{(k-1)})\bigr).
 $$
 
-It uses twenty iterations. This is a finite approximation: the final row normalization makes row sums one to floating-point accuracy, while column sums may still differ from one. The exact norm argument above applies to an exactly doubly stochastic matrix, not automatically to every finite-iteration output.
+It uses twenty iterations. The final row normalization makes row sums one to floating-point accuracy; column sums approach one as the iterations converge. Their remaining residual determines how close the finite output comes to the exact norm bound.
 
-Sinkhorn scaling also should not be read as the Euclidean nearest-point projection of an arbitrary matrix onto $\mathcal B_n$. It alternately rescales a positive matrix. For this note, its role is to provide a differentiable parameterization that approaches the desired normalization constraints.
+Alternating positive-matrix rescaling gives a differentiable parameterization approaching $\mathcal B_n$. The procedure follows multiplicative row and column normalization rather than Euclidean nearest-point projection.
 
 ## A two-stream calculation
 
@@ -113,7 +113,7 @@ B\begin{bmatrix}1\\-1\end{bmatrix}
 =\frac12\begin{bmatrix}1\\-1\end{bmatrix}.
 $$
 
-After ten identical mixing steps, the difference is multiplied by $2^{-10}=1/1024$. Its disappearance is compatible with the nonexpansive bound. “Norm bounded by one” does not mean every direction retains its magnitude or all information remains recoverable.
+After ten identical mixing steps, the difference is multiplied by $2^{-10}=1/1024$. The mean direction stays fixed while the difference direction contracts, showing how bounded transport can progressively merge streams.
 
 <figure class="figure-mechanism">
   <picture>
@@ -136,11 +136,11 @@ def sinkhorn(logits, iterations=20):
     return matrix
 ~~~
 
-Subtracting the largest logit prevents overflow in this small example; a shared positive scale disappears during normalization. Very large logit ranges can still underflow. A production implementation may require log-domain calculations and attention to numerical precision.
+Subtracting the largest logit prevents overflow; a shared positive scale disappears during normalization. For very large logit ranges, log-domain normalization also handles entries that would underflow after exponentiation.
 
-## The boundary of the stability claim
+## Finite normalization and input-dependent mixing
 
-There are two separate limitations. First, finite Sinkhorn iterations leave a normalization error. Measuring row and column residuals is more informative than assuming twenty iterations make every possible matrix exact. Highly imbalanced logits can converge slowly.
+Finite Sinkhorn iterations leave a normalization residual, especially for highly imbalanced logits. The remaining row and column errors quantify its effect on the transport bound.
 
 We can still quantify a useful approximate bound. Suppose the final nonnegative matrix has row sums one and its largest column sum is at most $1+\delta$. The standard induced-norm inequality gives
 
@@ -149,17 +149,17 @@ $$
 \leq\sqrt{1+\delta}.
 $$
 
-Here $\|B\|_1$ is the largest absolute column sum and $\|B\|_\infty$ is the largest absolute row sum. The downloadable example checks this bound for its finite-iteration output. This is weaker than exact nonexpansiveness. Even a small gain can accumulate when multiplied across many layers, so a small normalization residual has to be interpreted in the context of depth.
+Here $\|B\|_1$ is the largest absolute column sum and $\|B\|_\infty$ is the largest absolute row sum. The downloadable example checks this bound for its finite-iteration output. Across a chain of $L$ matrices satisfying the same residual bound, the resulting upper bound is $(1+\delta)^{L/2}$, connecting normalization accuracy to network depth.
 
-Second, the full residual matrix depends on the input. For $g(X)=B(X)X$, a perturbation obeys
+The learned mixing matrix also depends on the input. For $g(X)=B(X)X$, a perturbation obeys
 
 $$
 dg=B(X)\,dX+[dB(X)]X.
 $$
 
-The doubly stochastic bound controls the first term. It does not remove the second term. Nor does it bound the Jacobian of the nonlinear branch, its read/write mappings, or their sum with the residual path. It would therefore be incorrect to conclude that the entire network has Jacobian norm at most one.
+The doubly stochastic bound controls the first term. The second describes how the mixing weights change with the input. Together with the nonlinear branch and its read/write mappings, it contributes to the full layer Jacobian.
 
-The constraint still has a useful, concrete purpose: it permits stream mixing while preventing the fixed residual transport matrices from accumulating arbitrary multiplicative gains. The price is that mixing can suppress stream differences. The rest of the architecture determines whether that suppression helps combine useful information or erases distinctions the model needs.
+The constraint permits stream mixing while keeping the fixed transport matrices nonexpansive. Mixing also suppresses some stream differences, so the branch and read/write mappings determine how the network combines shared information with stream-specific features.
 
 The constraint also preserves the sum across streams for every feature channel: $\mathbf1^{\mathsf T}BX=\mathbf1^{\mathsf T}X$. It therefore conserves a stream mean without conserving each stream's identity. That distinction is visible in the two-stream example: both streams approach their shared mean, while the original difference becomes harder to recover.
 

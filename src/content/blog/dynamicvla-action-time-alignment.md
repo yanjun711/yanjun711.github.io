@@ -11,8 +11,6 @@ A robot observes a moving object, predicts six actions, and starts executing the
 
 If producing the chunk takes two control periods, its first two actions refer to times that have already passed. Executing the chunk from its beginning creates a systematic delay. DynamicVLA's action-streaming rule [\[1\]](https://arxiv.org/abs/2601.22153v1) makes the intended execution time explicit: discard expired actions and, where chunks overlap, use the chunk based on the newer observation.
 
-This note isolates that scheduling mechanism. It does not attempt to explain every component of the model or its dynamic-manipulation benchmark.
-
 ## A chunk has a clock
 
 Predicting several future actions in one call is action chunking, as used in ACT [\[2\]](https://arxiv.org/abs/2304.13705v1). To make the timing explicit, use discrete control ticks $k=0,1,2,\ldots$, separated by $\Delta$ seconds. An observation at tick $t$ produces the chunk
@@ -31,7 +29,7 @@ $$
 
 The first valid action is therefore not necessarily the first array element. It is the element whose timestamp matches the current execution tick. The paper assumes a horizon longer than inference delay, $n>m$, to maintain useful overlap.
 
-This rule corrects the indexing of execution. It does not make inference instantaneous. The chosen action is still conditioned on an observation from $m$ ticks earlier.
+Execution now uses the action for the current tick, conditioned on an observation from $m$ ticks earlier.
 
 ## Continuous inference creates overlap
 
@@ -39,7 +37,7 @@ DynamicVLA starts a new inference when the preceding inference finishes, while a
 
 This creates competing predictions. At tick $t+2m$, both $A_t$ and $A_{t+m}$ may contain an action for that tick. The newer chunk is based on a more recent observation, so the streaming rule replaces the unexecuted overlapping part of the older chunk.
 
-The first paper version names this module **Latent-aware Action Streaming**. Its Section III-D states the two rules explicitly: remove the outdated prefix and prioritize the newer overlapping sequence. The mechanism is about action timestamps and observation freshness; the word “newer” must retain that meaning when implementing the queue.
+The first paper version names this module **Latent-aware Action Streaming**. Section III-D gives two rules: remove the outdated prefix and prioritize the overlapping sequence based on the newer observation.
 
 For a general scheduler, let $r_t$ be the tick at which chunk $A_t$ is ready. Among chunks already available and containing an action for current tick $k$, choose
 
@@ -48,7 +46,7 @@ t^*(k)=\max\{t:r_t\leq k,\ t\leq k\leq t+n\},
 \qquad a_k=a_k^{(t^*(k))}.
 $$
 
-This is an explanatory timestamp-based formulation of the rule. With fixed latency it reduces to the paper's suffix-and-overwrite description. With variable latency it also clarifies that a late-arriving chunk from an older observation should not overwrite a chunk from a newer one merely because it arrived last.
+This timestamp formulation reduces to the paper's suffix-and-overwrite rule for fixed latency. With variable latency, ordering by observation time also handles out-of-order arrivals: a late chunk from an older observation yields to an already available chunk from a newer one.
 
 ## Six actions and two ticks of delay
 
@@ -72,9 +70,9 @@ At tick 2, only $A_0$ is ready. Execute its action for tick 2, then its action f
   <figcaption>Figure 1. Six-period action chunks with a two-tick inference delay. The first two predictions expire; the next two execute before a newer chunk takes over. Open markers indicate inference completion.</figcaption>
 </figure>
 
-For ticks 2 through 7, the source observation ticks are $0,0,2,2,4,4$. Observation age alternates between $100$ and $150$ ms. Dropping expired actions aligns the execution timestamp; it does not reduce that age to zero.
+For ticks 2 through 7, the source observation ticks are $0,0,2,2,4,4$. Execution timestamps align with the current tick, while observation age alternates between $100$ and $150$ ms.
 
-For scale, an object moving at $0.5$ m/s travels $5$ cm in $100$ ms. This is a constant-velocity illustration, not a DynamicVLA benchmark result. Whether the action suffix handles that motion depends on what the policy predicted about the future. A queue operation alone cannot recover a future state the model never anticipated. Related work such as VLASH [\[3\]](https://arxiv.org/abs/2512.01031v1) explicitly studies future-state-aware asynchronous inference, highlighting why execution timing and future-state conditioning are connected concerns.
+For scale, an object moving at a constant $0.5$ m/s travels $5$ cm in $100$ ms. The policy's later action entries need to anticipate that motion. Related work such as VLASH [\[3\]](https://arxiv.org/abs/2512.01031v1) studies future-state-aware asynchronous inference, connecting execution timing with predictions about the scene at execution time.
 
 ## A minimal scheduler
 
@@ -92,21 +90,19 @@ def action_for_tick(chunks, tick):
     return newest.actions[tick]
 ~~~
 
-The action values in the downloadable example are labels such as “action for tick 4 from observation 2.” They make scheduling visible without pretending to simulate a robot or measure task success. The script verifies the timeline above and includes a case in which an older chunk arrives after a newer one.
+The example labels actions with their execution and observation ticks, such as “action for tick 4 from observation 2.” It verifies the timeline above and includes an older chunk arriving after a newer one.
 
 Real queues may implement the same decision by replacing future entries when each chunk arrives. Either representation must preserve the timestamps. Advancing an array pointer without accounting for inference time would silently shift every intended action into the future.
 
-## What the rule leaves unresolved
+## Horizon, timestamps, and handoffs
 
-**The horizon must cover the delay.** If a chunk is ready only after all of its action timestamps have passed, there is no valid suffix. In the fixed-delay discrete schedule above, the next chunk is ready at $t+2m$, while the current chunk ends at $t+n$. Gapless coverage after startup therefore requires $n\geq 2m-1$, stronger than merely retaining a valid suffix. Variable latency can still leave a gap. A deployed controller needs an explicit fallback when no suitable action is available; this scheduling rule does not define one.
+**Horizon coverage.** In the fixed-delay schedule, the next chunk is ready at $t+2m$, while the current chunk ends at $t+n$. Gapless coverage after startup requires $n\geq 2m-1$. A shorter horizon or a latency spike can exhaust the queue, making chunk length and inference time joint scheduling parameters.
 
-**Prediction and execution must agree about time.** The suffix is useful only if the model's later entries mean actions for those later ticks. Discarding a prefix does not justify reinterpreting a sequence whose timing semantics are different. Sensor capture time, inference start time, and actuator dispatch time may also differ.
+**Timestamp meaning.** Each action entry refers to a particular future tick. Sensor capture time anchors that prediction; inference completion determines when it becomes available; actuator dispatch determines when execution begins. Keeping these times distinct lets the scheduler select the appropriate suffix.
 
-**Already executed actions cannot be replaced.** Overwriting applies to future queue entries. It cannot undo a command already sent to a slow actuator. Additional actuator delay may require another timing model beyond inference latency.
+**Queue handoff.** Overwriting updates future queue entries. Commands already dispatched follow the actuator's timing, so actuator delay adds to the interval between the source observation and physical motion.
 
-**Freshness is not continuity or safety.** A newer chunk can disagree sharply with the older one at the handoff. Always choosing it does not guarantee smooth forces, collision avoidance, or contact stability. Blending might address discontinuities, but introduces its own behavior and is not the rule analyzed here.
-
-The useful contribution is narrower: a policy produces time-indexed predictions, inference consumes time, and the execution layer respects both facts. Removing expired entries and preferring fresher observations makes that temporal contract explicit.
+Two overlapping chunks can also predict different actions at the same tick. Selecting the fresher chunk improves observation age; the size of the action change at that handoff depends on the policy's predictions. DynamicVLA's streaming rule ties execution to the current timestamp and the freshest available observation.
 
 ## References
 

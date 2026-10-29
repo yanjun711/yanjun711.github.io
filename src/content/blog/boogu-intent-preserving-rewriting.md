@@ -9,7 +9,7 @@ toc: true
 
 Ask an image generator to “put the result of seven times eight above three red circles to the left of a blue square.” The sentence specifies a simple picture, but it combines arithmetic, object counting, layout, and exact text. A model can produce an attractive image while failing any one of those requirements.
 
-[Boogu-Image](https://arxiv.org/abs/2607.13125v1) places a reasoning-capable prompt rewriter before generation. The narrow question here is what that rewriter should change. Converting “seven times eight” to “56” makes an implicit requirement explicit. Adding a fourth circle or replacing a white background with a dramatic gradient changes the requested image.
+[Boogu-Image](https://arxiv.org/abs/2607.13125v1) places a reasoning-capable prompt rewriter before generation. The rewriter resolves implicit instructions into concrete image details: “seven times eight” becomes “56,” while the requested objects, colors, and spatial relationships stay intact.
 
 ## Two different places for an error
 
@@ -19,15 +19,15 @@ $$
 p(I\mid x)=\sum_z q_\psi(z\mid x)\,p_\phi(I\mid z).
 $$
 
-Here $q_\psi$ denotes the rewriter and $p_\phi$ the image generator. This equation describes the two-stage interface; it is **not a training objective or formal model introduced by the Boogu report**. A deterministic rewrite is the special case where $q_\psi$ concentrates on one instruction.
+Here $q_\psi$ denotes the rewriter and $p_\phi$ the image generator. I use this abstraction to describe the two-stage interface. A deterministic rewrite is the special case where $q_\psi$ concentrates on one instruction.
 
 The decomposition separates two failures. The rewrite can faithfully specify three circles, while the generator draws four. Or the rewrite can already ask for four, in which case even perfect instruction following produces the wrong picture. Better text-to-image fidelity cannot repair a requirement that was changed upstream.
 
-Boogu's section 3.1.2 discusses rewriting as a reasoning process. Its examples include resolving indirectly described subjects, enumerating objects, and specifying literal strings and their placement. Appendix B.2.1 also distinguishes text-to-image instructions from editing instructions according to whether a reference image is supplied. The mechanism considered here is the translation of intent into explicit generation conditions, not the rest of the agentic system.
+Boogu's section 3.1.2 discusses rewriting as a reasoning process. Its examples include resolving indirectly described subjects, enumerating objects, and specifying literal strings and their placement. Appendix B.2.1 distinguishes text-to-image instructions from editing instructions according to whether a reference image is supplied. In each case, the rewriter translates intent into explicit generation conditions.
 
 ## Treat the request as a set of constraints
 
-Use this deliberately small request:
+Consider this request:
 
 > On a white background, put three red circles to the left of one blue square. The title should be the result of seven times eight.
 
@@ -45,11 +45,11 @@ $$
 C(u)=\bigwedge_{j=1}^{5}C_j(u).
 $$
 
-This constraint notation is an explanatory tool, not a claim that Boogu runs a symbolic constraint solver. It makes a distinction that prose can hide: requested properties must survive rewriting, while unspecified properties still leave room for a generator to choose.
+These predicates give us a compact way to compare the request with a rewrite: specified properties stay fixed, while unspecified details leave room for the generator to choose.
 
-For example, the request does not fix the circle radius, the title font, or the square's exact coordinates. A layout description may choose practical positions to express “left of,” but it should not accidentally add a competing subject, change the count, or overwrite the specified background. An image necessarily realizes unspecified details; the rewriter's job is to avoid making unnecessary choices into new mandatory conditions.
+For example, circle radius, title font, and exact coordinates are open choices. The count, colors, background, and “left of” relation define the requested composition. A rewrite can clarify that composition while leaving the remaining visual details open.
 
-## One rewrite, checked line by line
+## Comparing two rewrites
 
 A compact rewrite is:
 
@@ -57,7 +57,7 @@ A compact rewrite is:
 
 The arithmetic is resolved once, before image generation. “Three separate” and the explicit enumeration of the object groups reduce the ambiguity of the count. Quotation marks delimit the text to render: the image should contain the digits, not an equation, a verbal explanation, or the phrase “the result of seven times eight.”
 
-The horizontal row and centered title are illustrative layout choices used to make this example inspectable. They are not mathematical consequences of the original request, nor measured outputs of the Boogu rewriter. In a real application, the appropriate amount of such layout detail depends on the user's tolerance for specification and the generator's conditioning conventions.
+In this example rewrite, I chose a horizontal row and a centered title to give the shapes a concrete layout. Other arrangements can satisfy the same five requirements.
 
 Now compare an embellished rewrite:
 
@@ -65,7 +65,7 @@ Now compare an embellished rewrite:
 
 It supplies more visual detail, but violates the count, title, background, and potentially the relation. Word count and aesthetic specificity are poor proxies for intent preservation.
 
-The [small downloadable audit](/code/boogu-prompt-constraints.py) makes this comparison precise on **hand-specified scene graphs**. Its faithful scene passes all five predicates. A drifting scene with four circles, a navy background, and the title “ORBIT,” while retaining the left relation, passes only two: the square requirement and the relation requirement. It does not run Boogu, inspect rendered pixels, or estimate a model's success rate.
+The [downloadable example](/code/boogu-prompt-constraints.py) compares two hand-specified scene graphs. The faithful scene passes all five predicates. A scene with four circles, a navy background, and the title “ORBIT,” while retaining the left relation, passes two: the square requirement and the relation requirement.
 
 | Requirement | Faithful specification | Drifting specification |
 | --- | --- | --- |
@@ -86,9 +86,9 @@ left_of_square = (
 )
 ```
 
-Coordinates here represent object centers. They suffice for the toy graph, whose shapes are small and separated. If the actual requirement is that entire shapes lie to the left without overlap, a pixel evaluator needs object extents or masks as well. Even the definition of a predicate deserves care before it becomes an evaluation score.
+Coordinates here represent object centers in a graph of small, separated shapes. Testing whether entire shapes lie to the left without overlap would use their bounding boxes or masks.
 
-## When doing less is the correct operation
+## Clear prompts need little rewriting
 
 Boogu argues that an already clear, conflict-free prompt should be left essentially unchanged. In functional notation, that aspiration is
 
@@ -97,21 +97,19 @@ $$
 \quad\text{when }x\text{ already states the intended conditions clearly.}
 $$
 
-This is a **design criterion**, not a proved lower bound on generation quality. A reasoning model can still misread a prompt, and equivalent wordings can trigger different image distributions. Leaving the original wording available as a fallback is sensible, but the report does not establish a formal guarantee that every rewrite improves every output.
+This near-identity behavior keeps already explicit instructions intact. Equivalent wordings can produce different image distributions, so rewriting is most useful where it resolves an actual ambiguity or an implicit calculation.
 
 The right amount of rewriting is also generator-dependent. Models learn different caption styles, text conventions, and compositional priors. An enumeration that helps one model may be redundant or confusing for another. A faithful meaning and an effective conditioning format are related requirements, but neither implies the other.
 
-## Where the interface remains fragile
+## Separating rewrite errors from rendering errors
 
-Making a count explicit does not solve visual counting. Writing “56” does not ensure legible digits. Rewriting relocates some reasoning out of the image model; it does not eliminate the generator's limitations.
-
-Ambiguous or contradictory requests create a different boundary. A rewriter cannot preserve two mutually exclusive requirements by silently selecting one and presenting it as certain. Practical systems need a policy for clarification or explicit assumptions. That policy is separate from the arithmetic and enumeration example above.
+Rewriting resolves arithmetic and composition into text that the image model can use. The generator then renders the specified count, spatial relation, and literal digits. Separating these stages helps locate an error: did the rewrite change “three” to “four,” or did the generator draw four circles from a correct instruction?
 
 Object-focused benchmarks such as [GenEval](https://arxiv.org/abs/2310.11513v1) and compositional evaluations such as [T2I-CompBench](https://arxiv.org/abs/2307.06350v1) motivate checking counts, colors, and relations separately instead of reducing everything to aesthetic preference.
 
-To evaluate rewriting, compare the original and rewritten instructions using a fixed generator and documented settings, then assess individual constraints across multiple samples. Matching random seeds can make paired comparisons more informative, but it does not establish universal improvement. A separate audit of the rewritten text helps locate whether a failure arose before or during rendering.
+Paired samples from the same generator make the effect of rewriting visible. Checking the rewritten text alongside the rendered objects, colors, and relations separates changes introduced by the rewriter from errors introduced during generation.
 
-The useful role of this module is specific: turn implicit reasoning into explicit conditions while preserving the user's specified content. Its success should be judged by those conditions, rather than by how elaborate the rewritten prompt sounds.
+The rewriter's value comes from turning implicit reasoning into explicit conditions that survive through image generation.
 
 ## References
 

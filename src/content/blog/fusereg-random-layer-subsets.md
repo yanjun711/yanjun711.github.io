@@ -9,7 +9,7 @@ toc: true
 
 In a [representation autoencoder](https://arxiv.org/abs/2510.11690v1), several frozen encoder layers can describe the same image at different levels of detail. Averaging them gives a convenient latent, but a decoder trained on only that average may depend on a particular cancellation between layers. Change the layer composition and its prediction can change sharply.
 
-[FuseReg](https://arxiv.org/abs/2609.31620v1) trains downstream models on averages of random **nonempty layer subsets**. Its useful property is unusually precise: the operation preserves the full-layer mean in expectation, while injecting variation only where layers disagree. A three-layer example makes that property visible and explains the resulting regularizer under a linear squared-loss model.
+[FuseReg](https://arxiv.org/abs/2609.31620v1) trains downstream models on averages of random **nonempty layer subsets**. The operation preserves the full-layer mean in expectation while injecting variation where layers disagree. A three-layer example makes that property visible and explains the resulting regularizer under a linear squared-loss model.
 
 ## Normalize by the subset you actually kept
 
@@ -39,7 +39,7 @@ $$
 \mathbb E_S[z_S]=\bar h.
 $$
 
-This identity holds for the latent itself, before making any assumption about a decoder. It does not imply that a nonlinear decoder's average prediction equals its prediction at the average latent.
+The sampler therefore preserves the latent mean. The decoder's response to the variation depends on its mapping, which we can analyze exactly in the linear case below.
 
 ## The noise follows layer disagreement
 
@@ -70,7 +70,7 @@ At $p=0$, all layers are retained and $c_K(0)=0$. As $p$ approaches 1, condition
 
 ## Three layers, seven possible means
 
-Use the deliberately simple features
+Use three two-dimensional layer features:
 
 $$
 h_1=(1,0),\quad h_2=(1,1),\quad h_3=(1,-1).
@@ -129,13 +129,13 @@ $$
 
 Here time runs from noise to data. For a linear predictor and the paper's time-weighted squared loss, the disagreement penalty acquires the additional factor $\rho(t)t^2$, where $\rho(t)=\max(1-t,0.05)^{-2}$. The two stages therefore need not use the same drop rate: they see different inputs and predict different targets even though their subset sampler is shared.
 
-## The limit of the linear explanation
+## From linear decoders to nonlinear models
 
-The mean and covariance identities are exact properties of the sampling distribution. The squared-loss decomposition is exact under its stated linear assumptions. Actual representation-autoencoder decoders and diffusion transformers are nonlinear, and reconstruction training also includes perceptual and adversarial terms. The linear identity does not prove an identical explicit penalty for their full objectives.
+The sampler's mean and covariance identities hold for any downstream model. For a linear decoder with squared loss, they give the explicit disagreement penalty derived above. In a nonlinear decoder or diffusion transformer, a local Jacobian describes sensitivity to small subset perturbations. Perceptual and adversarial reconstruction losses contribute their own responses to those perturbations.
 
-A local Jacobian can help interpret small perturbations, but large subset changes can move a network across nonlinear regions. Strong disagreement may also carry useful detail rather than a nuisance shortcut. Regularizing sensitivity to it can trade fidelity for robustness, so a larger drop rate is not automatically better.
+Larger subset changes can cross nonlinear regions, and disagreement between layers can carry useful detail. The drop rate controls how strongly training discourages dependence on those differences, trading sensitivity to layer composition against reconstruction fidelity.
 
-Finally, equal per-layer keep probabilities are essential to the simple mean-preservation argument. Biased layer sampling or a different normalization can shift the expected latent. Applying the mechanism requires preserving the sampling convention as carefully as the tensor dimensions.
+Equal per-layer keep probabilities and normalization by the retained count produce the mean-preserving sampler. Biased sampling or a different denominator changes the expected latent and therefore the representation seen during training.
 
 ## References
 

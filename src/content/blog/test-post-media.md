@@ -16,7 +16,7 @@ Figure: Language-Forcing, 2026. [Paper](https://arxiv.org/abs/2610.23894).
 
 ## Table
 
-The values below are placeholders for checking table rendering. They are not experimental results.
+The example values below show the table's alignment and spacing.
 
 | Setting | Demonstrations | Trials |
 | --- | ---: | ---: |

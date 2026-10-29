@@ -23,7 +23,7 @@ Here $O$ is a coarse $64^3$ occupancy representation, $R$ is rotation represente
 
 The output variables answer related questions. Shape determines which points constitute the object. Rotation and scale determine how those points are oriented and stretched. Translation locates the result relative to the camera. The final rendered silhouette depends on all of them.
 
-It is possible to factor the same distribution as $p(O\mid I,M)p(R,t,s\mid O,I,M)$ by the probability chain rule. That does not mean the paper implements two independent predictors. SAM 3D's geometry model denoises shape and layout together, allowing their representations to exchange information during generation.
+SAM 3D's geometry model denoises shape and layout together, allowing their representations to exchange information throughout generation.
 
 ## Two views of the evidence
 
@@ -31,7 +31,7 @@ The model conditions on four sets of DINOv2 [\[3\]](https://arxiv.org/abs/2304.0
 
 The masks identify which object the model should explain. Without the full view, a tightly cropped image may make a small nearby object and a large distant object look similar. Without the crop, a small object can receive relatively few pixels in the full-image representation. The two views serve different geometric purposes.
 
-These cues do not make single-view reconstruction uniquely determined. An occluded back surface can have several plausible shapes, and absolute scale may remain ambiguous. Conditioning supplies evidence and learned priors; it does not turn every hidden quantity into an observation.
+For an occluded back surface or ambiguous absolute scale, the model combines visible evidence with learned shape and size priors to select a plausible reconstruction.
 
 
 ## What is actually mixed?
@@ -40,9 +40,9 @@ Appendix C.1 makes the tokenization concrete. Following the structured-latent ap
 
 Modality-specific input projections map those tokens into a shared feature width of $1024$. Output projections return predictions to the appropriate parameter spaces. A Mixture of Transformers uses one transformer for shape and another whose parameters are shared across the layout modalities. Joint self-attention permits information exchange between them.
 
-This arrangement matters because shared attention and shared parameters are different choices. Rotation need not use the same input projection as an eight-channel shape latent merely because both participate in an attention operation. Conversely, separate modality processing does not require the streams to ignore one another.
+Modality-specific projections preserve each variable's representation, while joint attention carries information between shape and layout. Shared attention connects the streams even where their processing parameters differ.
 
-The paper also uses a structured attention mask to support training on datasets with incomplete modality labels, and to permit selective fine-tuning. For example, shape-only supervision need not require reliable camera-space placement annotations. The exact mask is beyond the shape–layout coupling considered here; the essential point here is that modality-specific processing retains a route for joint context.
+A structured attention mask supports datasets with incomplete modality labels and permits selective fine-tuning. For example, shape-only data can supervise the geometry stream even when camera-space placement annotations are unavailable.
 
 Why should shape influence rotation? Imagine a shape generator that chooses a different canonical orientation for a chair. A fixed camera rotation that was correct for the old canonical orientation is now wrong. The output rotation only has meaning relative to the output shape's coordinate frame. Independent plausibility is insufficient; their composition must explain the same image.
 
@@ -55,7 +55,7 @@ p_{\mathrm{cam}}
 =R\operatorname{diag}(s)p_{\mathrm{obj}}+t.
 $$
 
-This is an explicit convention for the calculation, rather than a claim about every matrix-storage convention in the released code. Scale acts in object coordinates, rotation follows, and translation is in camera coordinates. Changing the operation order generally changes the result.
+Under this column-vector convention, scale acts in object coordinates, rotation follows, and translation is in camera coordinates. Changing the operation order generally changes the result.
 
 Take
 
@@ -100,13 +100,13 @@ assert np.allclose(camera_point, [1, 2, 4])
 assert np.allclose(uv, [25, 50])
 ~~~
 
-## What joint prediction can and cannot resolve
+## Shape and placement as one reconstruction problem
 
 Joint generation is useful when evidence for one output changes the interpretation of another: a proposed chair back determines which orientation explains the image; a ground plane helps judge placement; a visible silhouette constrains the combination of shape and scale. Cross-modal interaction gives the model a way to revise these variables together.
 
-It does not establish unique geometry behind an occluder. A plausible reconstruction may still differ from the true hidden surface. A learned size prior may choose a useful scale without measuring the object's physical dimensions. A visually aligned object may also violate contact or collision constraints that are not explicitly enforced by the prediction process.
+Hidden surfaces and absolute scale remain inferred quantities. The model chooses among plausible configurations using the visible silhouette, scene context, and learned priors. Contact geometry supplies another consistency criterion when placing the reconstructed asset into a scene.
 
-The geometry model is also only one stage of SAM 3D. A later model handles texture and refinement. The mechanism discussed here should therefore be evaluated by shape-and-placement consistency, without assigning every improvement in the final textured asset to the joint geometry tokens.
+This joint stage establishes the object's shape and camera-space placement. A later model handles texture and refinement, building on that geometric configuration.
 
 The practical distinction is straightforward: an object can look good in its own viewer and still fail to explain its source image. Joint shape-and-layout generation puts those two requirements into the same conditional modeling problem.
 

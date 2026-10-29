@@ -1,6 +1,6 @@
 ---
 title: "Latent-to-4D: Aligning Video Latents with Geometry Tokens"
-description: "Why matching a latent tensor's shape is insufficient, and how resampling and learned local projection bridge a video VAE and a 4D reconstructor."
+description: "How grid resampling and a learned local projection connect video VAE latents to a 4D reconstruction hierarchy."
 date: 2026-09-12
 tags: [3D vision, Video generation]
 draft: false
@@ -19,7 +19,7 @@ $$
 z\in\mathbb R^{T_v\times H_v\times W_v\times C_v}.
 $$
 
-The geometry hierarchy expects $T$ frames, $M$ spatial tokens per frame, and a feature dimension $d$. Its initial token tensor has shape $T\times M\times d$. Batch dimensions are omitted for now, and this channels-last notation is for explanation rather than an implementation prescription.
+The geometry hierarchy expects $T$ frames, $M$ spatial tokens per frame, and a feature dimension $d$. In channels-last notation with the batch dimension omitted, its initial token tensor has shape $T\times M\times d$.
 
 Three mismatches appear independently. Temporal compression changes how many latent slices represent a clip. Spatial compression changes the sampling grid. Feature learning changes what the channels encode. Reshaping can reorder existing entries, but it cannot solve these three problems by itself.
 
@@ -45,11 +45,11 @@ The order separates geometry of the grid from meaning of the features. Interpola
 
 The refinement hierarchy and prediction heads are initialized from [4RC](https://arxiv.org/abs/2602.10094v1). Alignment is followed by refinement rather than immediate geometric decoding. For a batch of tokens shaped $(B,T,M,d)$, frame-wise attention treats frames as separate batch elements, yielding $(BT,M,d)$. Global attention instead uses $(B,TM,d)$ to exchange evidence across frames. Alternating these operations supplies long-range information beyond the alignment convolution's local receptive field.
 
-This distinction matters when describing the mechanism: the adapter makes features consumable by the geometry hierarchy; the adapter alone is not the complete reconstructor.
+The adapter supplies local geometry tokens; the refinement hierarchy combines them across frames before the prediction heads decode geometry.
 
 ## A one-dimensional example you can calculate
 
-Reduce the problem to time only, two input channels, and a pointwise channel projection. This is an analogue of the interface, not a reproduction of the learned 3D convolution.
+For a one-dimensional example of the interface, use time only, two input channels, and a pointwise channel projection.
 
 Take two latent samples at times 0 and 1:
 
@@ -118,15 +118,15 @@ $$
 
 with ray origin $o_t$, unit direction $r_t(u)$, and predicted depth $d_t(u)$. For example, origin $(1,0,0)$, direction $(0,0,1)$, and depth 2 give point $(1,0,2)$. The metric values come from learned geometric supervision, not from grid interpolation.
 
-## The common-VAE boundary
+## Sharing the VAE interface
 
-The paper's shared interface requires the same VAE checkpoint, latent normalization, tensor layout, compression convention, and a supported latent shape. Within that boundary, the diffusion transformer's architecture or conditioning mode can differ. This is the reason a single downstream pathway can potentially serve several compatible generators.
+Generators sharing the same VAE checkpoint, latent normalization, tensor layout, compression convention, and supported latent shape can use the same downstream pathway. Their diffusion transformer architectures and conditioning modes can differ because the alignment module consumes the common terminal latent representation.
 
-Even that compatibility does not make observed-video and generated-video latent distributions identical. Generated motion may be inconsistent; geometry cues may be ambiguous or absent; training coverage may be limited. The adapter can run successfully while its geometric predictions remain wrong.
+Observed and generated video latents can differ in motion consistency and available geometry cues. The reconstruction hierarchy uses geometric supervision and learned priors to interpret those cues, making the training distribution relevant to its predictions on generated videos.
 
-Trilinear resampling also cannot recover fine detail that the VAE discarded. If an event is temporally compressed away or two structures become indistinguishable in the latent representation, increasing the grid resolution does not restore the missing evidence. Refinement can use learned priors and context, but those are inferences rather than recovered measurements.
+Trilinear resampling increases grid resolution using the information retained by the VAE. Refinement adds context and learned priors where temporal compression or appearance encoding has left geometry ambiguous.
 
-The useful claim is consequently precise: a learned alignment can replace the RGB interface between a compatible video latent space and a 4D hierarchy. It removes an intermediate representation conversion while retaining the need for geometric supervision, global reasoning, and an explicit account of latent conventions.
+Latent-to-4D replaces the RGB decoding-and-re-encoding interface with a learned alignment: resample the grid, convert local features, then refine the resulting tokens into structured geometry.
 
 ## References
 

@@ -17,7 +17,7 @@ Suppose two patches belong to a person's shirt and another belongs to the backgr
 
 The paper visualizes this issue with patch cosine-similarity maps and notes a related degradation during extended [DINOv2](https://arxiv.org/abs/2304.07193v1) training. As training continues, those maps become less localized even while global classification improves. A global objective can accept many representations with adequate image-level discrimination; not all of them provide equally useful local structure.
 
-An earlier checkpoint with good dense features supplies a reference. The goal is not to declare every relation from that checkpoint permanently correct. It is to give continued training a stable constraint on relations that its other objectives may neglect.
+An earlier checkpoint with good dense features supplies a reference, giving continued training a stable target for patch relations that image-level objectives may neglect.
 
 ## The Gram matrix is indexed by patches
 
@@ -63,11 +63,9 @@ The invariance is specific. Rotating each patch independently does not generally
 
 ### How the target enters training
 
-DINOv3 computes Gram anchoring on global crops and combines it with the image-level [DINO](https://arxiv.org/abs/2104.14294v1), patch-level [iBOT](https://arxiv.org/abs/2111.07832v1), and diversity objectives. It is an additional relation-preserving constraint, not a replacement for the rest of self-supervised training.
+DINOv3 computes Gram anchoring on global crops alongside the image-level [DINO](https://arxiv.org/abs/2104.14294v1), patch-level [iBOT](https://arxiv.org/abs/2111.07832v1), and diversity objectives. Together, they train image discrimination, patch features, and the geometry of patch relations.
 
-The reported refinement phase starts after one million iterations. Its initial Gram teacher comes from an earlier teacher checkpoint with good dense features. Importantly, that teacher is **not frozen forever**: every 10,000 iterations it is refreshed from the main exponential-moving-average teacher. It is a stable target between refreshes, distinct from the main teacher's ongoing EMA updates.
-
-This schedule allows the reference to move as training progresses. Calling it distillation from one permanently frozen early model would miss that part of the mechanism.
+The reported refinement phase starts after one million iterations. Its initial Gram teacher comes from an earlier teacher checkpoint with good dense features. Every 10,000 iterations it is refreshed from the main exponential-moving-average teacher. The reference therefore stays stable between refreshes and moves with training at those intervals.
 
 ## Three patches are enough to check it
 
@@ -138,19 +136,19 @@ $$
 =4(XX^{\mathsf T}-G_G)X
 $$
 
-with finite differences. This derivative treats $X$ as the already-normalized matrix. If the network produces raw features $Z$ and then normalizes them, the backward pass must also differentiate through that normalization. Ignoring its Jacobian would produce a different update.
+with finite differences. This derivative is with respect to the normalized matrix $X$. For a network producing raw features $Z$, the chain rule also carries the gradient through L2 normalization.
 
-## What Gram anchoring can and cannot preserve
+## Teacher geometry and spatial correspondence
 
-The loss is useful when relative patch similarities are the structure worth retaining. It constrains a patch's relations to all other patches in the crop, including distant positions. It is not explicitly a nearest-neighbor smoothness penalty, even though the teacher may provide smooth, localized similarity patterns.
+The loss constrains a patch's relations to all other patches in the crop, including distant positions. A teacher with localized similarity patterns supplies a target that distinguishes nearby surfaces and distant regions through their pairwise geometry.
 
-It also does not create semantic correctness by itself. A poor teacher can anchor poor relations. If every teacher patch collapsed to the same unit vector, its Gram matrix would be all ones; a similarly collapsed student could match it perfectly. The quality of the teacher and the other training objectives remain essential.
+Teacher quality determines which relations are preserved. If every teacher patch collapsed to the same unit vector, its Gram matrix would be all ones, and a similarly collapsed student would have zero Gram loss. DINOv3 combines anchoring with its image-level, patch-level, and diversity objectives to learn useful features.
 
 Spatial correspondence is another assumption. Comparing the same matrix indices after unrelated crop transformations would compare different patches. A patch permutation changes the Gram matrix's row and column identities; the loss is not invariant to permuting only one side.
 
-The high-resolution refinement in Section 4.3 keeps this same basic objective. It runs the Gram teacher at twice the input resolution and downsamples the teacher feature map to the student grid with bicubic interpolation. This changes the target relations while retaining corresponding spatial positions. It is not a new pairwise loss or a requirement that the student run at the teacher's resolution.
+The high-resolution refinement in Section 4.3 keeps the same objective. It runs the Gram teacher at twice the input resolution and downsamples the teacher feature map to the student grid with bicubic interpolation. The student receives higher-resolution target relations at corresponding spatial positions.
 
-Finally, forming a dense $P\times P$ matrix has quadratic storage in patch count. The compact equation does not make high-resolution matching free. Its practical scope depends on crop sizes, feature extraction, and implementation choices. What the objective deliberately preserves is a particular geometry of patch relations; feature coordinates, teacher quality, and compute requirements remain separate concerns.
+Forming a dense $P\times P$ matrix uses quadratic storage in patch count, making crop size an important cost factor. Gram anchoring spends that computation on preserving patch relationships while allowing the shared feature coordinate system to evolve.
 
 ## References
 

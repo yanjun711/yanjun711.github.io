@@ -31,7 +31,7 @@ $$
 
 Here $h_t\in\mathbb{R}^H$, and $\theta\in\mathbb{R}^P$ contains the parameters shared by every transition. Assume that $h_0$ is fixed and that each loss depends on $\theta$ only through the states. We will add a trainable output layer in the RNN example below.
 
-Running the recurrence for $T$ steps produces a computation graph with $T$ copies of $f_\theta$. These are copies of the operation, with references to the same parameter vector. They are not separate models with independently trained weights.
+Running the recurrence for $T$ steps produces a computation graph with $T$ uses of $f_\theta$, all referencing the same parameter vector.
 
 In the forward pass, we compute the states and losses. In the backward pass, we traverse this graph in reverse, starting from the last state. We need the forward activations to evaluate the local derivatives, which is why longer sequences require more memory unless we recompute some activations.
 
@@ -154,7 +154,7 @@ def backward(p, x, cache):
     return grads
 ```
 
-`dh_next` carries the contribution from later time steps. The `+=` operations accumulate the gradients of parameters reused across the sequence. The parameters must remain unchanged throughout this forward and backward pass; an optimizer update happens afterward.
+`dh_next` carries the contribution from later time steps. The `+=` operations accumulate gradients across all uses of each shared parameter. The optimizer updates those parameters after the complete forward and backward pass.
 
 ### Checking the gradient
 
@@ -204,7 +204,7 @@ $$
 g \leftarrow g\min\left(1,\frac{\tau}{\|g\|_2}\right),
 $$
 
-with a zero gradient left unchanged. Clipping does not recover a signal that has already vanished. Gated architectures such as [LSTMs](https://doi.org/10.1162/neco.1997.9.8.1735) provide additive state paths that can help preserve gradients, but they do not guarantee successful learning over arbitrary horizons.
+with a zero gradient left unchanged. Clipping controls large gradients. Gated architectures such as [LSTMs](https://doi.org/10.1162/neco.1997.9.8.1735) address vanishing gradients through additive state paths that help carry signals across longer sequences.
 
 ## Truncated BPTT
 
@@ -229,19 +229,19 @@ for x_chunk, y_chunk in chunks:
 
 This snippet assumes `torch` is imported and chunks belong to one continuing sequence. Reset the state for a new independent sequence. An LSTM carries a tuple of hidden and cell states; detach both tensors at a boundary.
 
-With non-overlapping chunks, paths are at most $K$ steps long, and often shorter near a boundary. Overlapping windows and other update schedules make different tradeoffs. In general, truncation changes the gradient estimate; it is not merely a memory-saving way to compute the full gradient. [Activation checkpointing](https://arxiv.org/abs/1604.06174v1) offers a different tradeoff: it recomputes activations during the backward pass while retaining the full gradient paths.
+With non-overlapping chunks, paths are at most $K$ steps long, and often shorter near a boundary. Overlapping windows and other update schedules make different tradeoffs. Truncation saves memory by omitting gradient paths across boundaries. [Activation checkpointing](https://arxiv.org/abs/1604.06174v1) saves memory by recomputing activations during the backward pass while retaining the full paths.
 
 ## Practical notes
 
 For the simple RNN above, storing the hidden states requires $O(TH)$ memory. Real implementations also retain other activations and intermediate values. Forward and backward computation both scale linearly with the number of time steps, for a fixed transition architecture.
 
-Three details are worth checking when implementing the algorithm:
+Three implementation choices determine the resulting gradient:
 
 - **Loss reduction.** Summing and averaging over time produce different gradient scales. Padding masks must also be reflected in the loss and its normalization.
 - **State boundaries.** Decide whether a hidden state should be reset, carried with its graph, or carried after detaching. Each choice changes which dependencies the gradient can follow.
 - **Gradient accumulation.** Accumulate contributions across time within one backward pass, and clear gradients between optimizer steps unless accumulation across steps is intentional.
 
-The same reasoning applies to a differentiable world model rolled forward over several steps: later prediction or planning losses can send gradients through earlier model states. The resulting gradient is a derivative of that model's rollout. It is not automatically a derivative through the physical environment, and its usefulness depends on how accurately the learned dynamics represent the rollout.
+The same reasoning applies to a differentiable world model rolled forward over several steps: later prediction or planning losses send gradients through earlier model states. Those gradients describe the learned dynamics, so the accuracy of the rollout determines how useful they are for planning in the physical environment.
 
 ## References
 

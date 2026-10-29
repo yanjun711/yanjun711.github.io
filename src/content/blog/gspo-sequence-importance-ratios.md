@@ -1,6 +1,6 @@
 ---
 title: "Sequence-Level Importance Ratios in GSPO"
-description: "Deriving GSPO's length-normalized ratio, its shared response-level weight, and the limits of sequence-level clipping."
+description: "Deriving GSPO's length-normalized ratio and the shared response-level weight behind sequence clipping."
 date: 2025-08-09
 tags: [LLM, Reinforcement learning]
 draft: false
@@ -45,7 +45,7 @@ $$
 
 This is the geometric mean of the token ratios. In the repeated-$1.02$ example, $s_i=1.02$ for either length. Compute it from mean log-probability differences rather than multiplying a long list of probabilities.
 
-The normalization is a consequential change of objective. $s_i$ is a length-normalized surrogate, **not** the exact density ratio $R_i$. Substituting it into an expectation does not preserve the usual unbiased importance-sampling identity. Its purpose is to provide a practical optimization weight on a more comparable scale across responses.
+Length normalization changes the optimization weight from the joint density ratio $R_i$ to the surrogate $s_i$. This places responses of different lengths on a more comparable scale, giving GSPO a different objective from exact joint importance sampling.
 
 ## Clipping one answer at a time
 
@@ -56,7 +56,7 @@ A_i=\frac{r_i-\operatorname{mean}(r_1,\ldots,r_G)}
 {\operatorname{std}(r_1,\ldots,r_G)}.
 $$
 
-Rewards, advantages, and rollout-policy log probabilities are held fixed during the policy update. If all rewards are equal, the denominator needs a numerical guard or the group needs explicit handling; the equation alone is undefined in that case.
+Rewards, advantages, and rollout-policy log probabilities are held fixed during the policy update. Groups with identical rewards have zero variance; implementations typically guard the denominator or skip those groups.
 
 The clipping construction follows [Proximal Policy Optimization (PPO)](https://arxiv.org/abs/1707.06347v1), with GSPO applying it to the length-normalized response ratio. The sampled objective to maximize is
 
@@ -70,7 +70,7 @@ $$
 
 The sign of $A_i$ matters. For a positive advantage, increasing $s_i$ beyond $1+\epsilon$ reaches a flat branch. Decreasing it below $1-\epsilon$ does not: the minimum still selects $s_iA_i$. For a negative advantage, the flat region is instead below $1-\epsilon$.
 
-Thus an out-of-range response is not automatically removed from the gradient. Clipping suppresses an update that would move too far in the reward-favored direction. The opposite direction remains penalized.
+Clipping flattens the objective in the reward-favored direction beyond the threshold, while retaining a penalty for movement in the opposite direction.
 
 <figure>
   <picture>
@@ -89,7 +89,7 @@ $$
 \nabla_\theta\log\pi_\theta(y_{i,t}\mid x,y_{i,<t}).
 $$
 
-Every token score gradient in one answer receives the same scalar multiplier $s_iA_i/L_i$. Their vector contributions can still differ, because the token gradients themselves differ. Shared weighting does not mean that every word has equal causal responsibility for the reward.
+Every token score gradient in one answer receives the scalar multiplier $s_iA_i/L_i$. Each token's log-probability Jacobian then determines its vector contribution to the parameter update.
 
 ## A two-token calculation
 
@@ -148,9 +148,9 @@ The opposing log changes cancel. Response-level clipping sees an unchanged avera
 
 Length normalization has a related tradeoff. It makes a repeated per-token change comparable across lengths, but it also dilutes an isolated token's log-ratio change in a long response. Whether that is useful depends on the behavior being rewarded and the optimization regime.
 
-The group advantage adds another limitation: the same answer can receive different normalized weights depending on the other answers sampled for its prompt. GSPO's ratio does not improve a poor reward function, supply token-level credit, or create a learning signal in a group with no reward variation.
+The group advantage also makes the update relative to the other answers sampled for that prompt. Reward variation supplies the learning signal, while $s_i$ scales the response's shared token update.
 
-These boundaries do not make the response-level choice arbitrary. A scalar completion reward and a shared response update are a coherent pairing. The precise mechanism is that GSPO averages **log probability changes**, exponentiates that average, and clips the resulting response contribution. Its empirical behavior should be assessed with that surrogate in mind, rather than treating it as exact joint importance sampling.
+GSPO pairs a scalar completion reward with a shared response update: average the **log probability changes**, exponentiate that average, and clip the resulting response contribution.
 
 ## References
 

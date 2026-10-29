@@ -75,11 +75,11 @@ for frame in range(num_frames):
 distribution_loss(outputs).backward()
 ```
 
-This is structural pseudocode, not a runnable diffusion implementation. In particular, `cache` represents the model's causal context, and `encode_clean_frame` includes the operations needed to obtain its KV representations.
+In this pseudocode, `cache` represents the model's causal context, and `encode_clean_frame` computes the frame's KV representations.
 
-The forward context remains generated context after detachment. Stopping a derivative does not replace a frame with ground truth. However, this is also not full backpropagation through the generated trajectory. Randomizing the exit allows different denoising positions to receive supervision across updates; it does not restore the omitted temporal derivatives.
+Detachment preserves the generated frame values as forward context while cutting their backward paths. Randomizing the exit distributes supervision across denoising positions over successive updates. Each update differentiates the selected call with its generated prefix held fixed.
 
-There is a further qualification: an early-exit training sample need not have exactly the same distribution as a sample from all $T$ inference steps. The central alignment is the use of generated causal prefixes, with a deliberate approximation in denoising depth and gradient flow.
+Early exit also shortens the denoising trajectory relative to full $T$-step inference. Training aligns the source of causal prefixes with generation while using shorter denoising paths and detached caches to control memory.
 
 ### What evaluates the generated video?
 
@@ -92,7 +92,7 @@ p_{\theta,\tau}\,\|\,p_{\mathrm{data},\tau}
 \right).
 $$
 
-Here $\tau$ is a noise level used by the distribution loss, and $p_{\theta,\tau}$ and $p_{\mathrm{data},\tau}$ are generated and real **video** distributions after applying that noising process. They are distributions, not single paired videos. In practice, DMD uses score estimates rather than directly evaluating these densities.
+Here $\tau$ is a noise level used by the distribution loss, and $p_{\theta,\tau}$ and $p_{\mathrm{data},\tau}$ are generated and real **video** distributions after applying that noising process. DMD estimates their score functions to construct the training update.
 
 The paper also considers SiD and adversarial objectives. Generated-prefix training is therefore not tied to a single choice of divergence. Its role is to supply video samples whose temporal dependencies include the model's own predictions.
 
@@ -137,17 +137,17 @@ $$
 =0.2805.
 $$
 
-Both computations see the accumulated error. Only the first assigns credit through earlier transitions. This example is not an assertion that Self Forcing uses squared scalar errors; it isolates the difference between forward rollout and backward credit assignment.
+Both computations see the accumulated error. Only the first assigns credit through earlier transitions. The scalar example separates the forward rollout from backward credit assignment in a setting where both gradients can be calculated by hand.
 
 [Download the checked example](/code/self-forcing-generated-prefixes.py). It verifies the full derivative with finite differences, then verifies the detached derivative while holding the generated prefixes fixed. Re-running the complete rollout for the second check would incorrectly measure the full derivative again.
 
-## Where this helps, and what it leaves open
+## Generated context and temporal credit
 
-The mechanism is relevant when a generator consumes its own outputs and its errors change later conditioning inputs. A model that generates an entire video jointly does not have this same prefix mismatch in this form. Likewise, replacing a real prefix with a generated one is useful only if the training objective can provide meaningful feedback on the resulting sample.
+Generated-prefix training addresses models whose outputs become later conditioning inputs. Rolling out those dependencies during training exposes the distribution-matching objective to the errors the model feeds back into itself.
 
-Detached caches reduce memory, but remove a path for learning how an early decision affects a much later frame. They do not make the truncated gradient an unbiased estimate of full temporal backpropagation. A video-level loss can still evaluate the whole sequence while receiving only these restricted parameter derivatives.
+Detached caches reduce memory by omitting gradients through earlier context computations. The video-level loss evaluates the whole sequence, while the update uses the retained local parameter derivatives. Forward exposure to accumulated errors and backward temporal credit are separate parts of the training design.
 
-Finally, training on generated prefixes is not a guarantee of unlimited-horizon stability. The paper reports deterioration far beyond the training horizon. The length of training rollouts, the quality of the distribution-matching teacher, and the retained context still constrain what the model can learn. The narrow result is that the training inputs now include the consequences of the generator's own earlier predictions.
+The paper reports deterioration far beyond the training horizon, connecting long-video quality to rollout length, teacher quality, and retained context. Within training, generated prefixes let each new prediction encounter the consequences of the model's own earlier outputs.
 
 ## References
 

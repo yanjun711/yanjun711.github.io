@@ -9,7 +9,7 @@ toc: true
 
 A video token and an audio token can both have index 10 while describing different moments. Video and audio encoders compress time at different rates. If a model treats their sequence indices as a shared clock, its positional representation can favor a sound that occurs before or after the corresponding visible event.
 
-[MOVA](https://arxiv.org/abs/2602.08794v1) addresses this mismatch inside the cross-attention bridge between its audio and video diffusion transformers. Its **Aligned RoPE** maps both token streams onto the same temporal grid. This note examines that coordinate change: what it preserves, what goes wrong without it, and what a shared clock cannot guarantee about generated content.
+[MOVA](https://arxiv.org/abs/2602.08794v1) addresses this mismatch inside the cross-attention bridge between its audio and video diffusion transformers. Its **Aligned RoPE** maps both token streams onto the same temporal grid, so their rotary phase difference reflects elapsed time in shared units.
 
 ## Two indices, two clocks
 
@@ -79,24 +79,24 @@ $$
 
 Both operands are measured in audio latent-frame units. Tokens representing the same timestamp have zero temporal difference. Tokens separated by the same duration have the same relative positional phase regardless of their absolute location in the clip.
 
-To check the second property, shift both timestamps by $\Delta$. Their new indices are $i+f_v\Delta$ and $j+f_a\Delta$. Substitution cancels the shift exactly. This is a statement about the rotary temporal coordinates under the assumed common origin; it does not claim that the entire generator is invariant to moving an event through a scene.
+To check the second property, shift both timestamps by $\Delta$. Their new indices are $i+f_v\Delta$ and $j+f_a\Delta$. Substitution cancels the shift exactly, preserving the rotary temporal phase difference under a common time shift.
 
 The scaling need not be an integer. Rotary embeddings accept continuous positions, so a rate ratio such as $2.5$ does not require rounding one stream onto discrete indices from the other. Rounding would introduce another timing error.
 
 ## A half-second example
 
-Take illustrative rates $f_v=2$ and $f_a=8$. Video index $i=1$ and audio index $j=4$ both represent $0.5$ seconds. Set $q_m=k_m=(1,0)^{\mathsf T}$ and $\theta_m=2$. For this deliberately simple content pair, the positional dot product reduces to a cosine.
+Take illustrative rates $f_v=2$ and $f_a=8$. Video index $i=1$ and audio index $j=4$ both represent $0.5$ seconds. Set $q_m=k_m=(1,0)^{\mathsf T}$ and $\theta_m=2$. The positional dot product then reduces to a cosine.
 
 With native indices, the simultaneous pair scores $\cos((4-1)/2)\approx0.0707$. Audio index $j=1$, which actually occurs at $0.125$ seconds, scores $\cos(0)=1$. Under aligned positions, the simultaneous pair scores 1, and that earlier audio token scores approximately 0.0707.
 
-This does not mean real attention must peak at the aligned timestamp: real query and key contents are learned, and meaningful sounds can precede or follow visible events. It demonstrates that positional coordinates should not systematically reverse the timing preference before content is considered.
+Alignment gives simultaneous events a matching positional phase. Learned query and key contents then determine the attention weights, including associations where a sound naturally precedes or follows a visible event.
 
 <figure class="figure-mechanism">
   <picture>
     <source media="(max-width: 620px)" srcset="/images/blog/mova-aligned-rope/clocks-mobile.svg" width="360" height="320" />
     <img src="/images/blog/mova-aligned-rope/clocks.svg" alt="At illustrative latent rates of video 2 Hz and audio 8 Hz, video index one and audio index four both describe half a second. Their native rotary positions differ by three. Multiplying video positions by four puts both at position four." loading="lazy" width="620" height="258" />
   </picture>
-  <figcaption>Figure 1. Filled tokens mark the same 0.5-second event; the dashed connector pairs them. Native indices place them at 1 and 4. Multiplying video indices by four puts both at rotary position 4. The rates are illustrative, and matching coordinates alone does not guarantee synchronized content.</figcaption>
+  <figcaption>Figure 1. Filled tokens mark the same 0.5-second event; the dashed connector pairs them. At the example rates of 2 video and 8 audio latent frames per second, native indices place them at 1 and 4. Multiplying video indices by four puts both at rotary position 4.</figcaption>
 </figure>
 
 The [runnable NumPy example](/code/mova-aligned-rope.py) verifies these values, the rotary dot-product identity, and invariance to a common physical-time shift. Its essential calculation is:
@@ -108,15 +108,15 @@ relative_phase = (audio_position - video_position) / theta
 score = np.cos(relative_phase)  # Only for q = k = [1, 0].
 ```
 
-## What alignment does not solve
+## Shared time in the cross-modal bridge
 
-A common coordinate system is an architectural prior, not a synchronization label. It does not tell the model which syllable belongs to which mouth movement, nor force the generated waveform and pixels to describe the same event. MOVA still needs bidirectional cross-modal exchange and aligned training data. Timing conventions remove an avoidable inconsistency from those interactions.
+A common coordinate system supplies the bridge with consistent temporal positions. Bidirectional cross-modal exchange and aligned training data teach the content associations, such as which syllable accompanies a mouth movement. Aligned RoPE puts those learned interactions on a shared clock.
 
-The derivation also assumes a common temporal origin. If preprocessing introduces an audio offset, different padding conventions, or unequal crop starts, the coordinates must include those offsets. Multiplying indices by the correct rate ratio does not correct a hidden offset. For irregular sampling or dropped frames, actual timestamps are more informative than a nominal constant-rate index.
+The derivation assumes a common temporal origin. Audio offsets, padding, and unequal crop starts contribute additional offsets to the coordinates. For irregular sampling or dropped frames, actual timestamps capture the timing more accurately than a nominal constant-rate index.
 
-RoPE is periodic in each frequency pair. Sharing physical units does not eliminate positional aliasing or establish a unique correspondence at every distance. Multiple frequencies and learned content help discriminate positions, while the model's training horizon still limits what can be inferred about extrapolation.
+Each RoPE frequency pair is periodic. Multiple frequencies and learned content help discriminate positions within the model's training horizon, while the shared physical unit keeps their phase differences consistent across modalities.
 
-Finally, this mechanism operates on latent time. A waveform sample index, a video pixel frame index, and a compressed latent index are not interchangeable. An implementation should first establish each token's timestamp after the VAE, then apply the shared-coordinate mapping. That bookkeeping is the narrow but necessary job performed by Aligned RoPE.
+The mapping operates on timestamps after VAE compression. Converting those latent indices into a common unit lets audio and video tokens express the same elapsed time despite their different sequence lengths.
 
 ## References
 
