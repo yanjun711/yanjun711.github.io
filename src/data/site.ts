@@ -8,6 +8,21 @@ export const profile = {
 
 export const publications = [
   {
+    id: 'jepa4r',
+    name: 'JEPA4R',
+    title: 'JEPA4R: Embodied JEPA World Models with 4D Point Planning',
+    authors: ['Jiarui Dong', 'Zhiheng Liang', 'Yanjun Li', 'Zeyu Zhang', 'Heejeong Nam', 'Haoyu Chen', 'Hao Tang'],
+    year: 2026,
+    arxiv: '2611.19771',
+    topic: 'World models',
+    equal: true,
+    description: 'We build a JEPA world model on single-camera point clouds, plan in a 4D point latent space, and decode imagined rollouts to inspect the predicted scene.',
+    project: 'https://aigeeksgroup.github.io/JEPA4R',
+    code: 'https://github.com/AIGeeksGroup/JEPA4R',
+    image: '/images/jepa4r.webp',
+    imageAlt: 'JEPA4R figure showing ground-truth and imagined 4D point-cloud rollouts.',
+  },
+  {
     id: 'language-forcing',
     name: 'Language-Forcing',
     title: 'Language-Forcing: Advancing Humanoid Loco-Manipulation via Semantic Alignment of Whole-Body World Action Models',
